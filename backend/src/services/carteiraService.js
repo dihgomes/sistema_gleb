@@ -187,12 +187,25 @@ class CarteiraService {
     const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
     const url = `${frontendUrl}/q/${carteira.codigoUnico}`;
     
+    console.log('\n' + '='.repeat(80));
+    console.log('📱 [QRCODE] Gerando QR Code');
+    console.log('🔗 URL gerada:', url);
+    console.log('📋 Código único:', carteira.codigoUnico);
+    console.log('🌍 FRONTEND_URL:', frontendUrl);
+    console.log('📏 Tamanho da URL:', url.length, 'caracteres');
+    console.log('🔍 URL (bytes):', Buffer.from(url).toString('hex'));
+    console.log('='.repeat(80));
+    
     const qrCodeBase64 = await QRCode.toDataURL(url, {
       errorCorrectionLevel: 'H',
       type: 'image/png',
       width: 300,
       margin: 2
     });
+
+    console.log('✅ QR Code gerado com sucesso');
+    console.log('📊 Tamanho do QR Code:', qrCodeBase64.length, 'caracteres (base64)');
+    console.log('='.repeat(80) + '\n');
 
     return {
       url,
