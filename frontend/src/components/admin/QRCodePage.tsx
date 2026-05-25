@@ -1,15 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Download, Copy, CheckCircle } from 'lucide-react';
+import { QRCodeSVG } from 'qrcode.react';
 import AdminLayout from './AdminLayout';
 import { API_ENDPOINTS } from '../../config/api';
 import { getToken } from '../../utils/auth';
-
-interface QRCodeData {
-  url: string;
-  qrcode: string;
-  codigoUnico: string;
-}
 
 interface Carteira {
   id: string;
@@ -21,9 +16,13 @@ export default function QRCodePage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
-  const [qrData, setQrData] = useState<QRCodeData | null>(null);
   const [carteira, setCarteira] = useState<Carteira | null>(null);
   const [copied, setCopied] = useState(false);
+
+  // Gera URL de validação no frontend
+  const validationUrl = carteira 
+    ? `${window.location.origin}/q/${carteira.codigoUnico}`
+    : '';
 
   useEffect(() => {
     loadData();
@@ -40,20 +39,8 @@ export default function QRCodePage() {
       if (carteiraResponse.ok) {
         const carteiraData = await carteiraResponse.json();
         setCarteira(carteiraData);
-      }
-
-      const qrResponse = await fetch(API_ENDPOINTS.GERAR_QRCODE(id!), {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${getToken()}`
-        }
-      });
-
-      if (qrResponse.ok) {
-        const qrData = await qrResponse.json();
-        setQrData(qrData);
       } else {
-        alert('Erro ao gerar QR Code');
+        alert('Erro ao carregar dados da carteira');
       }
     } catch (error) {
       console.error('Erro ao carregar dados:', error);
@@ -64,20 +51,38 @@ export default function QRCodePage() {
   };
 
   const handleCopyUrl = () => {
-    if (qrData?.url) {
-      navigator.clipboard.writeText(qrData.url);
+    if (validationUrl) {
+      navigator.clipboard.writeText(validationUrl);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     }
   };
 
   const handleDownloadQR = () => {
-    if (qrData?.qrcode) {
-      const link = document.createElement('a');
-      link.href = qrData.qrcode;
-      link.download = `qrcode-${carteira?.nome || 'carteira'}.png`;
-      link.click();
-    }
+    const svg = document.getElementById('qr-code-svg');
+    if (!svg || !carteira) return;
+
+    const svgData = new XMLSerializer().serializeToString(svg);
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    
+    const img = new Image();
+    img.onload = () => {
+      canvas.width = 512;
+      canvas.height = 512;
+      ctx.fillStyle = 'white';
+      ctx.fillRect(0, 0, 512, 512);
+      ctx.drawImage(img, 0, 0, 512, 512);
+      
+      const pngFile = canvas.toDataURL('image/png');
+      const downloadLink = document.createElement('a');
+      downloadLink.download = `qrcode-${carteira.nome.replace(/\s+/g, '-')}.png`;
+      downloadLink.href = pngFile;
+      downloadLink.click();
+    };
+
+    img.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgData)));
   };
 
   return (
@@ -103,7 +108,7 @@ export default function QRCodePage() {
             <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
             <p className="mt-2 text-gray-600">Gerando QR Code...</p>
           </div>
-        ) : qrData ? (
+        ) : carteira ? (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div className="bg-white rounded-xl shadow-md p-8 border border-gray-200">
               <h3 className="text-lg font-semibold text-gray-900 mb-4 text-center">
@@ -112,10 +117,12 @@ export default function QRCodePage() {
               
               <div className="flex justify-center mb-6">
                 <div className="p-4 bg-white border-4 border-blue-600 rounded-xl shadow-lg">
-                  <img
-                    src={qrData.qrcode}
-                    alt="QR Code"
-                    className="w-64 h-64"
+                  <QRCodeSVG
+                    id="qr-code-svg"
+                    value={validationUrl}
+                    size={256}
+                    level="H"
+                    includeMargin={true}
                   />
                 </div>
               </div>
@@ -153,7 +160,7 @@ export default function QRCodePage() {
                     Código Único
                   </label>
                   <p className="text-gray-900 font-mono font-medium bg-gray-100 px-3 py-2 rounded-lg">
-                    {qrData.codigoUnico}
+                    {carteira.codigoUnico}
                   </p>
                 </div>
 
@@ -164,7 +171,7 @@ export default function QRCodePage() {
                   <div className="flex gap-2">
                     <input
                       type="text"
-                      value={qrData.url}
+                      value={validationUrl}
                       readOnly
                       className="flex-1 px-3 py-2 bg-gray-100 border border-gray-300 rounded-lg text-sm font-mono"
                     />
