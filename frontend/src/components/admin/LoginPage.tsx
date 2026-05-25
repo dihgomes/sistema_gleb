@@ -140,7 +140,7 @@ export default function LoginPage() {
               Sistema de Validação de Carteiras
             </p>
             <p className="text-xs text-emerald-600 mt-1">
-              GLEB
+              GLEB - Grande Loja Maçônica do Estado da Bahia
             </p>
           </div>
         </div>
