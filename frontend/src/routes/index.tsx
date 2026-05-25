@@ -1,4 +1,4 @@
-import { createBrowserRouter } from 'react-router-dom';
+import { createBrowserRouter, Navigate } from 'react-router-dom';
 import ValidationPage from '../components/public/ValidationPage';
 import LoginPage from '../components/admin/LoginPage';
 import Dashboard from '../components/admin/Dashboard';
@@ -10,7 +10,7 @@ import ProtectedRoute from '../components/admin/ProtectedRoute';
 export const router = createBrowserRouter([
   {
     path: '/',
-    element: <ValidationPage />,
+    element: <Navigate to="/admin/login" replace />,
   },
   {
     path: '/q/:codigo',
