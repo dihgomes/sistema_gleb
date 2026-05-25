@@ -7,4 +7,13 @@ export default defineConfig({
   optimizeDeps: {
     exclude: ['lucide-react'],
   },
+  server: {
+    host: true,
+    allowedHosts: [
+      'localhost',
+      'controle-hrrb.com.br',
+      'www.controle-hrrb.com.br',
+      '.controle-hrrb.com.br'
+    ]
+  }
 });
