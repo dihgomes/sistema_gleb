@@ -115,26 +115,22 @@ interface InfoSectionProps {
 export default function InfoSection({ data }: InfoSectionProps) {
   return (
     <div className="flex flex-col gap-5 w-full">
-      {/* Nome em destaque */}
       <div className="text-center border-b border-blue-100 pb-4">
         <h2 className="text-lg sm:text-xl font-extrabold text-blue-900 leading-tight tracking-wide uppercase">
           {data.nome}
         </h2>
       </div>
 
-      {/* Situação Atual */}
       <div>
         <SectionHeader title="Situação Atual" />
         <SituacaoCard situacao={data.situacao} />
       </div>
 
-      {/* Datas Maçônicas */}
       <div>
         <SectionHeader title="Datas Maçônicas" />
         <DatasMaconicasBlock datas={data.datasMaconicas} />
       </div>
 
-      {/* Lojas */}
       <div>
         <SectionHeader title="Lojas" />
         <LojasBlock lojas={data.lojas} />

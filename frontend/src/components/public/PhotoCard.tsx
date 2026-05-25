@@ -8,7 +8,6 @@ interface PhotoCardProps {
 export default function PhotoCard({ foto, nome }: PhotoCardProps) {
   return (
     <div className="flex flex-col items-center">
-      {/* Moldura da foto - formato 3x4 ampliado */}
       <div className="relative w-48 h-72 sm:w-64 sm:h-96 rounded-sm overflow-hidden border border-gray-300 shadow-lg bg-white">
         {foto ? (
           <img

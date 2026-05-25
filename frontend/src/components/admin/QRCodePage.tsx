@@ -19,7 +19,6 @@ export default function QRCodePage() {
   const [carteira, setCarteira] = useState<Carteira | null>(null);
   const [copied, setCopied] = useState(false);
 
-  // Gera URL de validação no frontend
   const validationUrl = carteira 
     ? `${window.location.origin}/q/${carteira.codigoUnico}`
     : '';

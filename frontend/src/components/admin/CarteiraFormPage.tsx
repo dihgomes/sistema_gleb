@@ -43,7 +43,6 @@ export default function CarteiraFormPage() {
     if (isEdit) {
       loadCarteira();
     } else {
-      // Resetar todos os estados quando for nova carteira
       setNome('');
       setLoja('');
       setSituacaoAtual('REGULAR');
@@ -72,7 +71,6 @@ export default function CarteiraFormPage() {
         setFotoPreview(data.fotoUrl);
         setDatasMaconicas(data.datasMaconicas || []);
         
-        // Converte dados antigos para nova estrutura
         const lojasConvertidas = (data.lojas || []).map((l: any) => ({
           dataFiliacao: l.data || l.dataFiliacao || '',
           dataDesligamento: l.desligamento && l.desligamento !== '--' ? l.desligamento : (l.dataDesligamento || ''),
@@ -141,7 +139,6 @@ export default function CarteiraFormPage() {
       return;
     }
 
-    // Validação: Se situação for DESLIGADO, deve ter data de desligamento
     if (situacaoAtual === 'DESLIGADO') {
       const temDataDesligamento = lojas.some(loja => loja.dataDesligamento.trim() !== '');
       if (!temDataDesligamento) {
@@ -228,7 +225,6 @@ export default function CarteiraFormPage() {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Dados Pessoais */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
             <div className="bg-gradient-to-r from-blue-50 to-blue-100/50 px-6 py-4 border-b border-blue-200">
               <h3 className="text-base font-semibold text-gray-900">Dados Pessoais</h3>
@@ -340,7 +336,6 @@ export default function CarteiraFormPage() {
             </div>
           </div>
 
-          {/* Datas */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
             <div className="bg-gradient-to-r from-green-50 to-green-100/50 px-6 py-4 border-b border-green-200">
               <h3 className="text-base font-semibold text-gray-900">Datas Maçônicas</h3>
@@ -400,7 +395,6 @@ export default function CarteiraFormPage() {
             </div>
           </div>
 
-          {/* Lojas */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
             <div className="bg-gradient-to-r from-orange-50 to-orange-100/50 px-6 py-4 border-b border-orange-200">
               <h3 className="text-base font-semibold text-gray-900">Lojas</h3>
@@ -416,7 +410,6 @@ export default function CarteiraFormPage() {
 
                   return (
                     <div key={index} className="flex flex-col md:flex-row gap-3 p-4 bg-gray-50 rounded-lg border border-gray-200">
-                      {/* Filiação */}
                       <div className="flex-1">
                         <label className="block text-xs font-medium text-gray-600 mb-1">Filiação</label>
                         <input
@@ -437,7 +430,6 @@ export default function CarteiraFormPage() {
                         )}
                       </div>
 
-                      {/* Desligamento */}
                       <div className="flex-1">
                         <label className="block text-xs font-medium text-gray-600 mb-1">Desligamento</label>
                         <input
@@ -461,7 +453,6 @@ export default function CarteiraFormPage() {
                         )}
                       </div>
 
-                      {/* Botões */}
                       <div className="flex gap-2 md:items-end">
                         {index === lojas.length - 1 && podeAdicionarNova && !isDesligada && (
                           <button
@@ -492,7 +483,6 @@ export default function CarteiraFormPage() {
 
           </div>
 
-          {/* Botões de Ação */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <div className="flex gap-3">
               {!isDesligada && (

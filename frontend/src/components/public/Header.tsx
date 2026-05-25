@@ -10,7 +10,6 @@ export default function Header() {
           />
         </div>
 
-        {/* Título */}
         <div className="text-center">
           <h1 className="text-lg sm:text-xl font-bold tracking-wide uppercase leading-tight text-blue-800">
             Grande Loja Maçônica do Estado da Bahia

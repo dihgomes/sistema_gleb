@@ -55,10 +55,8 @@ export default function ValidationPage() {
       const transformedData = transformCarteiraData(apiData);
       setData(transformedData);
       
-      // Verifica se a carteira está inativa
       setIsInativa(!apiData.ativo);
     } catch (err) {
-      // Retry até 2 vezes em caso de erro de rede
       if (retryCount < 2 && (err instanceof Error && (err.name === 'AbortError' || err.message.includes('fetch')))) {
         console.log(`Tentando novamente... (${retryCount + 1}/2)`);
         setTimeout(() => loadCarteiraData(codigoUnico, retryCount + 1), 1000);
@@ -131,7 +129,6 @@ export default function ValidationPage() {
       <Header />
 
       <main className="flex-1 w-full max-w-3xl mx-auto px-4 py-8">
-        {/* Alerta de carteira inativa */}
         {isInativa && (
           <div className="mb-6 bg-red-50 border-l-4 border-red-500 p-4 rounded-r-lg">
             <div className="flex items-center">
@@ -152,15 +149,11 @@ export default function ValidationPage() {
           </div>
         )}
 
-        {/* Card principal */}
         <div className="bg-white rounded-xl shadow-md overflow-hidden border border-blue-100">
-          {/* Faixa decorativa superior */}
           <div className="h-1.5 bg-gradient-to-r from-blue-900 via-blue-600 to-yellow-400" />
 
           <div className="p-5 sm:p-8">
-            {/* Layout responsivo: mobile = coluna, desktop = duas colunas */}
             <div className="flex flex-col items-center gap-8 sm:flex-row sm:items-start sm:gap-10">
-              {/* Coluna esquerda: foto */}
               <div className="flex-shrink-0">
                 <PhotoCard
                   foto={data.foto}
@@ -168,14 +161,12 @@ export default function ValidationPage() {
                 />
               </div>
 
-              {/* Coluna direita: informações */}
               <div className="flex-1 w-full">
                 <InfoSection data={data} />
               </div>
             </div>
           </div>
 
-          {/* Faixa decorativa inferior */}
           <div className="h-1 bg-gradient-to-r from-yellow-400 via-blue-600 to-blue-900" />
         </div>
 
