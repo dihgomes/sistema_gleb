@@ -1,0 +1,39 @@
+// Schema do Prisma para o sistema de carteira digital
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Tabela de Administradores
+model Admin {
+  id         String   @id @default(uuid())
+  nome       String
+  email      String   @unique
+  senhaHash  String   @map("senha_hash")
+  criadoEm   DateTime @default(now()) @map("criado_em")
+
+  @@map("admins")
+}
+
+// Tabela de Carteiras/Pessoas
+model Carteira {
+  id              String   @id @default(uuid())
+  codigoUnico     String   @unique @map("codigo_unico")
+  nome            String
+  loja            String?
+  fotoUrl         String?  @map("foto_url")
+  situacaoAtual   String?  @map("situacao_atual")
+  datasMaconicas  Json?    @map("datas_maconicas")
+  lojas           Json?
+  hashValidacao   String?  @map("hash_validacao")
+  ativo           Boolean  @default(true)
+  criadoEm        DateTime @default(now()) @map("criado_em")
+  atualizadoEm    DateTime @updatedAt @map("atualizado_em")
+
+  @@map("carteiras")
+}

@@ -1,0 +1,150 @@
+const carteiraService = require('../services/carteiraService');
+const path = require('path');
+
+/**
+ * Controller de carteiras
+ */
+class CarteiraController {
+  /**
+   * POST /api/admin/carteiras
+   * Cria uma nova carteira
+   */
+  async criar(req, res) {
+    try {
+      const { nome, loja, situacaoAtual, datasMaconicas, lojas } = req.body;
+
+      if (!nome) {
+        return res.status(400).json({ error: 'Nome é obrigatório' });
+      }
+
+      let fotoUrl = null;
+      if (req.file) {
+        const apiUrl = process.env.API_URL || `http://localhost:${process.env.PORT || 5001}`;
+        fotoUrl = `${apiUrl}/uploads/${req.file.filename}`;
+      }
+
+      const data = {
+        nome,
+        loja,
+        situacaoAtual,
+        datasMaconicas: datasMaconicas ? JSON.parse(datasMaconicas) : [],
+        lojas: lojas ? JSON.parse(lojas) : []
+      };
+
+      const carteira = await carteiraService.criar(data, fotoUrl);
+
+      return res.status(201).json(carteira);
+    } catch (error) {
+      return res.status(400).json({ error: error.message });
+    }
+  }
+
+  /**
+   * GET /api/admin/carteiras
+   * Lista todas as carteiras
+   */
+  async listar(req, res) {
+    try {
+      const carteiras = await carteiraService.listar();
+      return res.json(carteiras);
+    } catch (error) {
+      return res.status(400).json({ error: error.message });
+    }
+  }
+
+  /**
+   * GET /api/admin/carteiras/:id
+   * Busca uma carteira por ID
+   */
+  async buscarPorId(req, res) {
+    try {
+      const { id } = req.params;
+      const carteira = await carteiraService.buscarPorId(id);
+      return res.json(carteira);
+    } catch (error) {
+      return res.status(404).json({ error: error.message });
+    }
+  }
+
+  /**
+   * PUT /api/admin/carteiras/:id
+   * Atualiza uma carteira
+   */
+  async atualizar(req, res) {
+    try {
+      const { id } = req.params;
+      const { nome, loja, situacaoAtual, datasMaconicas, lojas } = req.body;
+
+      let fotoUrl = null;
+      if (req.file) {
+        const apiUrl = process.env.API_URL || `http://localhost:${process.env.PORT || 5001}`;
+        fotoUrl = `${apiUrl}/uploads/${req.file.filename}`;
+      }
+
+      const data = {
+        nome,
+        loja,
+        situacaoAtual,
+        datasMaconicas: datasMaconicas ? JSON.parse(datasMaconicas) : undefined,
+        lojas: lojas ? JSON.parse(lojas) : undefined
+      };
+
+      const carteira = await carteiraService.atualizar(id, data, fotoUrl);
+
+      return res.json(carteira);
+    } catch (error) {
+      return res.status(400).json({ error: error.message });
+    }
+  }
+
+  /**
+   * PATCH /api/admin/carteiras/:id/status
+   * Atualiza o status de uma carteira
+   */
+  async atualizarStatus(req, res) {
+    try {
+      const { id } = req.params;
+      const { ativo } = req.body;
+
+      if (typeof ativo !== 'boolean') {
+        return res.status(400).json({ error: 'Status ativo deve ser true ou false' });
+      }
+
+      const carteira = await carteiraService.atualizarStatus(id, ativo);
+
+      return res.json(carteira);
+    } catch (error) {
+      return res.status(400).json({ error: error.message });
+    }
+  }
+
+  /**
+   * DELETE /api/admin/carteiras/:id
+   * Exclusão lógica de uma carteira
+   */
+  async deletar(req, res) {
+    try {
+      const { id } = req.params;
+      const carteira = await carteiraService.deletar(id);
+      return res.json({ message: 'Carteira desativada com sucesso', carteira });
+    } catch (error) {
+      return res.status(400).json({ error: error.message });
+    }
+  }
+
+  /**
+   * POST /api/admin/carteiras/:id/gerar-qrcode
+   * Gera QR Code para uma carteira
+   */
+  async gerarQRCode(req, res) {
+    try {
+      const { id } = req.params;
+      const result = await carteiraService.gerarQRCode(id);
+      return res.json(result);
+    } catch (error) {
+      return res.status(400).json({ error: error.message });
+    }
+  }
+}
+
+module.exports = new CarteiraController();
