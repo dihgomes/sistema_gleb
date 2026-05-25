@@ -2,7 +2,6 @@ export default function Header() {
   return (
     <header className="bg-gray-100 py-6 px-4">
       <div className="max-w-3xl mx-auto flex flex-col items-center gap-3">
-        {/* Logo GLEB */}
         <div className="w-20 h-20 sm:w-24 sm:h-24">
           <img
             src="/logo.png"
