@@ -31,6 +31,18 @@ app.use(cors({
   credentials: true
 }));
 
+// Middleware de log para TODAS as requisições
+app.use((req, res, next) => {
+  console.log('\n' + '='.repeat(80));
+  console.log(`📥 [${new Date().toISOString()}] ${req.method} ${req.url}`);
+  console.log('🌐 Origin:', req.headers.origin || 'N/A');
+  console.log('🔗 Referer:', req.headers.referer || 'N/A');
+  console.log('📱 User-Agent:', req.headers['user-agent']?.substring(0, 50) + '...' || 'N/A');
+  console.log('🔑 Headers:', Object.keys(req.headers).join(', '));
+  console.log('='.repeat(80));
+  next();
+});
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -76,9 +88,18 @@ app.use((req, res) => {
 
 // Iniciar servidor
 app.listen(PORT, () => {
-  console.log(`🚀 Servidor rodando na porta ${PORT}`);
-  console.log(`📍 API disponível em: http://localhost:${PORT}`);
-  console.log(`🏥 Health check: http://localhost:${PORT}/health`);
+  console.log('\n' + '='.repeat(80));
+  console.log('🚀 SERVIDOR INICIADO COM SUCESSO');
+  console.log('='.repeat(80));
+  console.log(`📍 Porta: ${PORT}`);
+  console.log(`🌐 API Local: http://localhost:${PORT}`);
+  console.log(`🏥 Health Check: http://localhost:${PORT}/health`);
+  console.log(`🔒 NODE_ENV: ${process.env.NODE_ENV}`);
+  console.log(`🌍 FRONTEND_URL: ${process.env.FRONTEND_URL}`);
+  console.log('📋 Origens CORS permitidas:');
+  allowedOrigins.forEach(origin => console.log(`   - ${origin}`));
+  console.log('='.repeat(80));
+  console.log('✅ Aguardando requisições...\n');
 });
 
 module.exports = app;
