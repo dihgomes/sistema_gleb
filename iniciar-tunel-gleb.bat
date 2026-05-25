@@ -29,7 +29,7 @@ echo.
 
 cd /d "%~dp0"
 
-cloudflared tunnel --config cloudflare-tunnel-config.yml run
+cloudflared tunnel --config cloudflare-tunnel-backend-config.yml run
 
 if errorlevel 1 (
     echo.
