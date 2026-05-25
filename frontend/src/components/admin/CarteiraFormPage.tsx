@@ -340,7 +340,7 @@ export default function CarteiraFormPage() {
             </div>
           </div>
 
-          {/* Datas Maçônicas */}
+          {/* Datas */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
             <div className="bg-gradient-to-r from-green-50 to-green-100/50 px-6 py-4 border-b border-green-200">
               <h3 className="text-base font-semibold text-gray-900">Datas Maçônicas</h3>
