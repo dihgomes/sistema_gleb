@@ -90,13 +90,13 @@ export default function QRCodePage() {
         <div className="flex items-center gap-4">
           <button
             onClick={() => navigate('/admin/carteiras')}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            className="p-2.5 hover:bg-slate-700/50 rounded-lg transition-all border border-emerald-500/20 hover:border-emerald-500/40"
           >
-            <ArrowLeft className="w-5 h-5" />
+            <ArrowLeft className="w-5 h-5 text-slate-400 hover:text-white transition-colors" />
           </button>
           <div>
-            <h2 className="text-2xl font-bold text-gray-900">QR Code da Carteira</h2>
-            <p className="text-gray-600 mt-1">
+            <h2 className="text-3xl font-bold text-white">QR Code da Carteira</h2>
+            <p className="text-slate-400 mt-1">
               {carteira?.nome || 'Carregando...'}
             </p>
           </div>
@@ -104,18 +104,18 @@ export default function QRCodePage() {
 
         {loading ? (
           <div className="text-center py-12">
-            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-            <p className="mt-2 text-gray-600">Gerando QR Code...</p>
+            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-500"></div>
+            <p className="mt-2 text-slate-400">Gerando QR Code...</p>
           </div>
         ) : carteira ? (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div className="bg-white rounded-xl shadow-md p-8 border border-gray-200">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4 text-center">
+            <div className="bg-slate-800/50 backdrop-blur-xl rounded-xl shadow-lg p-8 border border-purple-500/20">
+              <h3 className="text-xl font-bold text-white mb-6 text-center">
                 QR Code Gerado
               </h3>
               
               <div className="flex justify-center mb-6">
-                <div className="p-4 bg-white border-4 border-blue-600 rounded-xl shadow-lg">
+                <div className="p-4 bg-white border-4 border-purple-500 rounded-xl shadow-lg shadow-purple-500/25">
                   <QRCodeSVG
                     id="qr-code-svg"
                     value={validationUrl}
@@ -129,42 +129,42 @@ export default function QRCodePage() {
               <div className="space-y-3">
                 <button
                   onClick={handleDownloadQR}
-                  className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
+                  className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white rounded-lg font-semibold transition-all shadow-lg shadow-purple-500/25 border border-purple-500/50"
                 >
                   <Download className="w-5 h-5" />
                   Baixar QR Code
                 </button>
 
-                <p className="text-xs text-gray-500 text-center">
+                <p className="text-xs text-slate-400 text-center">
                   O QR Code será salvo como imagem PNG
                 </p>
               </div>
             </div>
 
-            <div className="bg-white rounded-xl shadow-md p-8 border border-gray-200">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">
+            <div className="bg-slate-800/50 backdrop-blur-xl rounded-xl shadow-lg p-8 border border-emerald-500/20">
+              <h3 className="text-xl font-bold text-white mb-6">
                 Informações da Carteira
               </h3>
 
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-slate-400 mb-2">
                     Nome
                   </label>
-                  <p className="text-gray-900 font-medium">{carteira?.nome}</p>
+                  <p className="text-white font-semibold text-lg">{carteira?.nome}</p>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-slate-400 mb-2">
                     Código Único
                   </label>
-                  <p className="text-gray-900 font-mono font-medium bg-gray-100 px-3 py-2 rounded-lg">
+                  <p className="text-emerald-400 font-mono font-bold bg-slate-900/50 px-4 py-3 rounded-lg border border-emerald-500/30">
                     {carteira.codigoUnico}
                   </p>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-slate-400 mb-2">
                     URL de Validação
                   </label>
                   <div className="flex gap-2">
@@ -172,14 +172,14 @@ export default function QRCodePage() {
                       type="text"
                       value={validationUrl}
                       readOnly
-                      className="flex-1 px-3 py-2 bg-gray-100 border border-gray-300 rounded-lg text-sm font-mono"
+                      className="flex-1 px-4 py-3 bg-slate-900/50 border border-emerald-500/30 rounded-lg text-sm font-mono text-slate-300"
                     />
                     <button
                       onClick={handleCopyUrl}
-                      className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                      className={`px-4 py-2 rounded-lg font-semibold transition-all shadow-lg ${
                         copied
-                          ? 'bg-green-600 text-white'
-                          : 'bg-gray-200 hover:bg-gray-300 text-gray-800'
+                          ? 'bg-gradient-to-r from-green-600 to-emerald-600 text-white shadow-green-500/25 border border-green-500/50'
+                          : 'bg-slate-700/50 hover:bg-slate-700 text-slate-300 border border-slate-600/50'
                       }`}
                     >
                       {copied ? (
@@ -190,13 +190,13 @@ export default function QRCodePage() {
                     </button>
                   </div>
                   {copied && (
-                    <p className="text-sm text-green-600 mt-2">URL copiada!</p>
+                    <p className="text-sm text-green-400 mt-2 font-semibold">URL copiada!</p>
                   )}
                 </div>
 
-                <div className="pt-4 border-t border-gray-200">
-                  <h4 className="font-medium text-gray-900 mb-2">Como usar:</h4>
-                  <ol className="list-decimal list-inside space-y-2 text-sm text-gray-600">
+                <div className="pt-4 border-t border-slate-700/50">
+                  <h4 className="font-bold text-white mb-3">Como usar:</h4>
+                  <ol className="list-decimal list-inside space-y-2 text-sm text-slate-400">
                     <li>Baixe o QR Code usando o botão acima</li>
                     <li>Imprima o QR Code na carteira física</li>
                     <li>Ao escanear, o usuário será direcionado para a página de validação</li>
@@ -204,9 +204,9 @@ export default function QRCodePage() {
                   </ol>
                 </div>
 
-                <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                  <p className="text-sm text-blue-800">
-                    <strong>Importante:</strong> Este QR Code é permanente e único. 
+                <div className="p-4 bg-emerald-500/10 border border-emerald-500/30 rounded-lg backdrop-blur-sm">
+                  <p className="text-sm text-emerald-300">
+                    <strong className="text-emerald-400">Importante:</strong> Este QR Code é permanente e único. 
                     Mesmo que você atualize os dados da carteira, o QR Code continuará funcionando.
                   </p>
                 </div>
@@ -214,8 +214,8 @@ export default function QRCodePage() {
             </div>
           </div>
         ) : (
-          <div className="bg-white rounded-xl shadow-md p-12 text-center border border-gray-200">
-            <p className="text-gray-600">Erro ao gerar QR Code</p>
+          <div className="bg-slate-800/50 backdrop-blur-xl rounded-xl shadow-lg p-12 text-center border border-red-500/20">
+            <p className="text-red-400">Erro ao gerar QR Code</p>
           </div>
         )}
       </div>

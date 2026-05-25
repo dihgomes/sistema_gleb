@@ -1,7 +1,8 @@
-import { ReactNode } from 'react';
+import { ReactNode, useState } from 'react';
 import { LogOut, Home, Users, Plus } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { logout, getAdmin } from '../../utils/auth';
+import Modal from '../ui/Modal';
 
 interface AdminLayoutProps {
   children: ReactNode;
@@ -11,6 +12,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   const navigate = useNavigate();
   const location = useLocation();
   const admin = getAdmin();
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   const menuItems = [
     { path: '/admin/dashboard', icon: Home, label: 'Dashboard' },
@@ -19,9 +21,12 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   ];
 
   const handleLogout = () => {
-    if (confirm('Deseja realmente sair?')) {
-      logout();
-    }
+    setShowLogoutModal(true);
+  };
+
+  const confirmLogout = () => {
+    logout();
+    setShowLogoutModal(false);
   };
 
   return (
@@ -107,6 +112,18 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
           </p>
         </div>
       </footer>
+
+      {/* Modal de Logout */}
+      <Modal
+        isOpen={showLogoutModal}
+        onClose={() => setShowLogoutModal(false)}
+        onConfirm={confirmLogout}
+        title="Confirmar Saída"
+        message="Deseja realmente sair do sistema?"
+        confirmText="Sair"
+        cancelText="Cancelar"
+        confirmVariant="danger"
+      />
     </div>
   );
 }
