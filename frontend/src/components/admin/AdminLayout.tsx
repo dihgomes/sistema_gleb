@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { Shield, LogOut, Home, Users, Plus } from 'lucide-react';
+import { LogOut, Home, Users, Plus } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { logout, getAdmin } from '../../utils/auth';
 
@@ -30,9 +30,6 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-white/10 border-2 border-yellow-400/60 flex items-center justify-center">
-                <Shield className="w-6 h-6 text-yellow-300" strokeWidth={1.5} />
-              </div>
               <div>
                 <h1 className="text-lg font-bold">Área Administrativa</h1>
                 <p className="text-xs text-blue-200">Sistema GLEB</p>

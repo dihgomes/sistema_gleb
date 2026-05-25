@@ -1,5 +1,4 @@
 import { useState, FormEvent } from 'react';
-import { Shield } from 'lucide-react';
 import Input from '../ui/Input';
 import Checkbox from '../ui/Checkbox';
 import Button from '../ui/Button';
@@ -74,9 +73,6 @@ export default function LoginPage() {
       <div className="w-full max-w-md">
         <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
           <div className="bg-gradient-to-r from-blue-900 via-blue-700 to-blue-900 p-8 text-center">
-            <div className="w-20 h-20 mx-auto rounded-full bg-white/10 border-2 border-yellow-400/60 flex items-center justify-center shadow-xl mb-4">
-              <Shield className="w-12 h-12 text-yellow-300" strokeWidth={1.5} />
-            </div>
             <h1 className="text-xl font-bold text-white tracking-wide uppercase">
               Área Administrativa
             </h1>
