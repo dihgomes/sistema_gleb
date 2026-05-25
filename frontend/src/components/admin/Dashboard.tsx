@@ -54,52 +54,56 @@ export default function Dashboard() {
       title: 'Total de Carteiras',
       value: stats.total,
       icon: Users,
-      bgGradient: 'bg-gradient-to-br from-blue-500 to-blue-600',
-      iconBg: 'bg-blue-50',
-      iconColor: 'text-blue-600',
-      textColor: 'text-blue-600'
+      gradient: 'from-emerald-500 to-teal-500',
+      iconColor: 'text-emerald-400',
+      borderColor: 'border-emerald-500/20'
     },
     {
       title: 'Carteiras Ativas',
       value: stats.ativas,
       icon: CheckCircle,
-      bgGradient: 'bg-gradient-to-br from-green-500 to-green-600',
-      iconBg: 'bg-green-50',
-      iconColor: 'text-green-600',
-      textColor: 'text-green-600'
+      gradient: 'from-green-500 to-emerald-500',
+      iconColor: 'text-green-400',
+      borderColor: 'border-green-500/20'
     },
     {
       title: 'Carteiras Inativas',
       value: stats.inativas,
       icon: XCircle,
-      bgGradient: 'bg-gradient-to-br from-red-500 to-red-600',
-      iconBg: 'bg-red-50',
-      iconColor: 'text-red-600',
-      textColor: 'text-red-600'
+      gradient: 'from-red-500 to-rose-500',
+      iconColor: 'text-red-400',
+      borderColor: 'border-red-500/20'
     },
     {
       title: 'QR Codes Gerados',
       value: stats.total,
       icon: QrCode,
-      bgGradient: 'bg-gradient-to-br from-purple-500 to-purple-600',
-      iconBg: 'bg-purple-50',
-      iconColor: 'text-purple-600',
-      textColor: 'text-purple-600'
+      gradient: 'from-purple-500 to-pink-500',
+      iconColor: 'text-purple-400',
+      borderColor: 'border-purple-500/20'
     },
   ];
 
   return (
     <AdminLayout>
       <div className="space-y-6">
-        <div>
-          <h2 className="text-2xl font-bold text-gray-900">Dashboard</h2>
-          <p className="text-gray-600 mt-1">Visão geral do sistema de carteiras digitais</p>
+        {/* Header */}
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-3xl font-bold text-white">Dashboard</h2>
+            <p className="text-slate-400 mt-1">Visão geral do sistema de carteiras digitais</p>
+          </div>
+          <div className="flex items-center gap-2 text-emerald-400">
+            <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
+            <span className="text-sm">Sistema Online</span>
+          </div>
         </div>
 
+        {/* Stats Cards */}
         {loading ? (
           <div className="text-center py-12">
-            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-            <p className="mt-2 text-gray-600">Carregando...</p>
+            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-500"></div>
+            <p className="mt-2 text-slate-400">Carregando...</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -108,66 +112,74 @@ export default function Dashboard() {
               return (
                 <div
                   key={card.title}
-                  className="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-all duration-200 overflow-hidden"
+                  className={`bg-slate-800/50 backdrop-blur-xl rounded-xl border ${card.borderColor} hover:border-emerald-500/40 shadow-lg hover:shadow-emerald-500/10 transition-all duration-300 overflow-hidden group`}
                 >
-                  <div className="p-5">
+                  <div className="p-6">
                     <div className="flex items-center justify-between mb-4">
-                      <div className={`${card.iconBg} p-3 rounded-lg`}>
-                        <Icon className={`w-6 h-6 ${card.iconColor}`} />
+                      <div className={`p-3 rounded-lg bg-gradient-to-br ${card.gradient} shadow-lg`}>
+                        <Icon className="w-6 h-6 text-white" />
+                      </div>
+                      <div className={`text-4xl font-bold ${card.iconColor} opacity-10 group-hover:opacity-20 transition-opacity`}>
+                        <Icon className="w-12 h-12" />
                       </div>
                     </div>
                     <div>
-                      <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">{card.title}</p>
-                      <p className={`text-3xl font-bold mt-2 ${card.textColor}`}>
+                      <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">{card.title}</p>
+                      <p className="text-4xl font-bold mt-2 text-white">
                         {card.value}
                       </p>
                     </div>
                   </div>
+                  <div className={`h-1 bg-gradient-to-r ${card.gradient}`}></div>
                 </div>
               );
             })}
           </div>
         )}
 
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <h3 className="text-base font-semibold text-gray-900 mb-4">Ações Rápidas</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+        {/* Ações Rápidas */}
+        <div className="bg-slate-800/50 backdrop-blur-xl rounded-xl border border-emerald-500/20 shadow-lg p-6">
+          <h3 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
+            <div className="w-1 h-6 bg-gradient-to-b from-emerald-500 to-teal-500 rounded-full"></div>
+            Ações Rápidas
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <a
               href="/admin/carteiras/nova"
-              className="flex items-center gap-3 p-4 bg-gradient-to-br from-blue-50 to-blue-100/50 border border-blue-200 rounded-lg hover:shadow-md hover:scale-[1.02] transition-all duration-200"
+              className="flex items-center gap-4 p-5 bg-slate-700/30 border border-emerald-500/20 rounded-xl hover:border-emerald-500/40 hover:shadow-lg hover:shadow-emerald-500/10 hover:scale-[1.02] transition-all duration-300 group"
             >
-              <div className="bg-blue-600 p-2.5 rounded-lg shadow-sm">
-                <Users className="w-5 h-5 text-white" />
+              <div className="p-3 rounded-lg bg-gradient-to-br from-emerald-600 to-teal-600 shadow-lg group-hover:shadow-emerald-500/50 transition-shadow">
+                <Users className="w-6 h-6 text-white" />
               </div>
               <div>
-                <p className="font-semibold text-gray-900 text-sm">Nova Carteira</p>
-                <p className="text-xs text-gray-600">Cadastrar nova carteira</p>
+                <p className="font-semibold text-white text-sm">Nova Carteira</p>
+                <p className="text-xs text-slate-400">Cadastrar nova carteira</p>
               </div>
             </a>
 
             <a
               href="/admin/carteiras"
-              className="flex items-center gap-3 p-4 bg-gradient-to-br from-green-50 to-green-100/50 border border-green-200 rounded-lg hover:shadow-md hover:scale-[1.02] transition-all duration-200"
+              className="flex items-center gap-4 p-5 bg-slate-700/30 border border-green-500/20 rounded-xl hover:border-green-500/40 hover:shadow-lg hover:shadow-green-500/10 hover:scale-[1.02] transition-all duration-300 group"
             >
-              <div className="bg-green-600 p-2.5 rounded-lg shadow-sm">
-                <CheckCircle className="w-5 h-5 text-white" />
+              <div className="p-3 rounded-lg bg-gradient-to-br from-green-600 to-emerald-600 shadow-lg group-hover:shadow-green-500/50 transition-shadow">
+                <CheckCircle className="w-6 h-6 text-white" />
               </div>
               <div>
-                <p className="font-semibold text-gray-900 text-sm">Ver Carteiras</p>
-                <p className="text-xs text-gray-600">Listar todas as carteiras</p>
+                <p className="font-semibold text-white text-sm">Ver Carteiras</p>
+                <p className="text-xs text-slate-400">Listar todas as carteiras</p>
               </div>
             </a>
 
             <a
               href="/admin/carteiras"
-              className="flex items-center gap-3 p-4 bg-gradient-to-br from-purple-50 to-purple-100/50 border border-purple-200 rounded-lg hover:shadow-md hover:scale-[1.02] transition-all duration-200"
+              className="flex items-center gap-4 p-5 bg-slate-700/30 border border-purple-500/20 rounded-xl hover:border-purple-500/40 hover:shadow-lg hover:shadow-purple-500/10 hover:scale-[1.02] transition-all duration-300 group"
             >
-              <div className="bg-purple-600 p-2.5 rounded-lg shadow-sm">
-                <QrCode className="w-5 h-5 text-white" />
+              <div className="p-3 rounded-lg bg-gradient-to-br from-purple-600 to-pink-600 shadow-lg group-hover:shadow-purple-500/50 transition-shadow">
+                <QrCode className="w-6 h-6 text-white" />
               </div>
               <div>
-                <p className="font-semibold text-gray-900 text-sm">Gerar QR Code</p>
-                <p className="text-xs text-gray-600">Gerar código de validação</p>
+                <p className="font-semibold text-white text-sm">Gerar QR Code</p>
+                <p className="text-xs text-slate-400">Gerar código de validação</p>
               </div>
             </a>
           </div>
