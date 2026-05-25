@@ -128,52 +128,56 @@ export default function CarteirasListPage() {
                 key={carteira.id}
                 className="bg-slate-800/50 backdrop-blur-xl rounded-xl border border-emerald-500/20 hover:border-emerald-500/40 shadow-lg hover:shadow-emerald-500/10 transition-all duration-300 overflow-hidden group"
               >
-                <div className="flex items-center gap-4 p-5">
-                  <div className="flex-shrink-0">
-                    {carteira.fotoUrl ? (
-                      <img
-                        src={carteira.fotoUrl}
-                        alt={carteira.nome}
-                        className="w-16 h-16 rounded-full object-cover border-2 border-emerald-500/30 shadow-lg"
-                      />
-                    ) : (
-                      <div className="w-16 h-16 rounded-full bg-slate-700/50 border-2 border-emerald-500/30 flex items-center justify-center">
-                        <span className="text-slate-500 text-xs font-medium">Sem foto</span>
-                      </div>
-                    )}
-                  </div>
+                <div className="p-4 sm:p-5">
+                  {/* Header com foto, nome e status */}
+                  <div className="flex items-start gap-3 sm:gap-4 mb-3">
+                    <div className="flex-shrink-0">
+                      {carteira.fotoUrl ? (
+                        <img
+                          src={carteira.fotoUrl}
+                          alt={carteira.nome}
+                          className="w-14 h-14 sm:w-16 sm:h-16 rounded-full object-cover border-2 border-emerald-500/30 shadow-lg"
+                        />
+                      ) : (
+                        <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-slate-700/50 border-2 border-emerald-500/30 flex items-center justify-center">
+                          <span className="text-slate-500 text-xs font-medium">Sem foto</span>
+                        </div>
+                      )}
+                    </div>
 
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between gap-4">
-                      <div className="flex-1 min-w-0">
-                        <h3 className="text-base font-semibold text-white truncate">{carteira.nome}</h3>
-                        <p className="text-xs text-slate-400 mt-0.5">
-                          Código: <span className="font-mono font-medium text-emerald-400">{carteira.codigoUnico}</span>
-                        </p>
-                      </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="flex-1 min-w-0">
+                          <h3 className="text-base font-semibold text-white truncate">{carteira.nome}</h3>
+                          <p className="text-xs text-slate-400 mt-0.5">
+                            Código: <span className="font-mono font-medium text-emerald-400">{carteira.codigoUnico}</span>
+                          </p>
+                        </div>
 
-                      <div className="flex items-center gap-2 flex-shrink-0">
-                        {carteira.situacaoAtual === 'REGULAR' ? (
-                          <span className="px-3 py-1.5 bg-green-500/20 text-green-400 rounded-lg text-xs font-bold uppercase tracking-wide border border-green-500/30">
-                            Regular
-                          </span>
-                        ) : carteira.situacaoAtual === 'DESLIGADO' ? (
-                          <span className="px-3 py-1.5 bg-red-500/20 text-red-400 rounded-lg text-xs font-bold uppercase tracking-wide border border-red-500/30">
-                            Desligado
-                          </span>
-                        ) : (
-                          <span className="px-3 py-1.5 bg-slate-500/20 text-slate-400 rounded-lg text-xs font-bold uppercase tracking-wide border border-slate-500/30">
-                            {carteira.situacaoAtual || 'Sem Status'}
-                          </span>
-                        )}
+                        <div className="flex-shrink-0">
+                          {carteira.situacaoAtual === 'REGULAR' ? (
+                            <span className="px-2 sm:px-3 py-1 sm:py-1.5 bg-green-500/20 text-green-400 rounded-lg text-xs font-bold uppercase tracking-wide border border-green-500/30 whitespace-nowrap">
+                              Regular
+                            </span>
+                          ) : carteira.situacaoAtual === 'DESLIGADO' ? (
+                            <span className="px-2 sm:px-3 py-1 sm:py-1.5 bg-red-500/20 text-red-400 rounded-lg text-xs font-bold uppercase tracking-wide border border-red-500/30 whitespace-nowrap">
+                              Desligado
+                            </span>
+                          ) : (
+                            <span className="px-2 sm:px-3 py-1 sm:py-1.5 bg-slate-500/20 text-slate-400 rounded-lg text-xs font-bold uppercase tracking-wide border border-slate-500/30 whitespace-nowrap">
+                              {carteira.situacaoAtual || 'Sem Status'}
+                            </span>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-2 flex-shrink-0">
+                  {/* Botões de ação */}
+                  <div className="flex flex-col sm:flex-row gap-2 sm:gap-2">
                     <button
                       onClick={() => navigate(`/admin/carteiras/${carteira.id}/qrcode`)}
-                      className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white rounded-lg text-xs font-semibold transition-all shadow-lg shadow-purple-500/25 border border-purple-500/50"
+                      className="flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white rounded-lg text-xs font-semibold transition-all shadow-lg shadow-purple-500/25 border border-purple-500/50"
                     >
                       <QrCode className="w-4 h-4" />
                       QR Code
@@ -181,7 +185,7 @@ export default function CarteirasListPage() {
 
                     <button
                       onClick={() => navigate(`/admin/carteiras/${carteira.id}/editar`)}
-                      className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-lg text-xs font-semibold transition-all shadow-lg shadow-emerald-500/25 border border-emerald-500/50"
+                      className="flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-lg text-xs font-semibold transition-all shadow-lg shadow-emerald-500/25 border border-emerald-500/50"
                     >
                       <Edit className="w-4 h-4" />
                       Editar
@@ -193,18 +197,18 @@ export default function CarteirasListPage() {
             </div>
 
             {totalPages > 1 && (
-              <div className="bg-slate-800/50 backdrop-blur-xl rounded-xl shadow-lg border border-emerald-500/20 px-4 py-3">
-                <div className="flex items-center justify-between">
+              <div className="bg-slate-800/50 backdrop-blur-xl rounded-xl shadow-lg border border-emerald-500/20 px-3 sm:px-4 py-3">
+                <div className="flex items-center justify-between gap-2">
                   <button
                     onClick={() => handlePageChange(currentPage - 1)}
                     disabled={currentPage === 1}
-                    className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-slate-700/50 border border-emerald-500/30 rounded-lg hover:bg-slate-700 hover:border-emerald-500/50 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                    className="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 text-xs sm:text-sm font-semibold text-white bg-slate-700/50 border border-emerald-500/30 rounded-lg hover:bg-slate-700 hover:border-emerald-500/50 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                   >
                     <ChevronLeft className="w-4 h-4" />
-                    Anterior
+                    <span className="hidden sm:inline">Anterior</span>
                   </button>
 
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-1 sm:gap-2">
                     {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
                       if (
                         page === 1 ||
@@ -215,7 +219,7 @@ export default function CarteirasListPage() {
                           <button
                             key={page}
                             onClick={() => handlePageChange(page)}
-                            className={`px-4 py-2 text-sm font-semibold rounded-lg transition-all ${
+                            className={`px-2.5 sm:px-4 py-2 text-xs sm:text-sm font-semibold rounded-lg transition-all ${
                               currentPage === page
                                 ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-lg shadow-emerald-500/25 border border-emerald-500/50'
                                 : 'text-slate-400 hover:text-white hover:bg-slate-700/50 border border-transparent'
@@ -226,7 +230,7 @@ export default function CarteirasListPage() {
                         );
                       } else if (page === currentPage - 2 || page === currentPage + 2) {
                         return (
-                          <span key={page} className="px-2 text-slate-500">
+                          <span key={page} className="px-1 sm:px-2 text-slate-500 text-xs sm:text-sm">
                             ...
                           </span>
                         );
@@ -238,9 +242,9 @@ export default function CarteirasListPage() {
                   <button
                     onClick={() => handlePageChange(currentPage + 1)}
                     disabled={currentPage === totalPages}
-                    className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-slate-700/50 border border-emerald-500/30 rounded-lg hover:bg-slate-700 hover:border-emerald-500/50 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                    className="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 text-xs sm:text-sm font-semibold text-white bg-slate-700/50 border border-emerald-500/30 rounded-lg hover:bg-slate-700 hover:border-emerald-500/50 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                   >
-                    Próxima
+                    <span className="hidden sm:inline">Próxima</span>
                     <ChevronRight className="w-4 h-4" />
                   </button>
                 </div>
