@@ -25,13 +25,23 @@ export default function ValidationPage() {
     }
   }, [codigo]);
 
-  const loadCarteiraData = async (codigoUnico: string) => {
+  const loadCarteiraData = async (codigoUnico: string, retryCount = 0) => {
     setLoading(true);
     setError(null);
     setIsInativa(false);
 
     try {
-      const response = await fetch(API_ENDPOINTS.CARTEIRA_PUBLIC(codigoUnico));
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
+
+      const response = await fetch(API_ENDPOINTS.CARTEIRA_PUBLIC(codigoUnico), {
+        signal: controller.signal,
+        headers: {
+          'Accept': 'application/json',
+        },
+      });
+
+      clearTimeout(timeoutId);
 
       if (!response.ok) {
         if (response.status === 404) {
@@ -48,10 +58,20 @@ export default function ValidationPage() {
       // Verifica se a carteira está inativa
       setIsInativa(!apiData.ativo);
     } catch (err) {
+      // Retry até 2 vezes em caso de erro de rede
+      if (retryCount < 2 && (err instanceof Error && (err.name === 'AbortError' || err.message.includes('fetch')))) {
+        console.log(`Tentando novamente... (${retryCount + 1}/2)`);
+        setTimeout(() => loadCarteiraData(codigoUnico, retryCount + 1), 1000);
+        return;
+      }
+
       setError(err instanceof Error ? err.message : 'Erro ao carregar carteira');
       console.error('Erro ao carregar carteira:', err);
-    } finally {
       setLoading(false);
+    } finally {
+      if (retryCount === 0) {
+        setLoading(false);
+      }
     }
   };
 
