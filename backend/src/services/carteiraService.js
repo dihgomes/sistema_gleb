@@ -197,10 +197,15 @@ class CarteiraService {
     console.log('='.repeat(80));
     
     const qrCodeBase64 = await QRCode.toDataURL(url, {
-      errorCorrectionLevel: 'H',
+      errorCorrectionLevel: 'M',  // Mudado de H para M (melhor compatibilidade)
       type: 'image/png',
-      width: 300,
-      margin: 2
+      quality: 1,
+      width: 400,  // Aumentado para melhor leitura
+      margin: 4,   // Margem maior para melhor leitura
+      color: {
+        dark: '#000000',
+        light: '#FFFFFF'
+      }
     });
 
     console.log('✅ QR Code gerado com sucesso');
