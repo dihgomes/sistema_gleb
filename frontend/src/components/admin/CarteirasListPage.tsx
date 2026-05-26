@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Edit, QrCode, Search, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Edit, QrCode, Search, ChevronLeft, ChevronRight, User } from 'lucide-react';
 import AdminLayout from './AdminLayout';
 import { API_ENDPOINTS } from '../../config/api';
 import { getToken } from '../../utils/auth';
@@ -13,6 +13,7 @@ interface Carteira {
   situacaoAtual: string | null;
   ativo: boolean;
   criadoEm: string;
+  criadoPor?: string;
 }
 
 export default function CarteirasListPage() {
@@ -173,23 +174,43 @@ export default function CarteirasListPage() {
                     </div>
                   </div>
 
-                  {/* Botões de ação */}
-                  <div className="flex flex-col sm:flex-row gap-2 sm:gap-2">
-                    <button
-                      onClick={() => navigate(`/admin/carteiras/${carteira.id}/qrcode`)}
-                      className="flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white rounded-lg text-xs font-semibold transition-all shadow-lg shadow-purple-500/25 border border-purple-500/50"
-                    >
-                      <QrCode className="w-4 h-4" />
-                      QR Code
-                    </button>
+                  {/* Botões de ação e informação de criação */}
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+                    <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+                      <button
+                        onClick={() => navigate(`/admin/carteiras/${carteira.id}/qrcode`)}
+                        className="flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white rounded-lg text-xs font-semibold transition-all shadow-lg shadow-purple-500/25 border border-purple-500/50"
+                      >
+                        <QrCode className="w-4 h-4" />
+                        QR Code
+                      </button>
 
-                    <button
-                      onClick={() => navigate(`/admin/carteiras/${carteira.id}/editar`)}
-                      className="flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-lg text-xs font-semibold transition-all shadow-lg shadow-emerald-500/25 border border-emerald-500/50"
-                    >
-                      <Edit className="w-4 h-4" />
-                      Editar
-                    </button>
+                      <button
+                        onClick={() => navigate(`/admin/carteiras/${carteira.id}/editar`)}
+                        className="flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-lg text-xs font-semibold transition-all shadow-lg shadow-emerald-500/25 border border-emerald-500/50"
+                      >
+                        <Edit className="w-4 h-4" />
+                        Editar
+                      </button>
+                    </div>
+
+                    {/* Informação de criação */}
+                    <div className="flex items-center gap-1.5 flex-shrink-0">
+                      <User className="w-3.5 h-3.5 text-slate-500" />
+                      <span className="text-xs text-slate-500 whitespace-nowrap">
+                        {carteira.criadoPor ? (
+                          <>Criado por: <span className="text-slate-400 font-medium">{carteira.criadoPor}</span></>
+                        ) : (
+                          <>Criado em: <span className="text-slate-400 font-medium">
+                            {new Date(carteira.criadoEm).toLocaleDateString('pt-BR', { 
+                              day: '2-digit', 
+                              month: '2-digit', 
+                              year: 'numeric' 
+                            })}
+                          </span></>
+                        )}
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
