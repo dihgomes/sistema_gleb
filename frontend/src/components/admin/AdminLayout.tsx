@@ -31,14 +31,12 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex flex-col relative overflow-hidden">
-      {/* Background effects */}
       <div className="fixed inset-0 z-0 pointer-events-none">
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#10b98108_1px,transparent_1px),linear-gradient(to_bottom,#10b98108_1px,transparent_1px)] bg-[size:4rem_4rem]"></div>
         <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500/5 rounded-full blur-3xl"></div>
         <div className="absolute bottom-0 left-0 w-96 h-96 bg-teal-500/5 rounded-full blur-3xl"></div>
       </div>
 
-      {/* Header */}
       <header className="bg-slate-800/50 backdrop-blur-xl border-b border-emerald-500/10 shadow-lg relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
@@ -69,7 +67,6 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         </div>
       </header>
 
-      {/* Navigation */}
       <nav className="bg-slate-800/30 backdrop-blur-sm border-b border-emerald-500/10 relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex gap-2 overflow-x-auto">
@@ -96,12 +93,10 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         </div>
       </nav>
 
-      {/* Main content */}
       <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full relative z-10">
         {children}
       </main>
 
-      {/* Footer */}
       <footer className="bg-slate-800/30 backdrop-blur-sm border-t border-emerald-500/10 relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <p className="text-center text-sm text-slate-400">
@@ -113,7 +108,6 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         </div>
       </footer>
 
-      {/* Modal de Logout */}
       <Modal
         isOpen={showLogoutModal}
         onClose={() => setShowLogoutModal(false)}

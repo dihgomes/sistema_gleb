@@ -3,6 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const routes = require('./routes');
+const logger = require('./utils/logger');
 
 const app = express();
 const PORT = process.env.PORT || 3002;
@@ -17,14 +18,11 @@ const allowedOrigins = [
 
 app.use(cors({
   origin: (origin, callback) => {
-    console.log('🔐 [CORS] Verificando origem:', origin || 'sem origem');
-    
     if (!origin || allowedOrigins.includes(origin)) {
-      console.log('✅ [CORS] Origem permitida');
+      logger.cors(origin, true);
       callback(null, true);
     } else {
-      console.log('❌ [CORS] Origem bloqueada:', origin);
-      console.log('📋 [CORS] Origens permitidas:', allowedOrigins);
+      logger.cors(origin, false);
       callback(new Error('Not allowed by CORS'));
     }
   },
@@ -33,13 +31,25 @@ app.use(cors({
 
 // Middleware de log para TODAS as requisições
 app.use((req, res, next) => {
-  console.log('\n' + '='.repeat(80));
-  console.log(`📥 [${new Date().toISOString()}] ${req.method} ${req.url}`);
-  console.log('🌐 Origin:', req.headers.origin || 'N/A');
-  console.log('🔗 Referer:', req.headers.referer || 'N/A');
-  console.log('📱 User-Agent:', req.headers['user-agent']?.substring(0, 50) + '...' || 'N/A');
-  console.log('🔑 Headers:', Object.keys(req.headers).join(', '));
-  console.log('='.repeat(80));
+  // Ignora logs de health check e arquivos estáticos
+  if (req.url === '/health' || req.url.startsWith('/uploads')) {
+    return next();
+  }
+  
+  logger.request(req.method, req.url, {
+    origin: req.headers.origin,
+    ip: req.ip || req.connection.remoteAddress,
+    user: req.user?.nome
+  });
+  
+  // Intercepta a resposta para logar o status
+  const originalSend = res.send;
+  res.send = function(data) {
+    logger.response(res.statusCode);
+    logger.footer();
+    return originalSend.call(this, data);
+  };
+  
   next();
 });
 
@@ -63,7 +73,8 @@ app.get('/health', (req, res) => {
 
 // Middleware de erro global
 app.use((err, req, res, next) => {
-  console.error('Erro:', err);
+  logger.error('Erro no servidor', err);
+  logger.footer();
 
   if (err.code === 'LIMIT_FILE_SIZE') {
     return res.status(400).json({ 
@@ -88,18 +99,13 @@ app.use((req, res) => {
 
 // Iniciar servidor
 app.listen(PORT, () => {
-  console.log('\n' + '='.repeat(80));
-  console.log('🚀 SERVIDOR INICIADO COM SUCESSO');
-  console.log('='.repeat(80));
-  console.log(`📍 Porta: ${PORT}`);
-  console.log(`🌐 API Local: http://localhost:${PORT}`);
-  console.log(`🏥 Health Check: http://localhost:${PORT}/health`);
-  console.log(`🔒 NODE_ENV: ${process.env.NODE_ENV}`);
-  console.log(`🌍 FRONTEND_URL: ${process.env.FRONTEND_URL}`);
-  console.log('📋 Origens CORS permitidas:');
-  allowedOrigins.forEach(origin => console.log(`   - ${origin}`));
-  console.log('='.repeat(80));
-  console.log('✅ Aguardando requisições...\n');
+  logger.serverStart({
+    port: PORT,
+    env: process.env.NODE_ENV || 'development',
+    localUrl: `http://localhost:${PORT}`,
+    healthUrl: `http://localhost:${PORT}/health`,
+    allowedOrigins: allowedOrigins
+  });
 });
 
 module.exports = app;

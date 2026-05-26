@@ -1,4 +1,5 @@
 const carteiraService = require('../services/carteiraService');
+const logger = require('../utils/logger');
 const path = require('path');
 
 /**
@@ -32,6 +33,13 @@ class CarteiraController {
       };
 
       const carteira = await carteiraService.criar(data, fotoUrl);
+      
+      logger.carteira('create', {
+        nome: carteira.nome,
+        codigo: carteira.codigoUnico,
+        loja: carteira.loja,
+        admin: req.user?.nome || 'Sistema'
+      });
 
       return res.status(201).json(carteira);
     } catch (error) {
@@ -90,6 +98,13 @@ class CarteiraController {
       };
 
       const carteira = await carteiraService.atualizar(id, data, fotoUrl);
+      
+      logger.carteira('update', {
+        nome: carteira.nome,
+        codigo: carteira.codigoUnico,
+        loja: carteira.loja,
+        admin: req.user?.nome || 'Sistema'
+      });
 
       return res.json(carteira);
     } catch (error) {
@@ -126,6 +141,13 @@ class CarteiraController {
     try {
       const { id } = req.params;
       const carteira = await carteiraService.deletar(id);
+      
+      logger.carteira('delete', {
+        nome: carteira.nome,
+        codigo: carteira.codigoUnico,
+        admin: req.user?.nome || 'Sistema'
+      });
+      
       return res.json({ message: 'Carteira desativada com sucesso', carteira });
     } catch (error) {
       return res.status(400).json({ error: error.message });
@@ -140,6 +162,13 @@ class CarteiraController {
     try {
       const { id } = req.params;
       const result = await carteiraService.gerarQRCode(id);
+      
+      logger.carteira('qrcode', {
+        nome: result.nome,
+        codigo: result.codigoUnico,
+        admin: req.user?.nome || 'Sistema'
+      });
+      
       return res.json(result);
     } catch (error) {
       return res.status(400).json({ error: error.message });

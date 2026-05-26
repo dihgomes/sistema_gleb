@@ -1,13 +1,10 @@
 import { CarteiraPublica, CarteiraDisplay } from '../types/carteira';
 
-// Função para formatar data de yyyy-mm-dd para dd/mm/yyyy
 function formatDateToBrazilian(dateString: string): string {
   if (!dateString) return '';
   
-  // Se já estiver no formato brasileiro, retorna como está
   if (dateString.includes('/')) return dateString;
-  
-  // Converte de yyyy-mm-dd para dd/mm/yyyy
+
   const [year, month, day] = dateString.split('-');
   return `${day}/${month}/${year}`;
 }

@@ -1,4 +1,5 @@
 const authService = require('../services/authService');
+const logger = require('../utils/logger');
 
 /**
  * Controller de autenticação
@@ -17,9 +18,12 @@ class AuthController {
       }
 
       const result = await authService.login(email, senha);
+      
+      logger.auth('login', result.admin.nome, true);
 
       return res.json(result);
     } catch (error) {
+      logger.auth('login', req.body.email, false);
       return res.status(401).json({ error: error.message });
     }
   }

@@ -5,12 +5,12 @@ export interface DataMaconica {
 
 export interface Loja {
   loja: string;
-  data?: string; // Mantido para compatibilidade com dados antigos
+  data?: string;
   dataFiliacao?: string;
-  desligamento?: string; // Mantido para compatibilidade
+  desligamento?: string;
   dataDesligamento?: string;
   justificativaDesligamento?: string;
-  tipo?: string; // Mantido para compatibilidade
+  tipo?: string;
 }
 
 export interface CarteiraPublica {

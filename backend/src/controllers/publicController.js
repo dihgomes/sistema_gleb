@@ -1,4 +1,5 @@
 const carteiraService = require('../services/carteiraService');
+const logger = require('../utils/logger');
 
 /**
  * Controller de rotas públicas
@@ -12,28 +13,19 @@ class PublicController {
     try {
       const { codigo_unico } = req.params;
       
-      console.log('='.repeat(60));
-      console.log('🔍 [PUBLIC] Requisição de validação de carteira');
-      console.log('📋 Código único:', codigo_unico);
-      console.log('🌐 Origin:', req.headers.origin);
-      console.log('🔗 Referer:', req.headers.referer);
-      console.log('📱 User-Agent:', req.headers['user-agent']);
-      console.log('='.repeat(60));
-      
       const carteira = await carteiraService.buscarPorCodigo(codigo_unico);
       
-      console.log('✅ Carteira encontrada:', carteira.nome);
-      console.log('📊 Status ativo:', carteira.ativo);
-      console.log('='.repeat(60));
+      logger.carteira('view', {
+        nome: carteira.nome,
+        codigo: codigo_unico,
+        ip: req.ip || req.connection.remoteAddress
+      });
 
       // Retorna a carteira independente do status ativo
       // O frontend exibirá um indicador se estiver inativa
       return res.json(carteira);
     } catch (error) {
-      console.log('❌ [PUBLIC] Erro ao buscar carteira');
-      console.log('🔴 Código único:', req.params.codigo_unico);
-      console.log('🔴 Erro:', error.message);
-      console.log('='.repeat(60));
+      logger.error(`Carteira não encontrada: ${req.params.codigo_unico}`, error);
       return res.status(404).json({ error: 'Carteira não encontrada' });
     }
   }
