@@ -1,0 +1,70 @@
+version: '3.3'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - gleb-network
+    ports:
+      - "5432:5432"
+
+  backend:
+    image: node:20-alpine
+    working_dir: /app
+    command: sh -c "npm install && npx prisma generate && npx prisma migrate deploy && node src/server.js"
+    environment:
+      NODE_ENV: production
+      PORT: 3002
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      JWT_SECRET: ${JWT_SECRET}
+      ADMIN_SENHA: ${ADMIN_SENHA}
+      FRONTEND_URL: https://sistema.gleb.scrb.org.br
+    volumes:
+      - ./backend:/app
+    depends_on:
+      - postgres
+    networks:
+      - gleb-network
+    ports:
+      - "3002:3002"
+
+  frontend:
+    image: node:20-alpine
+    working_dir: /app
+    command: sh -c "npm install && npm run build && npx serve -s dist -l 80"
+    environment:
+      VITE_API_URL: https://sistema.gleb.scrb.org.br/api
+    volumes:
+      - ./frontend:/app
+    networks:
+      - gleb-network
+    ports:
+      - "5173:80"
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - nginx_cache:/var/cache/nginx
+    depends_on:
+      - backend
+      - frontend
+    networks:
+      - gleb-network
+
+volumes:
+  postgres_data:
+  nginx_cache:
+
+networks:
+  gleb-network:
