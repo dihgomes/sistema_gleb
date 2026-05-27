@@ -2,6 +2,7 @@ version: '3.3'
 
 services:
   postgres:
+    container_name: sistema_gleb_postgres
     image: postgres:16-alpine
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
@@ -16,6 +17,7 @@ services:
     restart: unless-stopped
 
   backend:
+    container_name: sistema_gleb_backend
     image: node:20-alpine
     working_dir: /app
     command: >
@@ -47,6 +49,7 @@ services:
       - "traefik.http.services.gleb-backend.loadbalancer.server.port=3002"
 
   frontend:
+    container_name: sistema_gleb_frontend
     image: node:20-alpine
     working_dir: /app
     command: >
