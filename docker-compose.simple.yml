@@ -38,14 +38,14 @@ services:
     depends_on:
       - postgres
     networks:
-      - traefik_traefik
+      - scrb
       - gleb-network
-    restart: unless-stopped
     labels:
       - "traefik.enable=true"
+      - "traefik.docker.network=scrb"
       - "traefik.http.routers.gleb-backend.rule=Host(`sistema.gleb.scrb.org.br`) && PathPrefix(`/api`)"
       - "traefik.http.routers.gleb-backend.entrypoints=websecure"
-      - "traefik.http.routers.gleb-backend.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.gleb-backend.tls.certresolver=letsencryptresolver"
       - "traefik.http.services.gleb-backend.loadbalancer.server.port=3002"
 
   frontend:
@@ -64,14 +64,14 @@ services:
     environment:
       VITE_API_URL: https://sistema.gleb.scrb.org.br/api
     networks:
-      - traefik_traefik
+      - scrb
       - gleb-network
-    restart: unless-stopped
     labels:
       - "traefik.enable=true"
+      - "traefik.docker.network=scrb"
       - "traefik.http.routers.gleb-frontend.rule=Host(`sistema.gleb.scrb.org.br`)"
       - "traefik.http.routers.gleb-frontend.entrypoints=websecure"
-      - "traefik.http.routers.gleb-frontend.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.gleb-frontend.tls.certresolver=letsencryptresolver"
       - "traefik.http.services.gleb-frontend.loadbalancer.server.port=3000"
 
 volumes:
@@ -80,5 +80,5 @@ volumes:
 
 networks:
   gleb-network:
-  traefik_traefik:
+  scrb:
     external: true
