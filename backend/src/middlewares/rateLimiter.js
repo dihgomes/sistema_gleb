@@ -8,9 +8,6 @@ export const loginLimiter = rateLimit({
   },
   standardHeaders: true,
   legacyHeaders: false,
-  keyGenerator: (req) => {
-    return `${req.ip}-${req.headers['user-agent']}`;
-  },
   skipSuccessfulRequests: true
 });
 
