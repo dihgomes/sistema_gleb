@@ -57,9 +57,8 @@ services:
       git clone https://github.com/dihgomes/sistema_gleb.git . &&
       cd frontend &&
       npm install &&
-      npm install -g serve &&
       npm run build &&
-      exec serve -s dist -l 3000 -n
+      npx http-server dist -p 3000 -a 0.0.0.0 --proxy http://localhost:3000? -c-1
       "
     environment:
       VITE_API_URL: https://sistema.gleb.scrb.org.br/api
