@@ -10,6 +10,7 @@ services:
       PGDATA: /var/lib/postgresql/data/pgdata
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - backup_upload:/backup
     networks:
       - gleb-network
     ports:
@@ -65,6 +66,7 @@ services:
 volumes:
   postgres_data:
   nginx_cache:
+  backup_upload:
 
 networks:
   gleb-network:
