@@ -87,7 +87,6 @@ export default function Dashboard() {
   return (
     <AdminLayout>
       <div className="space-y-6">
-        {/* Header */}
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-3xl font-bold text-white">Dashboard</h2>
@@ -99,7 +98,6 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Stats Cards */}
         {loading ? (
           <div className="text-center py-12">
             <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-500"></div>
@@ -137,7 +135,6 @@ export default function Dashboard() {
           </div>
         )}
 
-        {/* Ações Rápidas */}
         <div className="bg-slate-800/50 backdrop-blur-xl rounded-xl border border-emerald-500/20 shadow-lg p-6">
           <h3 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
             <div className="w-1 h-6 bg-gradient-to-b from-emerald-500 to-teal-500 rounded-full"></div>

@@ -13,7 +13,10 @@ interface Carteira {
   situacaoAtual: string | null;
   ativo: boolean;
   criadoEm: string;
-  criadoPor?: string;
+  criadoPor?: {
+    nome: string;
+    email: string;
+  };
 }
 
 export default function CarteirasListPage() {
@@ -73,7 +76,6 @@ export default function CarteirasListPage() {
   return (
     <AdminLayout>
       <div className="space-y-6">
-        {/* Header */}
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-3xl font-bold text-white">Carteiras Cadastradas</h2>
@@ -88,7 +90,6 @@ export default function CarteirasListPage() {
           </button>
         </div>
 
-        {/* Search bar */}
         <div className="bg-slate-800/50 backdrop-blur-xl rounded-xl shadow-lg p-4 border border-emerald-500/20">
           <div className="relative">
             <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
@@ -130,7 +131,6 @@ export default function CarteirasListPage() {
                 className="bg-slate-800/50 backdrop-blur-xl rounded-xl border border-emerald-500/20 hover:border-emerald-500/40 shadow-lg hover:shadow-emerald-500/10 transition-all duration-300 overflow-hidden group"
               >
                 <div className="p-4 sm:p-5">
-                  {/* Header com foto, nome e status */}
                   <div className="flex items-start gap-3 sm:gap-4 mb-3">
                     <div className="flex-shrink-0">
                       {carteira.fotoUrl ? (
@@ -174,7 +174,6 @@ export default function CarteirasListPage() {
                     </div>
                   </div>
 
-                  {/* Botões de ação e informação de criação */}
                   <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
                     <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
                       <button
@@ -194,12 +193,20 @@ export default function CarteirasListPage() {
                       </button>
                     </div>
 
-                    {/* Informação de criação */}
                     <div className="flex items-center gap-1.5 flex-shrink-0">
                       <User className="w-3.5 h-3.5 text-slate-500" />
                       <span className="text-xs text-slate-500 whitespace-nowrap">
-                        {carteira.criadoPor ? (
-                          <>Criado por: <span className="text-slate-400 font-medium">{carteira.criadoPor}</span></>
+                        {carteira.criadoPor?.nome ? (
+                          <>
+                            Criado por <span className="text-slate-400 font-medium">{carteira.criadoPor.nome}</span> em{' '}
+                            <span className="text-slate-400 font-medium">
+                              {new Date(carteira.criadoEm).toLocaleDateString('pt-BR', { 
+                                day: '2-digit', 
+                                month: '2-digit', 
+                                year: 'numeric' 
+                              })}
+                            </span>
+                          </>
                         ) : (
                           <>Criado em: <span className="text-slate-400 font-medium">
                             {new Date(carteira.criadoEm).toLocaleDateString('pt-BR', { 

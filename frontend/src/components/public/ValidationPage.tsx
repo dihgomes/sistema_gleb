@@ -149,15 +149,16 @@ export default function ValidationPage() {
           </div>
         )}
 
-        <div className="bg-white rounded-xl shadow-md overflow-hidden border border-blue-100">
-          <div className="h-1.5 bg-gradient-to-r from-blue-900 via-blue-600 to-yellow-400" />
+        <div className="bg-white rounded-2xl shadow-2xl overflow-hidden border-2" style={{ borderColor: '#6F63C7' }}>
+          <div className="h-2" style={{ background: 'linear-gradient(to right, #6F63C7, #8B7FD9, #FCD34D)' }} />
 
-          <div className="p-5 sm:p-8">
-            <div className="flex flex-col items-center gap-8 sm:flex-row sm:items-start sm:gap-10">
+          <div className="p-6 sm:p-10">
+            <div className="flex flex-col items-center gap-10 sm:flex-row sm:items-start sm:gap-12">
               <div className="flex-shrink-0">
                 <PhotoCard
                   foto={data.foto}
                   nome={data.nome}
+                  unidade={data.unidadesAdministradas}
                 />
               </div>
 
@@ -167,7 +168,7 @@ export default function ValidationPage() {
             </div>
           </div>
 
-          <div className="h-1 bg-gradient-to-r from-yellow-400 via-blue-600 to-blue-900" />
+          <div className="h-2" style={{ background: 'linear-gradient(to right, #FCD34D, #8B7FD9, #6F63C7)' }} />
         </div>
 
         <FooterValidation

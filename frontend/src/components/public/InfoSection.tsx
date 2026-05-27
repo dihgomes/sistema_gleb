@@ -7,8 +7,11 @@ interface SectionHeaderProps {
 
 function SectionHeader({ title }: SectionHeaderProps) {
   return (
-    <div className="bg-blue-800 px-4 py-2 rounded-t-md">
-      <h3 className="text-white text-xs font-bold tracking-widest uppercase">{title}</h3>
+    <div className="px-5 py-3 rounded-t-md shadow-sm" style={{ backgroundColor: '#6F63C7' }}>
+      <h3 className="text-white text-xs font-bold tracking-widest uppercase flex items-center gap-2">
+        <span className="w-1 h-4 bg-yellow-400 rounded-full"></span>
+        {title}
+      </h3>
     </div>
   );
 }
@@ -43,67 +46,40 @@ function SituacaoCard({ situacao }: SituacaoProps) {
   const Icon = cfg.icon;
 
   return (
-    <div className={`flex items-center gap-3 px-4 py-3 ${cfg.bg} border ${cfg.border} rounded-b-md`}>
-      <Icon className={`w-7 h-7 flex-shrink-0 ${cfg.iconColor}`} />
-      <div>
-        <p className="text-[10px] text-gray-500 uppercase tracking-widest">Status</p>
-        <p className={`text-xl font-extrabold tracking-widest ${cfg.text}`}>{cfg.label}</p>
+    <div className={`flex items-center gap-4 px-5 py-4 ${cfg.bg} border ${cfg.border} rounded-b-md shadow-sm`}>
+      <Icon className={`w-8 h-8 flex-shrink-0 ${cfg.iconColor}`} />
+      <div className="flex-1">
+        <p className="text-[10px] text-gray-600 uppercase tracking-widest mb-1">Status</p>
+        <p className={`text-2xl font-extrabold tracking-wide ${cfg.text}`}>{cfg.label}</p>
       </div>
-      <span className={`ml-auto w-3 h-3 rounded-full ${cfg.dot} shadow`} />
+      <span className={`w-4 h-4 rounded-full ${cfg.dot} shadow-md animate-pulse`} />
     </div>
   );
 }
 
-interface DatasMaconicasProps {
-  datas: MasonData['datasMaconicas'];
+interface InfoItemProps {
+  label: string;
+  value: string | null | undefined;
 }
 
-function DatasMaconicasBlock({ datas }: DatasMaconicasProps) {
+function InfoItem({ label, value }: InfoItemProps) {
   return (
-    <div className="border border-gray-200 rounded-b-md divide-y divide-gray-100">
-      {datas.map((d, i) => (
-        <div key={i} className="px-4 py-3 bg-white hover:bg-blue-50/40 transition-colors">
-          <p className="text-[10px] text-blue-700 font-bold uppercase tracking-widest mb-0.5">{d.grau}</p>
-          <p className="text-sm text-gray-800 font-semibold uppercase">
-            {d.data}
-            <span className="mx-1.5 text-gray-400">—</span>
-            <span className="font-normal text-gray-700">{d.loja}</span>
-          </p>
-        </div>
-      ))}
+    <div className="px-5 py-4 bg-white border-b border-gray-100 last:border-b-0 hover:bg-purple-50/30 transition-colors">
+      <p className="text-[10px] font-bold uppercase tracking-widest mb-2" style={{ color: '#6F63C7' }}>{label}</p>
+      <p className="text-base text-gray-900 font-semibold">
+        {value || <span className="text-gray-400 font-normal italic">Não informado</span>}
+      </p>
     </div>
   );
 }
 
-interface LojasProps {
-  lojas: MasonData['lojas'];
-}
-
-function LojasBlock({ lojas }: LojasProps) {
+function DadosPessoaisBlock({ data }: { data: MasonData }) {
   return (
-    <div className="border border-gray-200 rounded-b-md divide-y divide-gray-100">
-      {lojas.map((l, i) => (
-        <div key={i} className="px-4 py-3 bg-white hover:bg-blue-50/40 transition-colors">
-          <p className="text-sm font-semibold text-gray-800 mb-1 uppercase">{l.nome}</p>
-          <div className="flex flex-wrap gap-x-4 gap-y-0.5">
-            <span className="text-xs text-gray-500">
-              <span className="font-medium text-blue-800">Filiação:</span> {l.filiacao}
-            </span>
-            <span className="text-xs text-gray-500">
-              <span className="font-medium text-blue-800">Desligamento:</span>{' '}
-              {l.desligamento ?? '--'}
-            </span>
-          </div>
-          {l.justificativa && (
-            <div className="mt-2 pt-2 border-t border-gray-100">
-              <p className="text-xs text-gray-600 uppercase">
-                <span className="font-medium text-blue-800">Justificativa:</span>{' '}
-                {l.justificativa}
-              </p>
-            </div>
-          )}
-        </div>
-      ))}
+    <div className="border border-gray-200 rounded-b-md overflow-hidden">
+      <InfoItem label="CPF" value={data.cpf} />
+      <InfoItem label="Data de Nascimento" value={data.dataNascimento} />
+      <InfoItem label="Cargo/Função" value={data.cargo} />
+      <InfoItem label="Unidades Administradas" value={data.unidadesAdministradas} />
     </div>
   );
 }
@@ -114,9 +90,9 @@ interface InfoSectionProps {
 
 export default function InfoSection({ data }: InfoSectionProps) {
   return (
-    <div className="flex flex-col gap-5 w-full">
-      <div className="text-center border-b border-blue-100 pb-4">
-        <h2 className="text-lg sm:text-xl font-extrabold text-blue-900 leading-tight tracking-wide uppercase">
+    <div className="flex flex-col gap-6 w-full">
+      <div className="text-center border-b-2 pb-5" style={{ borderColor: '#6F63C7' }}>
+        <h2 className="text-xl sm:text-2xl font-black leading-tight tracking-tight uppercase" style={{ color: '#6F63C7' }}>
           {data.nome}
         </h2>
       </div>
@@ -127,13 +103,8 @@ export default function InfoSection({ data }: InfoSectionProps) {
       </div>
 
       <div>
-        <SectionHeader title="Datas Maçônicas" />
-        <DatasMaconicasBlock datas={data.datasMaconicas} />
-      </div>
-
-      <div>
-        <SectionHeader title="Lojas" />
-        <LojasBlock lojas={data.lojas} />
+        <SectionHeader title="Dados Pessoais" />
+        <DadosPessoaisBlock data={data} />
       </div>
     </div>
   );

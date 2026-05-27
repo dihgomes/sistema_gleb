@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { isAuthenticated } from '../../utils/auth';
+import InactivityMonitor from '../common/InactivityMonitor';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -19,5 +20,9 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
     return null;
   }
 
-  return <>{children}</>;
+  return (
+    <InactivityMonitor>
+      {children}
+    </InactivityMonitor>
+  );
 }

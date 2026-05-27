@@ -1,22 +1,11 @@
 import { useState, useEffect, FormEvent } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Save, ArrowLeft, Trash2, Plus, AlertCircle, Upload, X } from 'lucide-react';
+import { Save, ArrowLeft, AlertCircle, Upload, X } from 'lucide-react';
 import AdminLayout from './AdminLayout';
 import Input from '../ui/Input';
 import { API_ENDPOINTS } from '../../config/api';
 import { getToken } from '../../utils/auth';
 import { useToast } from '../../contexts/ToastContext';
-
-interface DataMaconica {
-  titulo: string;
-  data: string;
-}
-
-interface Loja {
-  dataFiliacao: string;
-  dataDesligamento: string;
-  bloqueado?: boolean;
-}
 
 export default function CarteiraFormPage() {
   const { showToast } = useToast();
@@ -26,30 +15,28 @@ export default function CarteiraFormPage() {
 
   const [loading, setLoading] = useState(false);
   const [nome, setNome] = useState('');
-  const [loja, setLoja] = useState('');
+  const [cpf, setCpf] = useState('');
+  const [cargo, setCargo] = useState('');
+  const [dataNascimento, setDataNascimento] = useState('');
+  const [unidadesAdministradas, setUnidadesAdministradas] = useState('');
   const [situacaoAtual, setSituacaoAtual] = useState('REGULAR');
   const [isDesligada, setIsDesligada] = useState(false);
   const [foto, setFoto] = useState<File | null>(null);
   const [fotoPreview, setFotoPreview] = useState<string | null>(null);
-  const [datasMaconicas, setDatasMaconicas] = useState<DataMaconica[]>([
-    { titulo: '', data: '' }
-  ]);
-  const [lojas, setLojas] = useState<Loja[]>([
-    { dataFiliacao: '', dataDesligamento: '', bloqueado: false }
-  ]);
 
   useEffect(() => {
     if (isEdit) {
       loadCarteira();
     } else {
       setNome('');
-      setLoja('');
+      setCpf('');
+      setCargo('');
+      setDataNascimento('');
+      setUnidadesAdministradas('');
       setSituacaoAtual('REGULAR');
       setIsDesligada(false);
       setFoto(null);
       setFotoPreview(null);
-      setDatasMaconicas([{ titulo: '', data: '' }]);
-      setLojas([{ dataFiliacao: '', dataDesligamento: '', bloqueado: false }]);
     }
   }, [id, isEdit]);
 
@@ -64,18 +51,13 @@ export default function CarteiraFormPage() {
       if (response.ok) {
         const data = await response.json();
         setNome(data.nome);
-        setLoja(data.loja || '');
+        setCpf(data.cpf || '');
+        setCargo(data.cargo || '');
+        setDataNascimento(data.dataNascimento || '');
+        setUnidadesAdministradas(data.unidadesAdministradas || '');
         setSituacaoAtual(data.situacaoAtual || 'REGULAR');
         setIsDesligada(data.situacaoAtual === 'DESLIGADO');
         setFotoPreview(data.fotoUrl);
-        setDatasMaconicas(data.datasMaconicas || []);
-        
-        const lojasConvertidas = (data.lojas || []).map((l: any) => ({
-          dataFiliacao: l.data || l.dataFiliacao || '',
-          dataDesligamento: l.desligamento && l.desligamento !== '--' ? l.desligamento : (l.dataDesligamento || ''),
-          bloqueado: !!(l.data || l.dataFiliacao)
-        }));
-        setLojas(lojasConvertidas);
       }
     } catch (error) {
       console.error('Erro ao carregar carteira:', error);
@@ -94,40 +76,35 @@ export default function CarteiraFormPage() {
     }
   };
 
-  const addDataMaconica = () => {
-    setDatasMaconicas([...datasMaconicas, { titulo: '', data: '' }]);
-  };
-
-  const removeDataMaconica = (index: number) => {
-    setDatasMaconicas(datasMaconicas.filter((_, i) => i !== index));
-  };
-
-  const updateDataMaconica = (index: number, field: keyof DataMaconica, value: string) => {
-    const updated = [...datasMaconicas];
-    updated[index][field] = value;
-    setDatasMaconicas(updated);
-  };
-
-  const addLoja = () => {
-    setLojas([...lojas, { dataFiliacao: '', dataDesligamento: '', bloqueado: false }]);
-  };
-
-  const removeLoja = (index: number) => {
-    setLojas(lojas.filter((_, i) => i !== index));
-  };
-
-  const updateLoja = (index: number, field: keyof Loja, value: string | boolean) => {
-    const updated = [...lojas];
-    (updated[index] as any)[field] = value;
-    setLojas(updated);
-  };
-
-  const bloquearFiliacao = (index: number) => {
-    const updated = [...lojas];
-    if (updated[index].dataFiliacao.trim() !== '') {
-      updated[index].bloqueado = true;
-      setLojas(updated);
+  const handleCpfChange = (value: string) => {
+    const numbers = value.replace(/\D/g, '');
+    let formatted = numbers;
+    
+    if (numbers.length > 3) {
+      formatted = numbers.slice(0, 3) + '.' + numbers.slice(3);
     }
+    if (numbers.length > 6) {
+      formatted = formatted.slice(0, 7) + '.' + formatted.slice(7);
+    }
+    if (numbers.length > 9) {
+      formatted = formatted.slice(0, 11) + '-' + formatted.slice(11, 13);
+    }
+    
+    setCpf(formatted.slice(0, 14));
+  };
+
+  const handleDataNascimentoChange = (value: string) => {
+    const numbers = value.replace(/\D/g, '');
+    let formatted = numbers;
+    
+    if (numbers.length > 2) {
+      formatted = numbers.slice(0, 2) + '/' + numbers.slice(2);
+    }
+    if (numbers.length > 4) {
+      formatted = formatted.slice(0, 5) + '/' + formatted.slice(5);
+    }
+    
+    setDataNascimento(formatted.slice(0, 10));
   };
 
   const handleSubmit = async (e: FormEvent) => {
@@ -138,23 +115,16 @@ export default function CarteiraFormPage() {
       return;
     }
 
-    if (situacaoAtual === 'DESLIGADO') {
-      const temDataDesligamento = lojas.some(loja => loja.dataDesligamento.trim() !== '');
-      if (!temDataDesligamento) {
-        alert('Para definir a situação como DESLIGADO, é obrigatório preencher a data de desligamento na seção Lojas.');
-        return;
-      }
-    }
-
     setLoading(true);
 
     try {
       const formData = new FormData();
       formData.append('nome', nome);
-      formData.append('loja', loja);
+      formData.append('cpf', cpf);
+      formData.append('cargo', cargo);
+      formData.append('dataNascimento', dataNascimento);
+      formData.append('unidadesAdministradas', unidadesAdministradas);
       formData.append('situacaoAtual', situacaoAtual);
-      formData.append('datasMaconicas', JSON.stringify(datasMaconicas));
-      formData.append('lojas', JSON.stringify(lojas));
       
       if (foto) {
         formData.append('foto', foto);
@@ -235,26 +205,78 @@ export default function CarteiraFormPage() {
             <div className="p-6">
             
               <div className="space-y-4">
-                <Input
-                  label="Nome Completo *"
-                  type="text"
-                  value={nome}
-                  onChange={(e) => setNome(e.target.value)}
-                  placeholder="Digite o nome completo"
-                  required
-                  disabled={isDesligada}
-                />
-
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <Input
-                    label="Loja *"
+                    label="Nome Completo *"
                     type="text"
-                    value={loja}
-                    onChange={(e) => setLoja(e.target.value)}
-                    placeholder="Nome da Loja"
+                    value={nome}
+                    onChange={(e) => setNome(e.target.value)}
+                    placeholder="Digite o nome completo"
                     required
                     disabled={isDesligada}
                   />
+
+                  <div>
+                    <label className="block text-sm font-medium text-slate-300 mb-2">
+                      CPF
+                    </label>
+                    <input
+                      type="text"
+                      value={cpf}
+                      onChange={(e) => handleCpfChange(e.target.value)}
+                      placeholder="000.000.000-00"
+                      maxLength={14}
+                      disabled={isDesligada}
+                      className="w-full px-4 py-3 text-sm bg-slate-900/50 border border-emerald-500/30 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-slate-300 mb-2">
+                      Data de Nascimento
+                    </label>
+                    <input
+                      type="text"
+                      value={dataNascimento}
+                      onChange={(e) => handleDataNascimentoChange(e.target.value)}
+                      placeholder="DD/MM/AAAA"
+                      maxLength={10}
+                      disabled={isDesligada}
+                      className="w-full px-4 py-3 text-sm bg-slate-900/50 border border-emerald-500/30 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    />
+                  </div>
+
+                  <Input
+                    label="Cargo/Função"
+                    type="text"
+                    value={cargo}
+                    onChange={(e) => setCargo(e.target.value)}
+                    placeholder="Digite o cargo ou função"
+                    disabled={isDesligada}
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-slate-300 mb-2">
+                      Unidades Administradas
+                    </label>
+                    <select
+                      value={unidadesAdministradas}
+                      onChange={(e) => setUnidadesAdministradas(e.target.value)}
+                      disabled={isDesligada}
+                      className="w-full px-4 py-3 text-sm bg-slate-900/50 border border-emerald-500/30 rounded-lg text-white focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      <option value="">Selecione uma unidade</option>
+                      <option value="Santa Casa de Ruy Barbosa">Santa Casa de Ruy Barbosa</option>
+                      <option value="Instituto de Nefrologia Alaide Costa">Instituto de Nefrologia Alaide Costa</option>
+                      <option value="Hospital Regional Piemonte do Paraguaçu">Hospital Regional Piemonte do Paraguaçu</option>
+                      <option value="Hospital Metropolitano">Hospital Metropolitano</option>
+                      <option value="Hospital Estadual Litoral Norte">Hospital Estadual Litoral Norte</option>
+                    </select>
+                  </div>
 
                   <div>
                     <label className="block text-sm font-medium text-slate-300 mb-2">
@@ -269,11 +291,6 @@ export default function CarteiraFormPage() {
                       <option value="REGULAR">REGULAR</option>
                       {isEdit && <option value="DESLIGADO">DESLIGADO</option>}
                     </select>
-                    {isEdit && situacaoAtual === 'DESLIGADO' && (
-                      <p className="text-xs text-emerald-400 mt-1.5">
-                        Requer data de desligamento na seção Lojas
-                      </p>
-                    )}
                   </div>
                 </div>
 
@@ -336,159 +353,6 @@ export default function CarteiraFormPage() {
                 </div>
               </div>
             </div>
-          </div>
-
-          <div className="bg-slate-800/50 backdrop-blur-xl rounded-xl shadow-lg border border-green-500/20 overflow-hidden">
-            <div className="bg-gradient-to-r from-green-600/10 to-emerald-600/10 px-6 py-4 border-b border-green-500/20">
-              <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                <div className="w-1 h-6 bg-gradient-to-b from-green-500 to-emerald-500 rounded-full"></div>
-                Datas Maçônicas
-              </h3>
-              <p className="text-xs text-slate-400 mt-0.5">Graus e iniciações</p>
-            </div>
-            <div className="p-6">
-
-              <div className="space-y-3">
-                {datasMaconicas.map((data, index) => (
-                  <div key={index} className="flex flex-col md:flex-row gap-3 p-4 bg-slate-700/30 rounded-lg border border-green-500/20">
-                    <div className="flex-1">
-                      <label className="block text-xs font-medium text-slate-400 mb-1">Título</label>
-                      <input
-                        type="text"
-                        placeholder="Ex: Aprendiz"
-                        value={data.titulo}
-                        onChange={(e) => updateDataMaconica(index, 'titulo', e.target.value)}
-                        disabled={isDesligada}
-                        className="w-full px-3 py-2 text-sm bg-slate-900/50 border border-green-500/30 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-500/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                      />
-                    </div>
-                    <div className="flex-1">
-                      <label className="block text-xs font-medium text-slate-400 mb-1">Data</label>
-                      <input
-                        type="date"
-                        value={data.data}
-                        onChange={(e) => updateDataMaconica(index, 'data', e.target.value)}
-                        disabled={isDesligada}
-                        className="w-full px-3 py-2 text-sm bg-slate-900/50 border border-green-500/30 rounded-lg text-white focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-500/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                      />
-                    </div>
-                    <div className="flex gap-2 md:items-end">
-                      {index === datasMaconicas.length - 1 && !isDesligada && (
-                        <button
-                          type="button"
-                          onClick={addDataMaconica}
-                          className="flex items-center justify-center w-9 h-9 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 text-white rounded-lg transition-all shadow-lg shadow-green-500/25 border border-green-500/50"
-                          title="Adicionar nova data"
-                        >
-                          <Plus className="w-4 h-4" />
-                        </button>
-                      )}
-                      {datasMaconicas.length > 1 && !isDesligada && (
-                        <button
-                          type="button"
-                          onClick={() => removeDataMaconica(index)}
-                          className="flex items-center justify-center w-9 h-9 bg-red-500/20 hover:bg-red-500/30 text-red-400 border border-red-500/30 rounded-lg transition-all"
-                          title="Remover data"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-slate-800/50 backdrop-blur-xl rounded-xl shadow-lg border border-orange-500/20 overflow-hidden">
-            <div className="bg-gradient-to-r from-orange-600/10 to-amber-600/10 px-6 py-4 border-b border-orange-500/20">
-              <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                <div className="w-1 h-6 bg-gradient-to-b from-orange-500 to-amber-500 rounded-full"></div>
-                Lojas
-              </h3>
-              <p className="text-xs text-slate-400 mt-0.5">Filiações e desligamentos</p>
-            </div>
-            <div className="p-6">
-
-              <div className="space-y-3">
-                {lojas.map((loja, index) => {
-                  const isFiliacaoPreenchida = loja.dataFiliacao.trim() !== '';
-                  const isDesligamentoPreenchido = loja.dataDesligamento.trim() !== '';
-                  const podeAdicionarNova = isFiliacaoPreenchida && isDesligamentoPreenchido;
-
-                  return (
-                    <div key={index} className="flex flex-col md:flex-row gap-3 p-4 bg-slate-700/30 rounded-lg border border-orange-500/20">
-                      <div className="flex-1">
-                        <label className="block text-xs font-medium text-slate-400 mb-1">Filiação</label>
-                        <input
-                          type="date"
-                          value={loja.dataFiliacao}
-                          onChange={(e) => updateLoja(index, 'dataFiliacao', e.target.value)}
-                          onBlur={() => bloquearFiliacao(index)}
-                          disabled={loja.bloqueado || isDesligada}
-                          className={`w-full px-3 py-2 text-sm bg-slate-900/50 border border-orange-500/30 rounded-lg text-white focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition-all ${
-                            (loja.bloqueado || isDesligada) ? 'opacity-50 cursor-not-allowed' : ''
-                          }`}
-                        />
-                        {loja.bloqueado && (
-                          <p className="text-xs text-emerald-400 mt-1.5 flex items-center gap-1">
-                            <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full"></span>
-                            Bloqueado
-                          </p>
-                        )}
-                      </div>
-
-                      <div className="flex-1">
-                        <label className="block text-xs font-medium text-slate-400 mb-1">Desligamento</label>
-                        <input
-                          type="date"
-                          value={loja.dataDesligamento}
-                          onChange={(e) => updateLoja(index, 'dataDesligamento', e.target.value)}
-                          disabled={!isEdit || !loja.bloqueado || isDesligada}
-                          className={`w-full px-3 py-2 text-sm bg-slate-900/50 border border-orange-500/30 rounded-lg text-white focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition-all ${
-                            (!isEdit || !loja.bloqueado || isDesligada) ? 'opacity-50 cursor-not-allowed' : ''
-                          }`}
-                        />
-                        {!isEdit && (
-                          <p className="text-xs text-slate-500 mt-1.5">
-                            Crie a carteira primeiro
-                          </p>
-                        )}
-                        {isEdit && !loja.bloqueado && (
-                          <p className="text-xs text-slate-500 mt-1.5">
-                            Preencha a filiação primeiro
-                          </p>
-                        )}
-                      </div>
-
-                      <div className="flex gap-2 md:items-end">
-                        {index === lojas.length - 1 && podeAdicionarNova && !isDesligada && (
-                          <button
-                            type="button"
-                            onClick={addLoja}
-                            className="flex items-center justify-center w-9 h-9 bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-500 hover:to-amber-500 text-white rounded-lg transition-all shadow-lg shadow-orange-500/25 border border-orange-500/50"
-                            title="Adicionar nova loja"
-                          >
-                            <Plus className="w-4 h-4" />
-                          </button>
-                        )}
-                        {lojas.length > 1 && !isDesligada && (
-                          <button
-                            type="button"
-                            onClick={() => removeLoja(index)}
-                            className="flex items-center justify-center w-9 h-9 bg-red-500/20 hover:bg-red-500/30 text-red-400 border border-red-500/30 rounded-lg transition-all"
-                            title="Remover loja"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
-                        )}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-
           </div>
 
           <div className="bg-slate-800/50 backdrop-blur-xl rounded-xl shadow-lg border border-emerald-500/20 p-6">

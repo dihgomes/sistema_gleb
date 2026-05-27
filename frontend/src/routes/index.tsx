@@ -1,6 +1,7 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 import ValidationPage from '../components/public/ValidationPage';
 import LoginPage from '../components/admin/LoginPage';
+import TrocarSenhaPage from '../components/admin/TrocarSenhaPage';
 import Dashboard from '../components/admin/Dashboard';
 import CarteirasListPage from '../components/admin/CarteirasListPage';
 import CarteiraFormPage from '../components/admin/CarteiraFormPage';
@@ -19,6 +20,14 @@ export const router = createBrowserRouter([
   {
     path: '/admin/login',
     element: <LoginPage />,
+  },
+  {
+    path: '/admin/trocar-senha',
+    element: (
+      <ProtectedRoute>
+        <TrocarSenhaPage />
+      </ProtectedRoute>
+    ),
   },
   {
     path: '/admin/dashboard',

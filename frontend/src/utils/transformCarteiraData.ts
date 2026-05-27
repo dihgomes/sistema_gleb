@@ -12,20 +12,13 @@ function formatDateToBrazilian(dateString: string): string {
 export function transformCarteiraData(apiData: CarteiraPublica): CarteiraDisplay {
   return {
     nome: apiData.nome,
-    cim: 'N/A',
+    cim: apiData.codigo_unico || 'N/A',
     situacao: (apiData.situacao_atual?.toUpperCase() || 'REGULAR') as CarteiraDisplay['situacao'],
     foto: apiData.foto_url || '',
-    datasMaconicas: apiData.datas_maconicas.map(dm => ({
-      grau: dm.titulo,
-      data: formatDateToBrazilian(dm.data),
-      loja: apiData.loja || ''
-    })),
-    lojas: apiData.lojas.map(l => ({
-      nome: apiData.loja || l.loja || '',
-      filiacao: formatDateToBrazilian(l.dataFiliacao || l.data || ''),
-      desligamento: l.dataDesligamento ? formatDateToBrazilian(l.dataDesligamento) : (l.desligamento === '--' ? null : l.desligamento) || null,
-      justificativa: l.justificativaDesligamento
-    })),
+    cpf: apiData.cpf || null,
+    dataNascimento: apiData.data_nascimento ? formatDateToBrazilian(apiData.data_nascimento) : null,
+    cargo: apiData.cargo || null,
+    unidadesAdministradas: apiData.unidades_administradas || null,
     validadoEm: apiData.dados_validados_em,
     hashValidacao: apiData.hash_validacao
   };

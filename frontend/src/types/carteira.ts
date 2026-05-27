@@ -1,25 +1,12 @@
-export interface DataMaconica {
-  titulo: string;
-  data: string;
-}
-
-export interface Loja {
-  loja: string;
-  data?: string;
-  dataFiliacao?: string;
-  desligamento?: string;
-  dataDesligamento?: string;
-  justificativaDesligamento?: string;
-  tipo?: string;
-}
-
 export interface CarteiraPublica {
   nome: string;
-  loja?: string;
+  codigo_unico: string;
   foto_url: string | null;
   situacao_atual: string;
-  datas_maconicas: DataMaconica[];
-  lojas: Loja[];
+  cpf?: string | null;
+  data_nascimento?: string | null;
+  cargo?: string | null;
+  unidades_administradas?: string | null;
   dados_validados_em: string;
   hash_validacao: string;
   ativo: boolean;
@@ -30,17 +17,10 @@ export interface CarteiraDisplay {
   cim: string;
   situacao: 'REGULAR' | 'DESLIGADO';
   foto: string;
-  datasMaconicas: Array<{
-    grau: string;
-    data: string;
-    loja: string;
-  }>;
-  lojas: Array<{
-    nome: string;
-    filiacao: string;
-    desligamento: string | null;
-    justificativa?: string;
-  }>;
+  cpf?: string | null;
+  dataNascimento?: string | null;
+  cargo?: string | null;
+  unidadesAdministradas?: string | null;
   validadoEm: string;
   hashValidacao: string;
 }

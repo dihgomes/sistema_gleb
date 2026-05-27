@@ -1,12 +1,22 @@
-import { useState, FormEvent } from 'react';
+import { useState, FormEvent, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { API_ENDPOINTS } from '../../config/api';
 
 export default function LoginPage() {
+  const location = useLocation();
   const [usuario, setUsuario] = useState('');
   const [senha, setSenha] = useState('');
   const [lembrarMe, setLembrarMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [infoMessage, setInfoMessage] = useState('');
+
+  useEffect(() => {
+    if (location.state?.message) {
+      setInfoMessage(location.state.message);
+      setTimeout(() => setInfoMessage(''), 5000);
+    }
+  }, [location]);
 
   const handleUsuarioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/[^a-zA-Z]/g, '');
@@ -36,7 +46,7 @@ export default function LoginPage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          email: usuario,
+          nome: usuario,
           senha: senha,
         }),
       });
@@ -57,7 +67,11 @@ export default function LoginPage() {
         sessionStorage.setItem('showLoginToast', 'true');
       }
 
-      window.location.href = '/admin/dashboard';
+      if (data.admin.primeiroAcesso) {
+        window.location.href = '/admin/trocar-senha';
+      } else {
+        window.location.href = '/admin/dashboard';
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erro ao fazer login');
     } finally {
@@ -67,12 +81,9 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-emerald-950 to-slate-900 flex items-center justify-center px-4 py-8 relative overflow-hidden">
-      {/* Background com efeitos */}
       <div className="fixed inset-0 z-0">
-        {/* Grid pattern */}
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#10b98120_1px,transparent_1px),linear-gradient(to_bottom,#10b98120_1px,transparent_1px)] bg-[size:4rem_4rem]"></div>
         
-        {/* Logo watermark */}
         <div className="absolute inset-0 flex items-center justify-center opacity-[0.03]">
           <img 
             src="/santacasa-icon.png" 
@@ -81,14 +92,11 @@ export default function LoginPage() {
           />
         </div>
         
-        {/* Gradient overlays */}
         <div className="absolute top-0 left-0 w-96 h-96 bg-emerald-500/20 rounded-full blur-3xl"></div>
         <div className="absolute bottom-0 right-0 w-96 h-96 bg-teal-500/20 rounded-full blur-3xl"></div>
       </div>
 
-      {/* Container principal */}
       <div className="w-full max-w-6xl mx-auto grid md:grid-cols-2 gap-8 items-center relative z-10">
-        {/* Lado esquerdo - Branding */}
         <div className="hidden md:block text-white space-y-6">
           <div className="space-y-2">
             <p className="text-emerald-400 text-sm font-semibold tracking-wider uppercase">Sistema GLEB</p>
@@ -111,18 +119,24 @@ export default function LoginPage() {
           </div>
         </div>
 
-        {/* Lado direito - Formulário */}
         <div className="w-full max-w-md mx-auto">
           <div className="bg-slate-800/50 backdrop-blur-xl rounded-2xl border border-emerald-500/20 shadow-2xl overflow-hidden">
-            {/* Header do card */}
             <div className="bg-gradient-to-r from-emerald-600/10 to-teal-600/10 border-b border-emerald-500/20 p-8 text-center">
               <h2 className="text-2xl font-bold text-white mb-2">Login</h2>
               <p className="text-slate-400 text-sm">Acesse sua conta administrativa</p>
             </div>
 
-            {/* Formulário */}
             <div className="p-8">
               <form onSubmit={handleSubmit} className="space-y-6">
+                {infoMessage && (
+                  <div className="bg-yellow-500/10 border border-yellow-500/50 text-yellow-400 px-4 py-3 rounded-lg text-sm flex items-start gap-2 backdrop-blur-sm">
+                    <svg className="w-5 h-5 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                    </svg>
+                    <span>{infoMessage}</span>
+                  </div>
+                )}
+                
                 {error && (
                   <div className="bg-red-500/10 border border-red-500/50 text-red-400 px-4 py-3 rounded-lg text-sm flex items-start gap-2 backdrop-blur-sm">
                     <svg className="w-5 h-5 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
@@ -192,7 +206,6 @@ export default function LoginPage() {
               </form>
             </div>
 
-            {/* Footer do card */}
             <div className="bg-gradient-to-r from-emerald-600/5 to-teal-600/5 border-t border-emerald-500/20 px-8 py-4 text-center">
               <p className="text-slate-400 text-xs">
                 Sistema de Validação de Carteiras - GLEB
@@ -202,7 +215,6 @@ export default function LoginPage() {
         </div>
       </div>
 
-      {/* Footer */}
       <footer className="fixed bottom-0 left-0 right-0 py-4 text-center z-10">
         <p className="text-slate-500 text-sm">
           © {new Date().getFullYear()} Santa Casa de Ruy Barbosa - Todos os direitos reservados

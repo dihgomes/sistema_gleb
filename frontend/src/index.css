@@ -2,6 +2,26 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  select option {
+    background-color: #0f172a;
+    color: #ffffff;
+    padding: 0.75rem 1rem;
+  }
+
+  select option:hover,
+  select option:focus,
+  select option:checked {
+    background: linear-gradient(to right, #059669, #0d9488);
+    color: #ffffff;
+  }
+
+  select option:disabled {
+    color: #64748b;
+    background-color: #1e293b;
+  }
+}
+
 @layer utilities {
   @keyframes slide-in-right {
     from {
