@@ -59,7 +59,7 @@ services:
       npm install &&
       npm install -g serve &&
       npm run build &&
-      serve -s dist -l 3000
+      exec serve -s dist -l 3000 -n
       "
     environment:
       VITE_API_URL: https://sistema.gleb.scrb.org.br/api
