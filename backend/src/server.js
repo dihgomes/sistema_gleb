@@ -24,6 +24,9 @@ if (!process.env.DATABASE_URL) {
 
 const app = express();
 const PORT = process.env.PORT || 3002;
+
+app.set('trust proxy', 1);
+
 const allowedOrigins = [
   'http://localhost:5173',
   'https://controle-hrrb.com.br',
