@@ -9,31 +9,79 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Tabela de Administradores
+// Tabela de Administradores e Usuários
 model Admin {
-  id         String   @id @default(uuid())
-  nome       String
-  email      String   @unique
-  senhaHash  String   @map("senha_hash")
-  criadoEm   DateTime @default(now()) @map("criado_em")
+  id                      String    @id @default(uuid())
+  nome                    String    @unique
+  email                   String    @unique
+  senhaHash               String    @map("senha_hash")
+  role                    String    @default("user") // 'admin' ou 'user'
+  fotoUrl                 String?   @map("foto_url")
+  primeiroAcesso          Boolean   @default(true) @map("primeiro_acesso")
+  senhaExpiradaEm         DateTime? @map("senha_expirada_em")
+  ultimaSenhaHash         String?   @map("ultima_senha_hash")
+  penultimaSenhaHash      String?   @map("penultima_senha_hash")
+  senhaAlteradaEm         DateTime? @map("senha_alterada_em")
+  tentativasLogin         Int       @default(0) @map("tentativas_login")
+  bloqueado               Boolean   @default(false)
+  bloqueadoEm             DateTime? @map("bloqueado_em")
+  bloqueadoPorId          String?   @map("bloqueado_por_id")
+  desbloqueadoEm          DateTime? @map("desbloqueado_em")
+  desbloqueadoPorId       String?   @map("desbloqueado_por_id")
+  ativo                   Boolean   @default(true)
+  criadoEm                DateTime  @default(now()) @map("criado_em")
+  atualizadoEm            DateTime  @updatedAt @map("atualizado_em")
+  
+  // Relacionamento com carteiras criadas
+  carteirasCriadas        Carteira[] @relation("AdminCriador")
 
   @@map("admins")
 }
 
 // Tabela de Carteiras/Pessoas
 model Carteira {
-  id              String   @id @default(uuid())
-  codigoUnico     String   @unique @map("codigo_unico")
-  nome            String
-  loja            String?
-  fotoUrl         String?  @map("foto_url")
-  situacaoAtual   String?  @map("situacao_atual")
-  datasMaconicas  Json?    @map("datas_maconicas")
-  lojas           Json?
-  hashValidacao   String?  @map("hash_validacao")
-  ativo           Boolean  @default(true)
-  criadoEm        DateTime @default(now()) @map("criado_em")
-  atualizadoEm    DateTime @updatedAt @map("atualizado_em")
+  id                    String   @id @default(uuid())
+  codigoUnico           String   @unique @map("codigo_unico")
+  nome                  String
+  cpf                   String?
+  cargo                 String?
+  dataNascimento        String?  @map("data_nascimento")
+  unidadesAdministradas String?  @map("unidades_administradas")
+  fotoUrl               String?  @map("foto_url")
+  situacaoAtual         String?  @map("situacao_atual")
+  hashValidacao         String?  @map("hash_validacao")
+  ativo                 Boolean  @default(true)
+  criadoEm              DateTime @default(now()) @map("criado_em")
+  atualizadoEm          DateTime @updatedAt @map("atualizado_em")
+  
+  // Relacionamento com admin criador
+  criadoPorId           String?  @map("criado_por_id")
+  criadoPor             Admin?   @relation("AdminCriador", fields: [criadoPorId], references: [id])
 
   @@map("carteiras")
+}
+
+// Tabela de Logs de Auditoria
+model Log {
+  id              String   @id @default(uuid())
+  tipo            String   // 'login', 'logout', 'create', 'update', 'delete', 'block', 'unblock', 'qrcode', etc
+  entidade        String?  // 'admin', 'carteira', 'user'
+  entidadeId      String?  @map("entidade_id")
+  usuarioId       String?  @map("usuario_id")
+  usuarioNome     String?  @map("usuario_nome")
+  usuarioEmail    String?  @map("usuario_email")
+  usuarioRole     String?  @map("usuario_role")
+  acao            String   // Descrição da ação realizada
+  detalhes        Json?    // Dados adicionais em JSON
+  ip              String?
+  userAgent       String?  @map("user_agent")
+  sucesso         Boolean  @default(true)
+  erro            String?  // Mensagem de erro se houver
+  criadoEm        DateTime @default(now()) @map("criado_em")
+
+  @@index([tipo])
+  @@index([entidade])
+  @@index([usuarioId])
+  @@index([criadoEm])
+  @@map("logs")
 }

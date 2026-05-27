@@ -1,14 +1,7 @@
-const carteiraService = require('../services/carteiraService');
-const logger = require('../utils/logger');
+import carteiraService from '../services/carteiraService.js';
+import logger from '../utils/logger.js';
 
-/**
- * Controller de rotas públicas
- */
 class PublicController {
-  /**
-   * GET /api/public/carteira/:codigo_unico
-   * Retorna dados públicos de uma carteira
-   */
   async buscarCarteira(req, res) {
     try {
       const { codigo_unico } = req.params;
@@ -21,8 +14,6 @@ class PublicController {
         ip: req.ip || req.connection.remoteAddress
       });
 
-      // Retorna a carteira independente do status ativo
-      // O frontend exibirá um indicador se estiver inativa
       return res.json(carteira);
     } catch (error) {
       logger.error(`Carteira não encontrada: ${req.params.codigo_unico}`, error);
@@ -31,4 +22,4 @@ class PublicController {
   }
 }
 
-module.exports = new PublicController();
+export default new PublicController();

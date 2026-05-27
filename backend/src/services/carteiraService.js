@@ -1,24 +1,14 @@
-const prisma = require('../database/prisma');
-const { generateUniqueCode } = require('../utils/generateCode');
-const { generateValidationHash } = require('../utils/generateHash');
-const { formatBrazilianDate } = require('../utils/formatDate');
-const QRCode = require('qrcode');
+import prisma from '../database/prisma.js';
+import { generateUniqueCode } from '../utils/generateCode.js';
+import { generateValidationHash } from '../utils/generateHash.js';
+import { formatBrazilianDate } from '../utils/formatDate.js';
+import QRCode from 'qrcode';
 
-/**
- * Service de gerenciamento de carteiras
- */
 class CarteiraService {
-  /**
-   * Cria uma nova carteira
-   * @param {Object} data - Dados da carteira
-   * @param {string} fotoUrl - URL da foto (opcional)
-   * @returns {Object} Carteira criada
-   */
-  async criar(data, fotoUrl = null) {
+  async criar(data, fotoUrl = null, adminId = null) {
     let codigoUnico;
     let exists = true;
 
-    // Garante que o código seja único
     while (exists) {
       codigoUnico = generateUniqueCode();
       const carteira = await prisma.carteira.findUnique({
@@ -38,34 +28,99 @@ class CarteiraService {
       data: {
         codigoUnico,
         nome: data.nome,
-        loja: data.loja || null,
+        cpf: data.cpf || null,
+        cargo: data.cargo || null,
+        dataNascimento: data.dataNascimento || null,
+        unidadesAdministradas: data.unidadesAdministradas || null,
         fotoUrl,
         situacaoAtual: data.situacaoAtual || null,
-        datasMaconicas: data.datasMaconicas || [],
-        lojas: data.lojas || [],
         hashValidacao,
-        ativo: true
+        ativo: true,
+        criadoPorId: adminId
       }
     });
 
     return carteira;
   }
 
-  /**
-   * Lista todas as carteiras
-   * @returns {Array} Lista de carteiras
-   */
   async listar() {
     return await prisma.carteira.findMany({
+      include: {
+        criadoPor: {
+          select: {
+            nome: true,
+            email: true
+          }
+        }
+      },
       orderBy: { criadoEm: 'desc' }
     });
   }
 
-  /**
-   * Busca uma carteira por ID
-   * @param {string} id 
-   * @returns {Object} Carteira encontrada
-   */
+  async buscarPorId(id) {
+    const carteira = await prisma.carteira.findUnique({
+      where: { id }
+    });
+
+    if (!carteira) {
+      throw new Error('Carteira não encontrada');
+    }
+
+    return carteira;
+  }
+  
+  async criar(data, fotoUrl = null, adminId = null) {
+    let codigoUnico;
+    let exists = true;
+
+    while (exists) {
+      codigoUnico = generateUniqueCode();
+      const carteira = await prisma.carteira.findUnique({
+        where: { codigoUnico }
+      });
+      exists = !!carteira;
+    }
+
+    const hashValidacao = generateValidationHash({
+      nome: data.nome,
+      situacaoAtual: data.situacaoAtual,
+      datasMaconicas: data.datasMaconicas,
+      lojas: data.lojas
+    });
+
+    const carteira = await prisma.carteira.create({
+      data: {
+        codigoUnico,
+        nome: data.nome,
+        cpf: data.cpf || null,
+        cargo: data.cargo || null,
+        dataNascimento: data.dataNascimento || null,
+        unidadesAdministradas: data.unidadesAdministradas || null,
+        fotoUrl,
+        situacaoAtual: data.situacaoAtual || null,
+        hashValidacao,
+        ativo: true,
+        criadoPorId: adminId
+      }
+    });
+
+    return carteira;
+  }
+
+  async listar() {
+    return await prisma.carteira.findMany({
+      include: {
+        criadoPor: {
+          select: {
+            nome: true,
+            email: true
+          }
+        }
+      },
+      orderBy: { criadoEm: 'desc' }
+    });
+  }
+
   async buscarPorId(id) {
     const carteira = await prisma.carteira.findUnique({
       where: { id }
@@ -78,11 +133,6 @@ class CarteiraService {
     return carteira;
   }
 
-  /**
-   * Busca uma carteira por código único (rota pública)
-   * @param {string} codigoUnico 
-   * @returns {Object} Dados públicos da carteira
-   */
   async buscarPorCodigo(codigoUnico) {
     const carteira = await prisma.carteira.findUnique({
       where: { codigoUnico }
@@ -94,24 +144,19 @@ class CarteiraService {
 
     return {
       nome: carteira.nome,
-      loja: carteira.loja || null,
+      codigo_unico: carteira.codigoUnico,
       foto_url: carteira.fotoUrl,
       situacao_atual: carteira.situacaoAtual,
-      datas_maconicas: carteira.datasMaconicas || [],
-      lojas: carteira.lojas || [],
+      cpf: carteira.cpf || null,
+      data_nascimento: carteira.dataNascimento || null,
+      cargo: carteira.cargo || null,
+      unidades_administradas: carteira.unidadesAdministradas || null,
       dados_validados_em: formatBrazilianDate(carteira.atualizadoEm),
       hash_validacao: carteira.hashValidacao,
       ativo: carteira.ativo
     };
   }
 
-  /**
-   * Atualiza uma carteira
-   * @param {string} id 
-   * @param {Object} data 
-   * @param {string} fotoUrl 
-   * @returns {Object} Carteira atualizada
-   */
   async atualizar(id, data, fotoUrl = null) {
     const carteiraExistente = await this.buscarPorId(id);
 
@@ -124,6 +169,10 @@ class CarteiraService {
 
     const updateData = {
       nome: data.nome,
+      cpf: data.cpf,
+      cargo: data.cargo,
+      dataNascimento: data.dataNascimento,
+      unidadesAdministradas: data.unidadesAdministradas,
       loja: data.loja,
       situacaoAtual: data.situacaoAtual,
       datasMaconicas: data.datasMaconicas,
@@ -143,12 +192,16 @@ class CarteiraService {
     return carteira;
   }
 
-  /**
-   * Atualiza o status (ativo/inativo) de uma carteira
-   * @param {string} id 
-   * @param {boolean} ativo 
-   * @returns {Object} Carteira atualizada
-   */
+  async atualizarStatus(id, ativo) {
+    await this.buscarPorId(id);
+
+    const carteira = await prisma.carteira.update({
+      where: { id },
+      data: { ativo }
+    });
+
+    return carteira;
+  }
   async atualizarStatus(id, ativo) {
     await this.buscarPorId(id);
 
@@ -160,11 +213,6 @@ class CarteiraService {
     return carteira;
   }
 
-  /**
-   * Exclusão lógica de uma carteira
-   * @param {string} id 
-   * @returns {Object} Carteira desativada
-   */
   async deletar(id) {
     await this.buscarPorId(id);
 
@@ -176,41 +224,23 @@ class CarteiraService {
     return carteira;
   }
 
-  /**
-   * Gera URL e QR Code para uma carteira
-   * @param {string} id 
-   * @returns {Object} URL e QR Code em base64
-   */
   async gerarQRCode(id) {
     const carteira = await this.buscarPorId(id);
     
     const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
     const url = `${frontendUrl}/q/${carteira.codigoUnico}`;
     
-    console.log('\n' + '='.repeat(80));
-    console.log('📱 [QRCODE] Gerando QR Code');
-    console.log('🔗 URL gerada:', url);
-    console.log('📋 Código único:', carteira.codigoUnico);
-    console.log('🌍 FRONTEND_URL:', frontendUrl);
-    console.log('📏 Tamanho da URL:', url.length, 'caracteres');
-    console.log('🔍 URL (bytes):', Buffer.from(url).toString('hex'));
-    console.log('='.repeat(80));
-    
     const qrCodeBase64 = await QRCode.toDataURL(url, {
-      errorCorrectionLevel: 'M',  // Mudado de H para M (melhor compatibilidade)
+      errorCorrectionLevel: 'M',
       type: 'image/png',
       quality: 1,
-      width: 400,  // Aumentado para melhor leitura
-      margin: 4,   // Margem maior para melhor leitura
+      width: 400,
+      margin: 4,
       color: {
         dark: '#000000',
         light: '#FFFFFF'
       }
     });
-
-    console.log('✅ QR Code gerado com sucesso');
-    console.log('📊 Tamanho do QR Code:', qrCodeBase64.length, 'caracteres (base64)');
-    console.log('='.repeat(80) + '\n');
 
     return {
       url,
@@ -220,4 +250,4 @@ class CarteiraService {
   }
 }
 
-module.exports = new CarteiraService();
+export default new CarteiraService();

@@ -1,14 +1,8 @@
-/**
- * Sistema de Logging Profissional
- * Organiza e formata logs de forma clara e legível
- */
-
 const colors = {
   reset: '\x1b[0m',
   bright: '\x1b[1m',
   dim: '\x1b[2m',
-  
-  // Cores de texto
+
   black: '\x1b[30m',
   red: '\x1b[31m',
   green: '\x1b[32m',
@@ -19,7 +13,6 @@ const colors = {
   white: '\x1b[37m',
   gray: '\x1b[90m',
   
-  // Cores de fundo
   bgBlack: '\x1b[40m',
   bgRed: '\x1b[41m',
   bgGreen: '\x1b[42m',
@@ -35,9 +28,6 @@ class Logger {
     this.enabled = process.env.NODE_ENV !== 'test';
   }
 
-  /**
-   * Formata timestamp
-   */
   getTimestamp() {
     const now = new Date();
     return now.toLocaleString('pt-BR', {
@@ -50,33 +40,21 @@ class Logger {
     });
   }
 
-  /**
-   * Linha separadora
-   */
   separator(char = '─', length = 80) {
     if (!this.enabled) return;
     console.log(colors.gray + char.repeat(length) + colors.reset);
   }
 
-  /**
-   * Header de seção
-   */
   header(title, color = 'cyan') {
     if (!this.enabled) return;
     console.log('\n' + colors[color] + colors.bright + '┌─ ' + title + colors.reset);
   }
 
-  /**
-   * Footer de seção
-   */
   footer() {
     if (!this.enabled) return;
     console.log(colors.gray + '└' + '─'.repeat(79) + colors.reset + '\n');
   }
 
-  /**
-   * Log de informação
-   */
   info(message, data = null) {
     if (!this.enabled) return;
     console.log(colors.cyan + '│ ℹ ' + colors.reset + message);
@@ -85,9 +63,6 @@ class Logger {
     }
   }
 
-  /**
-   * Log de sucesso
-   */
   success(message, data = null) {
     if (!this.enabled) return;
     console.log(colors.green + '│ ✓ ' + colors.reset + message);
@@ -96,9 +71,6 @@ class Logger {
     }
   }
 
-  /**
-   * Log de erro
-   */
   error(message, error = null) {
     if (!this.enabled) return;
     console.log(colors.red + '│ ✗ ' + colors.reset + message);
@@ -112,9 +84,6 @@ class Logger {
     }
   }
 
-  /**
-   * Log de aviso
-   */
   warn(message, data = null) {
     if (!this.enabled) return;
     console.log(colors.yellow + '│ ⚠ ' + colors.reset + message);
@@ -123,9 +92,6 @@ class Logger {
     }
   }
 
-  /**
-   * Log de debug
-   */
   debug(message, data = null) {
     if (!this.enabled || process.env.NODE_ENV !== 'development') return;
     console.log(colors.magenta + '│ ⚙ ' + colors.reset + message);
@@ -134,9 +100,6 @@ class Logger {
     }
   }
 
-  /**
-   * Log de requisição HTTP
-   */
   request(method, path, details = {}) {
     if (!this.enabled) return;
     
@@ -169,9 +132,6 @@ class Logger {
     }
   }
 
-  /**
-   * Log de resposta HTTP
-   */
   response(statusCode, message = null) {
     if (!this.enabled) return;
     
@@ -181,9 +141,6 @@ class Logger {
     console.log(colors[color] + `│ ${icon} Status: ${statusCode}` + colors.reset + (message ? ` - ${message}` : ''));
   }
 
-  /**
-   * Log de autenticação
-   */
   auth(type, user, success = true) {
     if (!this.enabled) return;
     
@@ -210,9 +167,6 @@ class Logger {
     this.footer();
   }
 
-  /**
-   * Log de operação de carteira
-   */
   carteira(action, data) {
     if (!this.enabled) return;
     
@@ -252,9 +206,6 @@ class Logger {
     this.footer();
   }
 
-  /**
-   * Log de inicialização do servidor
-   */
   serverStart(config) {
     if (!this.enabled) return;
     
@@ -281,9 +232,6 @@ class Logger {
     this.separator('═');
   }
 
-  /**
-   * Log de CORS
-   */
   cors(origin, allowed) {
     if (!this.enabled) return;
     
@@ -295,4 +243,4 @@ class Logger {
   }
 }
 
-module.exports = new Logger();
+export default new Logger();

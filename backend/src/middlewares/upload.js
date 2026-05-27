@@ -1,8 +1,11 @@
-const multer = require('multer');
-const path = require('path');
-const crypto = require('crypto');
+import multer from 'multer';
+import path from 'path';
+import crypto from 'crypto';
+import { fileURLToPath } from 'url';
 
-// Configuração de armazenamento
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, path.resolve(__dirname, '../../uploads'));
@@ -14,7 +17,6 @@ const storage = multer.diskStorage({
   }
 });
 
-// Filtro de tipos de arquivo
 const fileFilter = (req, file, cb) => {
   const allowedMimes = [
     'image/jpeg',
@@ -30,13 +32,12 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
-// Configuração do multer
 const upload = multer({
   storage,
   fileFilter,
   limits: {
-    fileSize: parseInt(process.env.MAX_FILE_SIZE) || 5 * 1024 * 1024 // 5MB padrão
+    fileSize: parseInt(process.env.MAX_FILE_SIZE) || 5 * 1024 * 1024
   }
 });
 
-module.exports = upload;
+export default upload;

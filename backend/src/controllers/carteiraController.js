@@ -1,18 +1,11 @@
-const carteiraService = require('../services/carteiraService');
-const logger = require('../utils/logger');
-const path = require('path');
+import carteiraService from '../services/carteiraService.js';
+import logger from '../utils/logger.js';
+import path from 'path';
 
-/**
- * Controller de carteiras
- */
 class CarteiraController {
-  /**
-   * POST /api/admin/carteiras
-   * Cria uma nova carteira
-   */
   async criar(req, res) {
     try {
-      const { nome, loja, situacaoAtual, datasMaconicas, lojas } = req.body;
+      const { nome, cpf, cargo, dataNascimento, unidadesAdministradas, loja, situacaoAtual, datasMaconicas, lojas } = req.body;
 
       if (!nome) {
         return res.status(400).json({ error: 'Nome é obrigatório' });
@@ -26,18 +19,22 @@ class CarteiraController {
 
       const data = {
         nome,
+        cpf,
+        cargo,
+        dataNascimento,
+        unidadesAdministradas,
         loja,
         situacaoAtual,
         datasMaconicas: datasMaconicas ? JSON.parse(datasMaconicas) : [],
         lojas: lojas ? JSON.parse(lojas) : []
       };
 
-      const carteira = await carteiraService.criar(data, fotoUrl);
+      const adminId = req.user?.id || null;
+      const carteira = await carteiraService.criar(data, fotoUrl, adminId);
       
       logger.carteira('create', {
         nome: carteira.nome,
         codigo: carteira.codigoUnico,
-        loja: carteira.loja,
         admin: req.user?.nome || 'Sistema'
       });
 
@@ -47,10 +44,6 @@ class CarteiraController {
     }
   }
 
-  /**
-   * GET /api/admin/carteiras
-   * Lista todas as carteiras
-   */
   async listar(req, res) {
     try {
       const carteiras = await carteiraService.listar();
@@ -60,10 +53,6 @@ class CarteiraController {
     }
   }
 
-  /**
-   * GET /api/admin/carteiras/:id
-   * Busca uma carteira por ID
-   */
   async buscarPorId(req, res) {
     try {
       const { id } = req.params;
@@ -74,14 +63,10 @@ class CarteiraController {
     }
   }
 
-  /**
-   * PUT /api/admin/carteiras/:id
-   * Atualiza uma carteira
-   */
   async atualizar(req, res) {
     try {
       const { id } = req.params;
-      const { nome, loja, situacaoAtual, datasMaconicas, lojas } = req.body;
+      const { nome, cpf, cargo, dataNascimento, unidadesAdministradas, loja, situacaoAtual, datasMaconicas, lojas } = req.body;
 
       let fotoUrl = null;
       if (req.file) {
@@ -91,6 +76,10 @@ class CarteiraController {
 
       const data = {
         nome,
+        cpf,
+        cargo,
+        dataNascimento,
+        unidadesAdministradas,
         loja,
         situacaoAtual,
         datasMaconicas: datasMaconicas ? JSON.parse(datasMaconicas) : undefined,
@@ -112,10 +101,6 @@ class CarteiraController {
     }
   }
 
-  /**
-   * PATCH /api/admin/carteiras/:id/status
-   * Atualiza o status de uma carteira
-   */
   async atualizarStatus(req, res) {
     try {
       const { id } = req.params;
@@ -133,10 +118,6 @@ class CarteiraController {
     }
   }
 
-  /**
-   * DELETE /api/admin/carteiras/:id
-   * Exclusão lógica de uma carteira
-   */
   async deletar(req, res) {
     try {
       const { id } = req.params;
@@ -154,10 +135,6 @@ class CarteiraController {
     }
   }
 
-  /**
-   * POST /api/admin/carteiras/:id/gerar-qrcode
-   * Gera QR Code para uma carteira
-   */
   async gerarQRCode(req, res) {
     try {
       const { id } = req.params;
@@ -176,4 +153,4 @@ class CarteiraController {
   }
 }
 
-module.exports = new CarteiraController();
+export default new CarteiraController();

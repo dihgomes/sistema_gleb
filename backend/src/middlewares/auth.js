@@ -1,9 +1,5 @@
-const jwt = require('jsonwebtoken');
+import jwt from 'jsonwebtoken';
 
-/**
- * Middleware de autenticação JWT
- * Verifica se o token é válido e adiciona os dados do admin na requisição
- */
 function authMiddleware(req, res, next) {
   const authHeader = req.headers.authorization;
 
@@ -25,8 +21,13 @@ function authMiddleware(req, res, next) {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.adminId = decoded.id;
-    req.adminEmail = decoded.email;
+    
+    req.user = {
+      id: decoded.id,
+      email: decoded.email,
+      nome: decoded.nome,
+      role: decoded.role
+    };
     
     return next();
   } catch (err) {
@@ -34,4 +35,4 @@ function authMiddleware(req, res, next) {
   }
 }
 
-module.exports = authMiddleware;
+export default authMiddleware;

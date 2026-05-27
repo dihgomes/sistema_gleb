@@ -1,8 +1,3 @@
-/**
- * Formata data no padrão brasileiro DD/MM/YYYY HH:mm:ss
- * @param {Date} date - Data a ser formatada
- * @returns {string} Data formatada
- */
 function formatBrazilianDate(date = new Date()) {
   const day = String(date.getDate()).padStart(2, '0');
   const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -14,4 +9,4 @@ function formatBrazilianDate(date = new Date()) {
   return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
 }
 
-module.exports = { formatBrazilianDate };
+export { formatBrazilianDate };

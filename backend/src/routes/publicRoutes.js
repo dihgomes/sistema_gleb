@@ -1,9 +1,9 @@
-const express = require('express');
-const publicController = require('../controllers/publicController');
+import express from 'express';
+import publicController from '../controllers/publicController.js';
+import { publicLimiter } from '../middlewares/rateLimiter.js';
 
 const router = express.Router();
 
-// GET /api/public/carteira/:codigo_unico
-router.get('/carteira/:codigo_unico', publicController.buscarCarteira.bind(publicController));
+router.get('/carteira/:codigo_unico', publicLimiter, publicController.buscarCarteira.bind(publicController));
 
-module.exports = router;
+export default router;

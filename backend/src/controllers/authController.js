@@ -1,32 +1,47 @@
-const authService = require('../services/authService');
-const logger = require('../utils/logger');
+import authService from '../services/authService.js';
+import logger from '../utils/logger.js';
 
-/**
- * Controller de autenticação
- */
 class AuthController {
-  /**
-   * POST /api/auth/login
-   * Realiza login do administrador
-   */
+
   async login(req, res) {
     try {
-      const { email, senha } = req.body;
+      const { nome, senha } = req.body;
 
-      if (!email || !senha) {
-        return res.status(400).json({ error: 'Email e senha são obrigatórios' });
+      if (!nome || !senha) {
+        return res.status(400).json({ error: 'Nome e senha são obrigatórios' });
       }
 
-      const result = await authService.login(email, senha);
+      const result = await authService.login(nome, senha);
       
       logger.auth('login', result.admin.nome, true);
 
       return res.json(result);
     } catch (error) {
-      logger.auth('login', req.body.email, false);
+      logger.auth('login', req.body.nome, false);
       return res.status(401).json({ error: error.message });
+    }
+  }
+
+  async trocarSenha(req, res) {
+    try {
+      const { senhaAtual, novaSenha, primeiroAcesso } = req.body;
+      const userId = req.user.id;
+
+      if (!novaSenha) {
+        return res.status(400).json({ error: 'Nova senha é obrigatória' });
+      }
+
+      if (!primeiroAcesso && !senhaAtual) {
+        return res.status(400).json({ error: 'Senha atual é obrigatória' });
+      }
+
+      const result = await authService.trocarSenha(userId, senhaAtual, novaSenha, primeiroAcesso);
+
+      return res.json(result);
+    } catch (error) {
+      return res.status(400).json({ error: error.message });
     }
   }
 }
 
-module.exports = new AuthController();
+export default new AuthController();

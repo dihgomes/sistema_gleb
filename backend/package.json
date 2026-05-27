@@ -1,6 +1,7 @@
 {
   "name": "carteira-digital-backend",
   "version": "1.0.0",
+  "type": "module",
   "description": "Backend para sistema de validação de carteira digital via QR Code",
   "main": "src/server.js",
   "scripts": {
@@ -11,7 +12,12 @@
     "prisma:studio": "prisma studio",
     "seed": "node src/database/seed.js"
   },
-  "keywords": ["qrcode", "carteira", "digital", "validacao"],
+  "keywords": [
+    "qrcode",
+    "carteira",
+    "digital",
+    "validacao"
+  ],
   "author": "",
   "license": "MIT",
   "dependencies": {
@@ -20,6 +26,8 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
+    "express-rate-limit": "^8.5.2",
+    "helmet": "^8.2.0",
     "jsonwebtoken": "^9.0.2",
     "multer": "^1.4.5-lts.1",
     "qrcode": "^1.5.3"

@@ -1,10 +1,5 @@
-const crypto = require('crypto');
+import crypto from 'crypto';
 
-/**
- * Gera um código único seguro para a carteira
- * Usa caracteres alfanuméricos para facilitar leitura
- * @returns {string} Código único de 16 caracteres
- */
 function generateUniqueCode() {
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
   let code = '';
@@ -18,4 +13,4 @@ function generateUniqueCode() {
   return code;
 }
 
-module.exports = { generateUniqueCode };
+export { generateUniqueCode };

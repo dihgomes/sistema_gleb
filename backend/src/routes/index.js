@@ -1,17 +1,14 @@
-const express = require('express');
-const authRoutes = require('./authRoutes');
-const carteiraRoutes = require('./carteiraRoutes');
-const publicRoutes = require('./publicRoutes');
+import express from 'express';
+import authRoutes from './authRoutes.js';
+import carteiraRoutes from './carteiraRoutes.js';
+import publicRoutes from './publicRoutes.js';
 
 const router = express.Router();
 
-// Rotas de autenticação
 router.use('/auth', authRoutes);
 
-// Rotas administrativas de carteiras
 router.use('/admin/carteiras', carteiraRoutes);
 
-// Rotas públicas
 router.use('/public', publicRoutes);
 
-module.exports = router;
+export default router;
