@@ -13,8 +13,6 @@ services:
       - backup_upload:/backup
     networks:
       - gleb-network
-    ports:
-      - "15432:5432"
 
   backend:
     image: node:20-alpine
@@ -33,39 +31,20 @@ services:
       - postgres
     networks:
       - gleb-network
-    ports:
-      - "13002:3002"
 
   frontend:
     image: node:20-alpine
     working_dir: /app
-    command: sh -c "npm install && npm run build && npx serve -s dist -l 80"
+    command: sh -c "npm install && npm run build && npx serve -s dist -l 3000"
     environment:
       VITE_API_URL: https://sistema.gleb.scrb.org.br/api
     volumes:
       - ./frontend:/app
     networks:
       - gleb-network
-    ports:
-      - "15173:80"
-
-  nginx:
-    image: nginx:alpine
-    ports:
-      - "18080:80"
-      - "18443:443"
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-      - nginx_cache:/var/cache/nginx
-    depends_on:
-      - backend
-      - frontend
-    networks:
-      - gleb-network
 
 volumes:
   postgres_data:
-  nginx_cache:
   backup_upload:
 
 networks:
