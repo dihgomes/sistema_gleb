@@ -20,12 +20,11 @@ services:
     working_dir: /app
     command: >
       sh -c "
-      apk add --no-cache git &&
+      apk add --no-cache git openssl openssl-dev &&
       git clone https://github.com/dihgomes/sistema_gleb.git . &&
       cd backend &&
       npm install &&
       npx prisma generate &&
-      npx prisma migrate deploy &&
       node src/server.js
       "
     environment:
