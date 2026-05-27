@@ -45,6 +45,7 @@ services:
       - "traefik.http.routers.gleb-backend.rule=Host(`sistema.gleb.scrb.org.br`) && PathPrefix(`/api`)"
       - "traefik.http.routers.gleb-backend.entrypoints=websecure"
       - "traefik.http.routers.gleb-backend.tls.certresolver=letsencryptresolver"
+      - "traefik.http.routers.gleb-backend.priority=2"
       - "traefik.http.services.gleb-backend.loadbalancer.server.port=3002"
 
   frontend:
@@ -71,6 +72,7 @@ services:
       - "traefik.http.routers.gleb-frontend.rule=Host(`sistema.gleb.scrb.org.br`)"
       - "traefik.http.routers.gleb-frontend.entrypoints=websecure"
       - "traefik.http.routers.gleb-frontend.tls.certresolver=letsencryptresolver"
+      - "traefik.http.routers.gleb-frontend.priority=1"
       - "traefik.http.services.gleb-frontend.loadbalancer.server.port=3000"
 
 volumes:
