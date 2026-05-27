@@ -15,9 +15,7 @@ services:
       - gleb-network
 
   backend:
-    image: node:20-alpine
-    working_dir: /app
-    command: sh -c "npm install && npx prisma generate && npx prisma migrate deploy && node src/server.js"
+    build: ./backend
     environment:
       NODE_ENV: production
       PORT: 3002
@@ -25,21 +23,16 @@ services:
       JWT_SECRET: ${JWT_SECRET}
       ADMIN_SENHA: ${ADMIN_SENHA}
       FRONTEND_URL: https://sistema.gleb.scrb.org.br
-    volumes:
-      - ./backend:/app
     depends_on:
       - postgres
     networks:
       - gleb-network
 
   frontend:
-    image: node:20-alpine
-    working_dir: /app
-    command: sh -c "npm install && npm run build && npx serve -s dist -l 3000"
-    environment:
-      VITE_API_URL: https://sistema.gleb.scrb.org.br/api
-    volumes:
-      - ./frontend:/app
+    build:
+      context: ./frontend
+      args:
+        VITE_API_URL: https://sistema.gleb.scrb.org.br/api
     networks:
       - gleb-network
 
