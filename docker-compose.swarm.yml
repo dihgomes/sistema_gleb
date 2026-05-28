@@ -4,9 +4,9 @@ services:
   postgres:
     image: postgres:16-alpine
     environment:
-      POSTGRES_DB: ${POSTGRES_DB}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: gleb_db
+      POSTGRES_USER: gleb_user
+      POSTGRES_PASSWORD: GlebSecure2026Pass
       PGDATA: /var/lib/postgresql/data/pgdata
     volumes:
       - postgres_data:/var/lib/postgresql/data
@@ -38,11 +38,11 @@ services:
     environment:
       NODE_ENV: production
       PORT: 3002
-      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
-      JWT_SECRET: ${JWT_SECRET}
+      DATABASE_URL: postgresql://gleb_user:GlebSecure2026Pass@postgres:5432/gleb_db
+      JWT_SECRET: 5e0d462036a3f8b0c97cba4517a01dd0a57748b3badbd02827c3a7dc8d0858a8eed70c3e5fa7a69932a9fca655229d735bbf4d74daea91d7a622c0a1474ca72f
       ADMIN_NOME: admin
       ADMIN_EMAIL: admin@gleb.scrb.org.br
-      ADMIN_SENHA: ${ADMIN_SENHA}
+      ADMIN_SENHA: AdminGleb2026Secure
       ADMIN_ROLE: admin
       FRONTEND_URL: https://gleb.scrb.org.br
     networks:
