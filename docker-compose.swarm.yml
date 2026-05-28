@@ -69,7 +69,7 @@ services:
       npx http-server dist -p 3000 -a 0.0.0.0 --proxy http://localhost:3000? -c-1
       "
     environment:
-      VITE_API_URL: https://gleb.scrb.org.br/api
+      VITE_API_URL: https://gleb.scrb.org.br
     networks:
       - scrb
       - gleb-network
