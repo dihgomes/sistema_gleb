@@ -13,6 +13,7 @@ build/
 .env.local
 .env.production
 .env.development
+.env.portainer
 .env.*.local
 */.env
 */.env.local
