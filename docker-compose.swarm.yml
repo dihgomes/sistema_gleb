@@ -39,7 +39,7 @@ services:
       DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
       JWT_SECRET: ${JWT_SECRET}
       ADMIN_SENHA: ${ADMIN_SENHA}
-      FRONTEND_URL: https://sistema.gleb.scrb.org.br
+      FRONTEND_URL: https://gleb.scrb.org.br
     networks:
       - scrb
       - gleb-network
@@ -50,7 +50,7 @@ services:
       labels:
         - "traefik.enable=true"
         - "traefik.docker.network=scrb"
-        - "traefik.http.routers.gleb-backend.rule=Host(`sistema.gleb.scrb.org.br`) && PathPrefix(`/api`)"
+        - "traefik.http.routers.gleb-backend.rule=Host(`gleb.scrb.org.br`) && PathPrefix(`/api`)"
         - "traefik.http.routers.gleb-backend.entrypoints=web"
         - "traefik.http.services.gleb-backend.loadbalancer.server.port=3002"
 
@@ -67,7 +67,7 @@ services:
       npx http-server dist -p 3000 -a 0.0.0.0 --proxy http://localhost:3000? -c-1
       "
     environment:
-      VITE_API_URL: https://sistema.gleb.scrb.org.br/api
+      VITE_API_URL: https://gleb.scrb.org.br/api
     networks:
       - scrb
       - gleb-network
@@ -78,7 +78,7 @@ services:
       labels:
         - "traefik.enable=true"
         - "traefik.docker.network=scrb"
-        - "traefik.http.routers.gleb-frontend.rule=Host(`sistema.gleb.scrb.org.br`)"
+        - "traefik.http.routers.gleb-frontend.rule=Host(`gleb.scrb.org.br`)"
         - "traefik.http.routers.gleb-frontend.entrypoints=web"
         - "traefik.http.services.gleb-frontend.loadbalancer.server.port=3000"
 
