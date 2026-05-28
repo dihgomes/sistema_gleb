@@ -51,7 +51,9 @@ services:
         - "traefik.enable=true"
         - "traefik.docker.network=scrb"
         - "traefik.http.routers.gleb-backend.rule=Host(`gleb.scrb.org.br`) && PathPrefix(`/api`)"
-        - "traefik.http.routers.gleb-backend.entrypoints=web"
+        - "traefik.http.routers.gleb-backend.entrypoints=websecure"
+        - "traefik.http.routers.gleb-backend.tls=true"
+        - "traefik.http.routers.gleb-backend.tls.certresolver=letsencryptresolver"
         - "traefik.http.services.gleb-backend.loadbalancer.server.port=3002"
 
   frontend:
@@ -79,7 +81,9 @@ services:
         - "traefik.enable=true"
         - "traefik.docker.network=scrb"
         - "traefik.http.routers.gleb-frontend.rule=Host(`gleb.scrb.org.br`)"
-        - "traefik.http.routers.gleb-frontend.entrypoints=web"
+        - "traefik.http.routers.gleb-frontend.entrypoints=websecure"
+        - "traefik.http.routers.gleb-frontend.tls=true"
+        - "traefik.http.routers.gleb-frontend.tls.certresolver=letsencryptresolver"
         - "traefik.http.services.gleb-frontend.loadbalancer.server.port=3000"
 
 volumes:
