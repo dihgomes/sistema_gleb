@@ -45,3 +45,19 @@ backend/uploads/*
 # Temp files
 *.tmp
 .cache/
+
+# Sensitive files - DO NOT COMMIT
+*.sql
+*.bat
+*.png
+*.jpg
+*.jpeg
+*.txt
+cloudflare-tunnel-*
+backup_*
+iniciar-*
+limpar_*
+migration_*
+add_new_*
+192.168.*
+DNS.*
