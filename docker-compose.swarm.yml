@@ -15,8 +15,8 @@ services:
       POSTGRES_INITDB_ARGS: "--auth-host=md5"
       PGDATA: /var/lib/postgresql/data/pgdata
     volumes:
-      - postgres_data:/var/lib/postgresql/data
-      - backup_upload:/backup
+      - postgres_data_v2:/var/lib/postgresql/data
+      - backup_upload_v2:/backup
     networks:
       - gleb-network
     deploy:
@@ -100,8 +100,8 @@ services:
         - "traefik.http.services.gleb-frontend.loadbalancer.server.port=3000"
 
 volumes:
-  postgres_data:
-  backup_upload:
+  postgres_data_v2:
+  backup_upload_v2:
 
 networks:
   gleb-network:
