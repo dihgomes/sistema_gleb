@@ -3,10 +3,16 @@ version: '3.8'
 services:
   postgres:
     image: postgres:16-alpine
+    command: >
+      sh -c "
+      echo 'host all all all md5' > /tmp/pg_hba.conf &&
+      docker-entrypoint.sh postgres -c hba_file=/tmp/pg_hba.conf
+      "
     environment:
       POSTGRES_DB: gleb_db
       POSTGRES_USER: gleb_user
       POSTGRES_PASSWORD: GlebSecure2026Pass
+      POSTGRES_INITDB_ARGS: "--auth-host=md5"
       PGDATA: /var/lib/postgresql/data/pgdata
     volumes:
       - postgres_data:/var/lib/postgresql/data
