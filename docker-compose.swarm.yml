@@ -13,7 +13,7 @@ services:
       POSTGRES_USER: gleb_user
       POSTGRES_PASSWORD: GlebSecure2026Pass
       POSTGRES_INITDB_ARGS: "--auth-host=md5"
-      PGDATA: /var/lib/postgresql/data/pgdata
+      PGDATA: /var/lib/postgresql/data/pgdata_new
     volumes:
       - postgres_data_v2:/var/lib/postgresql/data
       - backup_upload_v2:/backup
