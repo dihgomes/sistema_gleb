@@ -25,6 +25,8 @@ services:
   backend:
     image: node:20-alpine
     working_dir: /app
+    volumes:
+      - uploads_data:/app/backend/uploads
     command: >
       sh -c "
       apk add --no-cache git openssl openssl-dev &&
@@ -97,6 +99,7 @@ services:
 volumes:
   postgres_data_v2:
   backup_upload_v2:
+  uploads_data:
 
 networks:
   gleb-network:
