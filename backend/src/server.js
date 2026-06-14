@@ -29,6 +29,7 @@ app.set('trust proxy', 1);
 
 const allowedOrigins = [
   'http://localhost:5173',
+  'http://localhost:5174',
   'https://controle-hrrb.com.br',
   'https://www.controle-hrrb.com.br',
   process.env.FRONTEND_URL

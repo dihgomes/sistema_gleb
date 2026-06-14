@@ -14,6 +14,7 @@ export default function TrocarSenhaPage() {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [countdown, setCountdown] = useState(2);
+  const [shouldRedirect, setShouldRedirect] = useState(false);
 
   const requisitos = {
     tamanho: novaSenha.length >= 6,
@@ -35,6 +36,23 @@ export default function TrocarSenhaPage() {
       setPrimeiroAcesso(admin.primeiroAcesso || false);
     }
   }, []);
+
+  useEffect(() => {
+    if (showSuccessModal && countdown > 0) {
+      const timer = setTimeout(() => {
+        setCountdown(prev => prev - 1);
+      }, 1000);
+      return () => clearTimeout(timer);
+    } else if (showSuccessModal && countdown === 0) {
+      setShouldRedirect(true);
+    }
+  }, [showSuccessModal, countdown]);
+
+  useEffect(() => {
+    if (shouldRedirect) {
+      navigate('/admin/dashboard');
+    }
+  }, [shouldRedirect, navigate]);
 
   const validarSenha = (senha: string): string | null => {
     if (senha.length < 6) {
@@ -121,17 +139,6 @@ export default function TrocarSenhaPage() {
 
       setShowSuccessModal(true);
       setCountdown(2);
-      
-      const interval = setInterval(() => {
-        setCountdown((prev) => {
-          if (prev <= 1) {
-            clearInterval(interval);
-            navigate('/admin/dashboard');
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erro ao trocar senha');
     } finally {

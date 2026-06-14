@@ -38,22 +38,17 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
       </div>
 
       <header className="bg-slate-800/50 backdrop-blur-xl border-b border-emerald-500/10 shadow-lg relative z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-emerald-600 to-teal-600 flex items-center justify-center shadow-lg shadow-emerald-500/25">
-                <Home className="w-5 h-5 text-white" />
-              </div>
-              <div>
-                <h1 className="text-lg font-bold text-white">Área Administrativa</h1>
-                <p className="text-xs text-emerald-400">Sistema GLEB</p>
-              </div>
+            <div>
+              <h1 className="text-lg font-bold text-white">Área Administrativa</h1>
+              <p className="text-xs text-emerald-400">Sistema GLEB</p>
             </div>
 
             <div className="flex items-center gap-4">
               <div className="text-right hidden sm:block">
                 <p className="text-sm font-medium text-white">{admin?.nome}</p>
-                <p className="text-xs text-slate-400">{admin?.email}</p>
+                <p className="text-xs text-slate-400 capitalize">{admin?.role}</p>
               </div>
               <button
                 onClick={handleLogout}
@@ -67,9 +62,9 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         </div>
       </header>
 
-      <nav className="bg-slate-800/30 backdrop-blur-sm border-b border-emerald-500/10 relative z-10">
+      <nav className="bg-slate-800/50 backdrop-blur-xl border-b border-emerald-500/20 relative z-10 shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex gap-2 overflow-x-auto">
+          <div className="flex gap-2 overflow-x-auto py-1">
             {menuItems.map((item) => {
               const Icon = item.icon;
               const isActive = location.pathname === item.path;
@@ -78,14 +73,25 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                 <button
                   key={item.path}
                   onClick={() => navigate(item.path)}
-                  className={`flex items-center gap-2 px-4 py-3 border-b-2 transition-all whitespace-nowrap ${
+                  className={`relative flex items-center gap-2.5 px-6 py-3 transition-all duration-300 whitespace-nowrap group ${
                     isActive
-                      ? 'border-emerald-500 text-emerald-400 font-semibold bg-emerald-500/10'
-                      : 'border-transparent text-slate-400 hover:text-white hover:border-emerald-500/50 hover:bg-slate-700/30'
+                      ? 'text-white font-semibold'
+                      : 'text-slate-400 hover:text-emerald-300'
                   }`}
                 >
-                  <Icon className="w-4 h-4" />
-                  {item.label}
+                  <div className={`p-1.5 rounded-lg transition-all duration-300 ${
+                    isActive 
+                      ? 'bg-gradient-to-br from-emerald-500/20 to-teal-500/20 shadow-lg shadow-emerald-500/20' 
+                      : 'bg-transparent group-hover:bg-slate-700/50'
+                  }`}>
+                    <Icon className={`w-5 h-5 transition-all duration-300 ${
+                      isActive ? 'text-emerald-400 scale-110' : 'group-hover:scale-105'
+                    }`} />
+                  </div>
+                  <span className="text-sm font-medium">{item.label}</span>
+                  <div className={`absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-t-full transition-all duration-300 ${
+                    isActive ? 'opacity-100 scale-x-100' : 'opacity-0 scale-x-0 group-hover:opacity-50 group-hover:scale-x-100'
+                  }`}></div>
                 </button>
               );
             })}
