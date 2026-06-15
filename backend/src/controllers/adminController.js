@@ -76,7 +76,7 @@ export const criarUsuario = async (req, res) => {
       data: {
         nome,
         email,
-        senha: senhaHash,
+        senhaHash: senhaHash,
         role: role || 'user',
         ativo: true,
         primeiroAcesso: true,
