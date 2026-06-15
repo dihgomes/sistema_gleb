@@ -6,7 +6,6 @@ import PhotoCard from './PhotoCard';
 import InfoSection from './InfoSection';
 import FooterValidation from './FooterValidation';
 import { API_ENDPOINTS } from '../../config/api';
-import { CarteiraPublica } from '../../types/carteira';
 import { transformCarteiraData } from '../../utils/transformCarteiraData';
 import { MasonData } from '../../data/mockData';
 
