@@ -1,8 +1,10 @@
 import { ReactNode, useState } from 'react';
-import { LogOut, Home, Users, Plus } from 'lucide-react';
+import { Home, Users, Plus } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { logout, getAdmin } from '../../utils/auth';
 import Modal from '../ui/Modal';
+import UserDropdown from '../ui/UserDropdown';
+import ChangePasswordModal from '../ui/ChangePasswordModal';
 
 interface AdminLayoutProps {
   children: ReactNode;
@@ -13,6 +15,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   const location = useLocation();
   const admin = getAdmin();
   const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [showChangePasswordModal, setShowChangePasswordModal] = useState(false);
 
   const menuItems = [
     { path: '/admin/dashboard', icon: Home, label: 'Dashboard' },
@@ -29,6 +32,14 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     setShowLogoutModal(false);
   };
 
+  const handleChangePassword = () => {
+    setShowChangePasswordModal(true);
+  };
+
+  const handleSettings = () => {
+    navigate('/admin/configuracoes');
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex flex-col relative overflow-hidden">
       <div className="fixed inset-0 z-0 pointer-events-none">
@@ -37,7 +48,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         <div className="absolute bottom-0 left-0 w-96 h-96 bg-teal-500/5 rounded-full blur-3xl"></div>
       </div>
 
-      <header className="bg-slate-800/50 backdrop-blur-xl border-b border-emerald-500/10 shadow-lg relative z-10">
+      <header className="bg-slate-800/50 backdrop-blur-xl border-b border-emerald-500/10 shadow-lg relative z-50">
         <div className="px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div>
@@ -45,19 +56,14 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
               <p className="text-xs text-emerald-400">Sistema GLEB</p>
             </div>
 
-            <div className="flex items-center gap-4">
-              <div className="text-right hidden sm:block">
-                <p className="text-sm font-medium text-white">{admin?.nome}</p>
-                <p className="text-xs text-slate-400 capitalize">{admin?.role}</p>
-              </div>
-              <button
-                onClick={handleLogout}
-                className="flex items-center gap-2 px-4 py-2 bg-red-600/90 hover:bg-red-600 rounded-lg transition-all shadow-lg shadow-red-500/20 border border-red-500/50"
-              >
-                <LogOut className="w-4 h-4 text-white" />
-                <span className="hidden sm:inline text-white font-medium">Sair</span>
-              </button>
-            </div>
+            <UserDropdown
+              userName={admin?.nome || 'Usuário'}
+              userRole={admin?.role || 'user'}
+              onChangePassword={handleChangePassword}
+              onSettings={handleSettings}
+              onLogout={handleLogout}
+              isAdmin={admin?.role === 'admin'}
+            />
           </div>
         </div>
       </header>
@@ -123,6 +129,11 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         confirmText="Sair"
         cancelText="Cancelar"
         confirmVariant="danger"
+      />
+
+      <ChangePasswordModal
+        isOpen={showChangePasswordModal}
+        onClose={() => setShowChangePasswordModal(false)}
       />
     </div>
   );

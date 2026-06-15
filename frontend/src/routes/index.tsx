@@ -6,6 +6,7 @@ import Dashboard from '../components/admin/Dashboard';
 import CarteirasListPage from '../components/admin/CarteirasListPage';
 import CarteiraFormPage from '../components/admin/CarteiraFormPage';
 import QRCodePage from '../components/admin/QRCodePage';
+import ConfiguracoesPage from '../components/admin/ConfiguracoesPage';
 import ProtectedRoute from '../components/admin/ProtectedRoute';
 
 export const router = createBrowserRouter([
@@ -66,6 +67,14 @@ export const router = createBrowserRouter([
     element: (
       <ProtectedRoute>
         <QRCodePage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: '/admin/configuracoes',
+    element: (
+      <ProtectedRoute>
+        <ConfiguracoesPage />
       </ProtectedRoute>
     ),
   },
