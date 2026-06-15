@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Key, Clock, Shield, Trash2, Plus, Copy, Check } from 'lucide-react';
 import { API_ENDPOINTS } from '../../config/api';
 import { getAuthHeaders } from '../../utils/auth';
+import AdminLayout from './AdminLayout';
 
 interface Pin {
   id: string;
@@ -49,6 +50,20 @@ export default function PinsPage() {
   };
 
   const criarPin = async () => {
+    const pinsAtivos = pins.filter(p => !p.expirado && !p.revogado);
+    const temTemporario = pinsAtivos.some(p => p.tipo === 'temporario');
+    const temPermanente = pinsAtivos.some(p => p.tipo === 'permanente');
+
+    if (tipoPinNovo === 'temporario' && temTemporario) {
+      alert('Você já possui um PIN temporário ativo. Revogue-o antes de criar outro.');
+      return;
+    }
+
+    if (tipoPinNovo === 'permanente' && temPermanente) {
+      alert('Você já possui um PIN permanente ativo. Revogue-o antes de criar outro.');
+      return;
+    }
+
     try {
       const response = await fetch(API_ENDPOINTS.PINS, {
         method: 'POST',
@@ -107,32 +122,33 @@ export default function PinsPage() {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-white flex items-center gap-2">
-            <Key className="w-7 h-7 text-emerald-400" />
-            PINs de Acesso
-          </h1>
-          <p className="text-slate-400 mt-1">
-            Gerencie os PINs para visualização de status das carteiras
-          </p>
+    <AdminLayout>
+      <div className="space-y-6">
+        <div className="flex items-center justify-between flex-wrap gap-4">
+          <div>
+            <h1 className="text-2xl font-bold text-white flex items-center gap-2">
+              <Key className="w-7 h-7 text-emerald-400" />
+              PINs de Acesso
+            </h1>
+            <p className="text-slate-400 mt-1">
+              Gerencie os PINs para visualização de status das carteiras
+            </p>
+          </div>
+          <button
+            onClick={() => setShowModal(true)}
+            className="flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition-all shadow-lg shadow-emerald-500/20"
+          >
+            <Plus className="w-5 h-5" />
+            Gerar Novo PIN
+          </button>
         </div>
-        <button
-          onClick={() => setShowModal(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition-all"
-        >
-          <Plus className="w-5 h-5" />
-          Gerar Novo PIN
-        </button>
-      </div>
 
       {loading ? (
         <div className="text-center py-12">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-500 mx-auto"></div>
         </div>
       ) : pins.length === 0 ? (
-        <div className="bg-slate-800/50 rounded-lg p-12 text-center">
+        <div className="bg-slate-800/50 backdrop-blur-sm rounded-lg p-12 text-center border border-slate-700/50">
           <Key className="w-16 h-16 text-slate-600 mx-auto mb-4" />
           <p className="text-slate-400 text-lg">Nenhum PIN ativo</p>
           <p className="text-slate-500 text-sm mt-2">Clique em "Gerar Novo PIN" para criar um</p>
@@ -194,7 +210,6 @@ export default function PinsPage() {
                     <div>
                       <p className="text-slate-500">Criado por</p>
                       <p className="text-white font-medium">{pin.criadoPorNome}</p>
-                      <p className="text-slate-400 text-xs capitalize">{pin.criadoPorRole}</p>
                     </div>
                     <div>
                       <p className="text-slate-500">Criado em</p>
@@ -239,8 +254,8 @@ export default function PinsPage() {
       )}
 
       {showModal && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-slate-800 rounded-lg p-6 max-w-md w-full border border-slate-700">
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-slate-800/95 backdrop-blur-xl rounded-lg p-6 max-w-md w-full border border-slate-700/50 shadow-2xl">
             {pinCriado ? (
               <div className="text-center">
                 <div className="w-16 h-16 bg-emerald-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -353,6 +368,7 @@ export default function PinsPage() {
           </div>
         </div>
       )}
-    </div>
+      </div>
+    </AdminLayout>
   );
 }

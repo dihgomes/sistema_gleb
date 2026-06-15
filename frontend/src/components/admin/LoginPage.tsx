@@ -154,7 +154,7 @@ export default function LoginPage() {
                     type="text"
                     value={usuario}
                     onChange={handleUsuarioChange}
-                    placeholder="Digite apenas letras"
+                    placeholder="Digite seu usuário"
                     required
                     autoComplete="username"
                     maxLength={50}

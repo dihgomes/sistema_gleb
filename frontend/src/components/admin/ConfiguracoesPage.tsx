@@ -226,7 +226,10 @@ export default function ConfiguracoesPage() {
                 <input
                   type="text"
                   value={formData.nome}
-                  onChange={(e) => setFormData({ ...formData, nome: e.target.value })}
+                  onChange={(e) => {
+                    const value = e.target.value.replace(/[^a-zA-Z0-9.\s]/g, '');
+                    setFormData({ ...formData, nome: value });
+                  }}
                   placeholder="Digite o nome do usuário"
                   className="w-full px-3 py-2 bg-slate-900/50 border border-emerald-500/30 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all text-sm"
                 />
