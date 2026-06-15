@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { Key, Eye, EyeOff } from 'lucide-react';
 import Header from './Header';
 import PhotoCard from './PhotoCard';
 import InfoSection from './InfoSection';
@@ -15,6 +16,10 @@ export default function ValidationPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isInativa, setIsInativa] = useState(false);
+  const [pin, setPin] = useState('');
+  const [showPinInput, setShowPinInput] = useState(false);
+  const [statusVisivel, setStatusVisivel] = useState(false);
+  const [motivoNegacao, setMotivoNegacao] = useState<string | null>(null);
 
   useEffect(() => {
     if (codigo) {
@@ -25,16 +30,21 @@ export default function ValidationPage() {
     }
   }, [codigo]);
 
-  const loadCarteiraData = async (codigoUnico: string, retryCount = 0) => {
+  const loadCarteiraData = async (codigoUnico: string, pinValue?: string, retryCount = 0) => {
     setLoading(true);
     setError(null);
     setIsInativa(false);
+    setMotivoNegacao(null);
 
     try {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
 
-      const response = await fetch(API_ENDPOINTS.CARTEIRA_PUBLIC(codigoUnico), {
+      const endpoint = pinValue 
+        ? API_ENDPOINTS.CARTEIRA_PUBLIC_WITH_PIN(codigoUnico, pinValue)
+        : API_ENDPOINTS.CARTEIRA_PUBLIC(codigoUnico);
+
+      const response = await fetch(endpoint, {
         signal: controller.signal,
         headers: {
           'Accept': 'application/json',
@@ -51,15 +61,20 @@ export default function ValidationPage() {
         }
       }
 
-      const apiData: CarteiraPublica = await response.json();
+      const apiData: any = await response.json();
       const transformedData = transformCarteiraData(apiData);
       setData(transformedData);
       
       setIsInativa(!apiData.ativo);
+      setStatusVisivel(apiData.statusVisivel || false);
+      
+      if (apiData.motivoNegacao) {
+        setMotivoNegacao(apiData.motivoNegacao);
+      }
     } catch (err) {
       if (retryCount < 2 && (err instanceof Error && (err.name === 'AbortError' || err.message.includes('fetch')))) {
         console.log(`Tentando novamente... (${retryCount + 1}/2)`);
-        setTimeout(() => loadCarteiraData(codigoUnico, retryCount + 1), 1000);
+        setTimeout(() => loadCarteiraData(codigoUnico, pinValue, retryCount + 1), 1000);
         return;
       }
 
@@ -70,6 +85,13 @@ export default function ValidationPage() {
       if (retryCount === 0) {
         setLoading(false);
       }
+    }
+  };
+
+  const handlePinSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (pin.length === 6 && codigo) {
+      loadCarteiraData(codigo, pin);
     }
   };
 
@@ -149,6 +171,60 @@ export default function ValidationPage() {
           </div>
         )}
 
+        {!statusVisivel && (
+          <div className="mb-6 bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-lg">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center">
+                <Key className="h-5 w-5 text-blue-500 mr-3" />
+                <div>
+                  <p className="text-sm font-semibold text-blue-800">
+                    Status Protegido
+                  </p>
+                  <p className="text-xs text-blue-700 mt-1">
+                    Para visualizar o status atual, insira o PIN de acesso
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowPinInput(!showPinInput)}
+                className="ml-4 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-lg transition-all flex items-center gap-2"
+              >
+                {showPinInput ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                {showPinInput ? 'Ocultar' : 'Inserir PIN'}
+              </button>
+            </div>
+            
+            {showPinInput && (
+              <form onSubmit={handlePinSubmit} className="mt-4 flex gap-2">
+                <input
+                  type="text"
+                  value={pin}
+                  onChange={(e) => setPin(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                  placeholder="Digite o PIN de 6 dígitos"
+                  maxLength={6}
+                  className="flex-1 px-4 py-2 border border-blue-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-center text-lg font-mono tracking-wider"
+                />
+                <button
+                  type="submit"
+                  disabled={pin.length !== 6}
+                  className="px-6 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white rounded-lg transition-all"
+                >
+                  Validar
+                </button>
+              </form>
+            )}
+
+            {motivoNegacao && (
+              <div className="mt-3 text-sm text-red-600 flex items-center gap-2">
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                </svg>
+                {motivoNegacao}
+              </div>
+            )}
+          </div>
+        )}
+
         <div className="bg-white rounded-2xl shadow-2xl overflow-hidden border-2" style={{ borderColor: '#6F63C7' }}>
           <div className="h-2" style={{ background: 'linear-gradient(to right, #6F63C7, #8B7FD9, #FCD34D)' }} />
 
@@ -163,7 +239,7 @@ export default function ValidationPage() {
               </div>
 
               <div className="flex-1 w-full">
-                <InfoSection data={data} />
+                <InfoSection data={data} statusVisivel={statusVisivel} />
               </div>
             </div>
           </div>

@@ -1,5 +1,5 @@
 import { ReactNode, useState } from 'react';
-import { Home, Users, Plus } from 'lucide-react';
+import { Home, Users, Plus, Key } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { logout, getAdmin } from '../../utils/auth';
 import Modal from '../ui/Modal';
@@ -21,6 +21,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     { path: '/admin/dashboard', icon: Home, label: 'Dashboard' },
     { path: '/admin/carteiras', icon: Users, label: 'Carteiras' },
     { path: '/admin/carteiras/nova', icon: Plus, label: 'Nova Carteira' },
+    { path: '/admin/pins', icon: Key, label: 'PINs de Acesso' },
   ];
 
   const handleLogout = () => {

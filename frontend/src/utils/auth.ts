@@ -29,3 +29,11 @@ export function logout() {
 export function isAuthenticated(): boolean {
   return !!getToken();
 }
+
+export function getAuthHeaders(): HeadersInit {
+  const token = getToken();
+  return {
+    'Content-Type': 'application/json',
+    ...(token && { 'Authorization': `Bearer ${token}` }),
+  };
+}

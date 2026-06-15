@@ -7,6 +7,7 @@ import CarteirasListPage from '../components/admin/CarteirasListPage';
 import CarteiraFormPage from '../components/admin/CarteiraFormPage';
 import QRCodePage from '../components/admin/QRCodePage';
 import ConfiguracoesPage from '../components/admin/ConfiguracoesPage';
+import PinsPage from '../components/admin/PinsPage';
 import ProtectedRoute from '../components/admin/ProtectedRoute';
 
 export const router = createBrowserRouter([
@@ -75,6 +76,14 @@ export const router = createBrowserRouter([
     element: (
       <ProtectedRoute>
         <ConfiguracoesPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: '/admin/pins',
+    element: (
+      <ProtectedRoute>
+        <PinsPage />
       </ProtectedRoute>
     ),
   },

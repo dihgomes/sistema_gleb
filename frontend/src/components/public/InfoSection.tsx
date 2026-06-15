@@ -86,9 +86,10 @@ function DadosPessoaisBlock({ data }: { data: MasonData }) {
 
 interface InfoSectionProps {
   data: MasonData;
+  statusVisivel?: boolean;
 }
 
-export default function InfoSection({ data }: InfoSectionProps) {
+export default function InfoSection({ data, statusVisivel = true }: InfoSectionProps) {
   return (
     <div className="flex flex-col gap-6 w-full">
       <div className="text-center border-b-2 pb-5" style={{ borderColor: '#6F63C7' }}>
@@ -97,10 +98,12 @@ export default function InfoSection({ data }: InfoSectionProps) {
         </h2>
       </div>
 
-      <div>
-        <SectionHeader title="Situação Atual" />
-        <SituacaoCard situacao={data.situacao} />
-      </div>
+      {statusVisivel && (
+        <div>
+          <SectionHeader title="Situação Atual" />
+          <SituacaoCard situacao={data.situacao} />
+        </div>
+      )}
 
       <div>
         <SectionHeader title="Dados Pessoais" />

@@ -5,5 +5,8 @@ export const API_ENDPOINTS = {
   ADMINS: `${API_URL}/api/admin/usuarios`,
   CARTEIRAS: `${API_URL}/api/admin/carteiras`,
   CARTEIRA_PUBLIC: (codigo: string) => `${API_URL}/api/public/carteira/${codigo}`,
+  CARTEIRA_PUBLIC_WITH_PIN: (codigo: string, pin: string) => `${API_URL}/api/public/carteira/${codigo}?pin=${pin}`,
   GERAR_QRCODE: (id: string) => `${API_URL}/api/admin/carteiras/${id}/gerar-qrcode`,
+  PINS: `${API_URL}/api/admin/pins`,
+  PIN_REVOGAR: (id: string) => `${API_URL}/api/admin/pins/${id}`,
 };

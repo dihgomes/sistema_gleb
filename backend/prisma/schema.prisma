@@ -85,3 +85,25 @@ model Log {
   @@index([criadoEm])
   @@map("logs")
 }
+
+// Tabela de PINs de Acesso para visualização de status
+model PinAcesso {
+  id              String    @id @default(uuid())
+  pin             String    @unique // PIN de 6 dígitos
+  tipo            String    // 'temporario' ou 'permanente'
+  expiraEm        DateTime? @map("expira_em") // null se permanente
+  ativo           Boolean   @default(true)
+  revogado        Boolean   @default(false)
+  revogadoEm      DateTime? @map("revogado_em")
+  criadoPorId     String    @map("criado_por_id")
+  criadoPorNome   String    @map("criado_por_nome")
+  criadoPorRole   String    @map("criado_por_role")
+  criadoEm        DateTime  @default(now()) @map("criado_em")
+  ultimoUso       DateTime? @map("ultimo_uso")
+  totalUsos       Int       @default(0) @map("total_usos")
+
+  @@index([pin])
+  @@index([ativo])
+  @@index([expiraEm])
+  @@map("pins_acesso")
+}
