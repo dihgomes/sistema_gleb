@@ -21,7 +21,7 @@ export default function LoginPage() {
   }, [location]);
 
   const handleUsuarioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.replace(/[^a-zA-Z]/g, '');
+    const value = e.target.value.replace(/[^a-zA-Z0-9.\s]/g, '');
     setUsuario(value);
   };
 
