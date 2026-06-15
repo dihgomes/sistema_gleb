@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 
-function authMiddleware(req, res, next) {
+export function authenticateToken(req, res, next) {
   const authHeader = req.headers.authorization;
 
   if (!authHeader) {
@@ -35,4 +35,11 @@ function authMiddleware(req, res, next) {
   }
 }
 
-export default authMiddleware;
+export function isAdmin(req, res, next) {
+  if (req.user.role !== 'admin') {
+    return res.status(403).json({ error: 'Acesso negado. Apenas administradores podem acessar este recurso.' });
+  }
+  return next();
+}
+
+export default authenticateToken;
