@@ -60,13 +60,14 @@ function SituacaoCard({ situacao }: SituacaoProps) {
 interface InfoItemProps {
   label: string;
   value: string | null | undefined;
+  uppercase?: boolean;
 }
 
-function InfoItem({ label, value }: InfoItemProps) {
+function InfoItem({ label, value, uppercase = false }: InfoItemProps) {
   return (
     <div className="px-5 py-4 bg-white border-b border-gray-100 last:border-b-0 hover:bg-purple-50/30 transition-colors">
       <p className="text-[10px] font-bold uppercase tracking-widest mb-2" style={{ color: '#6F63C7' }}>{label}</p>
-      <p className="text-base text-gray-900 font-semibold">
+      <p className={`text-base text-gray-900 font-semibold ${uppercase ? 'uppercase' : ''}`}>
         {value || <span className="text-gray-400 font-normal italic">Não informado</span>}
       </p>
     </div>
@@ -78,7 +79,7 @@ function DadosPessoaisBlock({ data }: { data: MasonData }) {
     <div className="border border-gray-200 rounded-b-md overflow-hidden">
       <InfoItem label="CPF" value={data.cpf} />
       <InfoItem label="Data de Nascimento" value={data.dataNascimento} />
-      <InfoItem label="Cargo/Função" value={data.cargo} />
+      <InfoItem label="Cargo/Função" value={data.cargo} uppercase={true} />
       <InfoItem label="Unidades Administradas" value={data.unidadesAdministradas} />
     </div>
   );

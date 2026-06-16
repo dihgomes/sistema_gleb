@@ -8,36 +8,19 @@ interface FooterValidationProps {
 function formatarDataHora(dataString: string): string {
   if (!dataString) return 'Data não disponível';
   
-  // Se já está no formato brasileiro (DD/MM/YYYY), retorna como está
+  // Se já está no formato brasileiro (DD/MM/YYYY HH:MM:SS), formata para exibição
   if (dataString.includes('/')) {
+    // Formato: DD/MM/YYYY HH:MM:SS -> DD/MM/YYYY às HH:MM
+    const partes = dataString.split(' ');
+    if (partes.length >= 2) {
+      const data = partes[0];
+      const hora = partes[1].substring(0, 5); // Pega apenas HH:MM
+      return `${data} às ${hora}`;
+    }
     return dataString;
   }
   
-  try {
-    const data = new Date(dataString);
-    
-    // Verifica se a data é válida
-    if (isNaN(data.getTime())) {
-      return dataString;
-    }
-    
-    // Converte para horário de Brasília (UTC-3)
-    const offsetBrasilia = -3 * 60; // -3 horas em minutos
-    const offsetLocal = data.getTimezoneOffset(); // offset do navegador em minutos
-    const diffMinutos = offsetBrasilia - offsetLocal;
-    
-    const dataBrasilia = new Date(data.getTime() + diffMinutos * 60 * 1000);
-    
-    const dia = String(dataBrasilia.getDate()).padStart(2, '0');
-    const mes = String(dataBrasilia.getMonth() + 1).padStart(2, '0');
-    const ano = dataBrasilia.getFullYear();
-    const horas = String(dataBrasilia.getHours()).padStart(2, '0');
-    const minutos = String(dataBrasilia.getMinutes()).padStart(2, '0');
-    
-    return `${dia}/${mes}/${ano} às ${horas}:${minutos}`;
-  } catch {
-    return dataString;
-  }
+  return dataString;
 }
 
 export default function FooterValidation({ validadoEm, hash }: FooterValidationProps) {
