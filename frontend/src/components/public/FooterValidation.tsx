@@ -21,11 +21,18 @@ function formatarDataHora(dataString: string): string {
       return dataString;
     }
     
-    const dia = String(data.getDate()).padStart(2, '0');
-    const mes = String(data.getMonth() + 1).padStart(2, '0');
-    const ano = data.getFullYear();
-    const horas = String(data.getHours()).padStart(2, '0');
-    const minutos = String(data.getMinutes()).padStart(2, '0');
+    // Converte para horário de Brasília (UTC-3)
+    const offsetBrasilia = -3 * 60; // -3 horas em minutos
+    const offsetLocal = data.getTimezoneOffset(); // offset do navegador em minutos
+    const diffMinutos = offsetBrasilia - offsetLocal;
+    
+    const dataBrasilia = new Date(data.getTime() + diffMinutos * 60 * 1000);
+    
+    const dia = String(dataBrasilia.getDate()).padStart(2, '0');
+    const mes = String(dataBrasilia.getMonth() + 1).padStart(2, '0');
+    const ano = dataBrasilia.getFullYear();
+    const horas = String(dataBrasilia.getHours()).padStart(2, '0');
+    const minutos = String(dataBrasilia.getMinutes()).padStart(2, '0');
     
     return `${dia}/${mes}/${ano} às ${horas}:${minutos}`;
   } catch {
