@@ -1,4 +1,4 @@
-import { CarteiraPublica, CarteiraDisplay } from '../types/carteira';
+import { CarteiraDisplay } from '../types/carteira';
 
 function formatDateToBrazilian(dateString: string): string {
   if (!dateString) return '';
@@ -10,16 +10,18 @@ function formatDateToBrazilian(dateString: string): string {
 }
 
 export function transformCarteiraData(apiData: any): CarteiraDisplay {
+  const dataNasc = apiData.dataNascimento || apiData.data_nascimento;
+  
   return {
-    nome: apiData.nome,
+    nome: apiData.nome || '',
     cim: apiData.codigoUnico || apiData.codigo_unico || 'N/A',
     situacao: (apiData.situacaoAtual?.toUpperCase() || apiData.situacao_atual?.toUpperCase() || 'REGULAR') as CarteiraDisplay['situacao'],
     foto: apiData.fotoUrl || apiData.foto_url || '',
     cpf: apiData.cpf || null,
-    dataNascimento: apiData.dataNascimento || apiData.data_nascimento ? formatDateToBrazilian(apiData.dataNascimento || apiData.data_nascimento) : null,
+    dataNascimento: dataNasc ? formatDateToBrazilian(dataNasc) : null,
     cargo: apiData.cargo || null,
     unidadesAdministradas: apiData.unidadesAdministradas || apiData.unidades_administradas || null,
-    validadoEm: apiData.criadoEm || apiData.criado_em || apiData.atualizadoEm || apiData.atualizado_em || apiData.dados_validados_em || '',
+    validadoEm: apiData.validadoEm || apiData.dados_validados_em || '',
     hashValidacao: apiData.hashValidacao || apiData.hash_validacao || ''
   };
 }

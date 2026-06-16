@@ -23,22 +23,20 @@ class PublicController {
       }
 
       const resposta = {
-        id: carteira.id,
-        codigoUnico: carteira.codigoUnico,
+        codigoUnico: carteira.codigo_unico,
         nome: carteira.nome,
         cpf: carteira.cpf,
         cargo: carteira.cargo,
-        dataNascimento: carteira.dataNascimento,
-        unidadesAdministradas: carteira.unidadesAdministradas,
-        fotoUrl: carteira.fotoUrl,
-        hashValidacao: carteira.hashValidacao,
+        dataNascimento: carteira.data_nascimento,
+        unidadesAdministradas: carteira.unidades_administradas,
+        fotoUrl: carteira.foto_url,
+        hashValidacao: carteira.hash_validacao,
         ativo: carteira.ativo,
-        criadoEm: carteira.criadoEm,
-        atualizadoEm: carteira.atualizadoEm,
+        validadoEm: carteira.dados_validados_em,
       };
 
       if (mostrarStatus) {
-        resposta.situacaoAtual = carteira.situacaoAtual;
+        resposta.situacaoAtual = carteira.situacao_atual;
         resposta.statusVisivel = true;
       } else {
         resposta.statusVisivel = false;

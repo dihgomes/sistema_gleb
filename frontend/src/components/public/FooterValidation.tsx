@@ -5,11 +5,22 @@ interface FooterValidationProps {
   hash: string;
 }
 
-function formatarDataHora(dataISO: string): string {
-  if (!dataISO) return 'Data não disponível';
+function formatarDataHora(dataString: string): string {
+  if (!dataString) return 'Data não disponível';
+  
+  // Se já está no formato brasileiro (DD/MM/YYYY), retorna como está
+  if (dataString.includes('/')) {
+    return dataString;
+  }
   
   try {
-    const data = new Date(dataISO);
+    const data = new Date(dataString);
+    
+    // Verifica se a data é válida
+    if (isNaN(data.getTime())) {
+      return dataString;
+    }
+    
     const dia = String(data.getDate()).padStart(2, '0');
     const mes = String(data.getMonth() + 1).padStart(2, '0');
     const ano = data.getFullYear();
@@ -18,7 +29,7 @@ function formatarDataHora(dataISO: string): string {
     
     return `${dia}/${mes}/${ano} às ${horas}:${minutos}`;
   } catch {
-    return dataISO;
+    return dataString;
   }
 }
 
