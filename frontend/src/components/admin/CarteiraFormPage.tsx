@@ -277,6 +277,7 @@ export default function CarteiraFormPage() {
                       <option value="Hospital Regional Piemonte do Paraguaçu">Hospital Regional Piemonte do Paraguaçu</option>
                       <option value="Hospital Metropolitano">Hospital Metropolitano</option>
                       <option value="Hospital Estadual Litoral Norte">Hospital Estadual Litoral Norte</option>
+                      <option value="CSC">CSC</option>
                     </select>
                   </div>
 
