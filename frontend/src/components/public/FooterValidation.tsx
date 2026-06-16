@@ -5,6 +5,23 @@ interface FooterValidationProps {
   hash: string;
 }
 
+function formatarDataHora(dataISO: string): string {
+  if (!dataISO) return 'Data não disponível';
+  
+  try {
+    const data = new Date(dataISO);
+    const dia = String(data.getDate()).padStart(2, '0');
+    const mes = String(data.getMonth() + 1).padStart(2, '0');
+    const ano = data.getFullYear();
+    const horas = String(data.getHours()).padStart(2, '0');
+    const minutos = String(data.getMinutes()).padStart(2, '0');
+    
+    return `${dia}/${mes}/${ano} às ${horas}:${minutos}`;
+  } catch {
+    return dataISO;
+  }
+}
+
 export default function FooterValidation({ validadoEm, hash }: FooterValidationProps) {
   return (
     <footer className="mt-8 border-t border-blue-100 pt-6 pb-8 px-4 text-center">
@@ -12,7 +29,7 @@ export default function FooterValidation({ validadoEm, hash }: FooterValidationP
         <ShieldCheck className="w-6 h-6 text-blue-700" />
         <p className="text-xs text-gray-600 tracking-wide">
           Dados validados em{' '}
-          <span className="font-semibold text-blue-900">{validadoEm}</span>
+          <span className="font-semibold text-blue-900">{formatarDataHora(validadoEm)}</span>
         </p>
         <div className="mt-1 px-4 py-1.5 bg-gray-100 border border-gray-200 rounded-md inline-flex items-center gap-2">
           <span className="w-1.5 h-1.5 rounded-full bg-green-500" />

@@ -32,6 +32,9 @@ class PublicController {
         unidadesAdministradas: carteira.unidadesAdministradas,
         fotoUrl: carteira.fotoUrl,
         hashValidacao: carteira.hashValidacao,
+        ativo: carteira.ativo,
+        criadoEm: carteira.criadoEm,
+        atualizadoEm: carteira.atualizadoEm,
       };
 
       if (mostrarStatus) {
