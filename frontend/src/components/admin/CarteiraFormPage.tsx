@@ -210,10 +210,11 @@ export default function CarteiraFormPage() {
                     label="Nome Completo *"
                     type="text"
                     value={nome}
-                    onChange={(e) => setNome(e.target.value)}
+                    onChange={(e) => setNome(e.target.value.toUpperCase())}
                     placeholder="Digite o nome completo"
                     required
                     disabled={isDesligada}
+                    style={{ textTransform: 'uppercase' }}
                   />
 
                   <div>
@@ -252,9 +253,10 @@ export default function CarteiraFormPage() {
                     label="Cargo/Função"
                     type="text"
                     value={cargo}
-                    onChange={(e) => setCargo(e.target.value)}
+                    onChange={(e) => setCargo(e.target.value.toUpperCase())}
                     placeholder="Digite o cargo ou função"
                     disabled={isDesligada}
+                    style={{ textTransform: 'uppercase' }}
                   />
                 </div>
 

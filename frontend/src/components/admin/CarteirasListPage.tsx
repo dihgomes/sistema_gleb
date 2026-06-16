@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Edit, QrCode, Search, ChevronLeft, ChevronRight, User } from 'lucide-react';
+import { Edit, QrCode, Search, ChevronLeft, ChevronRight, User, Ban } from 'lucide-react';
 import AdminLayout from './AdminLayout';
 import { API_ENDPOINTS } from '../../config/api';
-import { getToken } from '../../utils/auth';
+import { getToken, getAdmin } from '../../utils/auth';
 
 interface Carteira {
   id: string;
@@ -21,6 +21,8 @@ interface Carteira {
 
 export default function CarteirasListPage() {
   const navigate = useNavigate();
+  const admin = getAdmin();
+  const isAdmin = admin?.role === 'admin';
   const [carteiras, setCarteiras] = useState<Carteira[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -50,6 +52,33 @@ export default function CarteirasListPage() {
       alert('Erro ao carregar carteiras');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleRevogarCarteira = async (id: string, nome: string) => {
+    if (!confirm(`Tem certeza que deseja revogar a carteira de ${nome}?\n\nEsta ação irá desativar a carteira e ela não poderá mais ser validada.`)) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`${API_ENDPOINTS.CARTEIRAS}/${id}/status`, {
+        method: 'PATCH',
+        headers: {
+          'Authorization': `Bearer ${getToken()}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ ativo: false })
+      });
+
+      if (response.ok) {
+        alert('Carteira revogada com sucesso!');
+        loadCarteiras();
+      } else {
+        alert('Erro ao revogar carteira');
+      }
+    } catch (error) {
+      console.error('Erro ao revogar carteira:', error);
+      alert('Erro ao revogar carteira');
     }
   };
 
@@ -155,7 +184,7 @@ export default function CarteirasListPage() {
                           </p>
                         </div>
 
-                        <div className="flex-shrink-0">
+                        <div className="flex-shrink-0 flex flex-col items-end gap-2">
                           {carteira.situacaoAtual === 'REGULAR' ? (
                             <span className="px-2 sm:px-3 py-1 sm:py-1.5 bg-green-500/20 text-green-400 rounded-lg text-xs font-bold uppercase tracking-wide border border-green-500/30 whitespace-nowrap">
                               Regular
@@ -168,6 +197,17 @@ export default function CarteirasListPage() {
                             <span className="px-2 sm:px-3 py-1 sm:py-1.5 bg-slate-500/20 text-slate-400 rounded-lg text-xs font-bold uppercase tracking-wide border border-slate-500/30 whitespace-nowrap">
                               {carteira.situacaoAtual || 'Sem Status'}
                             </span>
+                          )}
+                          
+                          {isAdmin && carteira.ativo && (
+                            <button
+                              onClick={() => handleRevogarCarteira(carteira.id, carteira.nome)}
+                              className="flex items-center gap-1.5 px-2 py-1 bg-red-500/10 hover:bg-red-500/20 text-red-400 hover:text-red-300 rounded-md text-xs font-semibold transition-all border border-red-500/30 hover:border-red-500/50"
+                              title="Revogar carteira"
+                            >
+                              <Ban className="w-3 h-3" />
+                              Revogar
+                            </button>
                           )}
                         </div>
                       </div>
