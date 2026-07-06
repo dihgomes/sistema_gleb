@@ -28,12 +28,9 @@ services:
     command: >
       sh -c "
       apk add --no-cache git openssl openssl-dev &&
-      if [ -d .git ]; then
-        git pull origin main;
-      else
-        git clone https://github.com/dihgomes/sistema_gleb.git .;
-      fi &&
+      git clone https://github.com/dihgomes/sistema_gleb.git . &&
       cd backend &&
+      ln -sf /uploads uploads &&
       echo 'Aguardando PostgreSQL inicializar...' &&
       sleep 15 &&
       npm install &&
@@ -43,7 +40,7 @@ services:
       node src/server.js
       "
     volumes:
-      - uploads_v2:/app/backend/uploads
+      - uploads_v2:/uploads
     environment:
       NODE_ENV: production
       PORT: 3002
