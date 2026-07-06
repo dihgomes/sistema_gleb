@@ -38,6 +38,8 @@ services:
       node scripts/criarAdmin.js || true &&
       node src/server.js
       "
+    volumes:
+      - uploads_v2:/app/backend/uploads
     environment:
       NODE_ENV: production
       PORT: 3002
@@ -98,6 +100,7 @@ services:
 volumes:
   postgres_data_v2:
   backup_upload_v2:
+  uploads_v2:
 
 networks:
   gleb-network:
