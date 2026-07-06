@@ -30,6 +30,7 @@ services:
       apk add --no-cache git openssl openssl-dev &&
       git clone https://github.com/dihgomes/sistema_gleb.git . &&
       cd backend &&
+      mkdir -p uploads &&
       echo 'Aguardando PostgreSQL inicializar...' &&
       sleep 15 &&
       npm install &&
