@@ -9,6 +9,8 @@ router.use(authMiddleware);
 
 router.post('/', upload.single('foto'), carteiraController.criar.bind(carteiraController));
 
+router.post('/lote', upload.array('fotos', 10), carteiraController.criarEmLote.bind(carteiraController));
+
 router.get('/', carteiraController.listar.bind(carteiraController));
 
 router.get('/:id', carteiraController.buscarPorId.bind(carteiraController));
