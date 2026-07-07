@@ -2,21 +2,13 @@ import multer from 'multer';
 import path from 'path';
 import crypto from 'crypto';
 import { fileURLToPath } from 'url';
-import fs from 'fs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const uploadsDir = path.resolve(__dirname, '../../uploads');
-
-// Criar diretório uploads se não existir
-if (!fs.existsSync(uploadsDir)) {
-  fs.mkdirSync(uploadsDir, { recursive: true });
-}
-
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, uploadsDir);
+    cb(null, path.resolve(__dirname, '../../uploads'));
   },
   filename: (req, file, cb) => {
     const hash = crypto.randomBytes(16).toString('hex');

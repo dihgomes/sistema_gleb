@@ -138,8 +138,7 @@ export default function CarteiraLotePage() {
 
     try {
       const formData = new FormData();
-      
-      // Adicionar as fotos ao FormData
+
       const fotos: File[] = [];
       carteiras.forEach((carteira) => {
         if (carteira.foto) {
@@ -151,7 +150,6 @@ export default function CarteiraLotePage() {
         formData.append('fotos', foto);
       });
 
-      // Adicionar os dados das carteiras como JSON
       const carteirasData = carteiras.map(c => ({
         nome: c.nome.toUpperCase(),
         cpf: c.cpf || null,
