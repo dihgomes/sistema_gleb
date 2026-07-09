@@ -123,8 +123,8 @@ export default function LoginPage() {
 
         <div className="w-full max-w-md mx-auto">
           <div className="bg-slate-800/50 backdrop-blur-xl rounded-2xl border border-emerald-500/20 shadow-2xl overflow-hidden">
-            <div className="bg-gradient-to-r from-emerald-600/10 to-teal-600/10 border-b border-emerald-500/20 p-5 text-center">
-              <h2 className="text-xl font-bold text-white mb-1">Bem-vindo(a)</h2>
+            <div className="bg-gradient-to-r from-emerald-600/10 to-teal-600/10 border-b border-emerald-500/20 p-8 text-center">
+              <h2 className="text-2xl font-bold text-white mb-2">Login</h2>
               <p className="text-slate-400 text-sm">Acesse sua conta administrativa</p>
             </div>
 

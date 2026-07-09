@@ -5,7 +5,6 @@ import TrocarSenhaPage from '../components/admin/TrocarSenhaPage';
 import Dashboard from '../components/admin/Dashboard';
 import CarteirasListPage from '../components/admin/CarteirasListPage';
 import CarteiraFormPage from '../components/admin/CarteiraFormPage';
-import CarteiraLotePage from '../components/admin/CarteiraLotePage';
 import QRCodePage from '../components/admin/QRCodePage';
 import ConfiguracoesPage from '../components/admin/ConfiguracoesPage';
 import PinsPage from '../components/admin/PinsPage';
@@ -53,14 +52,6 @@ export const router = createBrowserRouter([
     element: (
       <ProtectedRoute>
         <CarteiraFormPage />
-      </ProtectedRoute>
-    ),
-  },
-  {
-    path: '/admin/carteiras/lote',
-    element: (
-      <ProtectedRoute>
-        <CarteiraLotePage />
       </ProtectedRoute>
     ),
   },

@@ -110,22 +110,13 @@ export default function CarteirasListPage() {
             <h2 className="text-3xl font-bold text-white">Carteiras Cadastradas</h2>
             <p className="text-slate-400 mt-1">Gerencie todas as carteiras digitais</p>
           </div>
-          <div className="flex gap-3">
-            <button
-              onClick={() => navigate('/admin/carteiras/lote')}
-              className="flex items-center gap-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white px-5 py-2.5 rounded-lg font-semibold transition-all shadow-lg shadow-purple-500/25 border border-purple-500/50"
-            >
-              <span className="text-xl">⚡</span>
-              Criar em Lote
-            </button>
-            <button
-              onClick={() => navigate('/admin/carteiras/nova')}
-              className="flex items-center gap-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white px-5 py-2.5 rounded-lg font-semibold transition-all shadow-lg shadow-emerald-500/25 border border-emerald-500/50"
-            >
-              <span className="text-xl">+</span>
-              Nova Carteira
-            </button>
-          </div>
+          <button
+            onClick={() => navigate('/admin/carteiras/nova')}
+            className="flex items-center gap-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white px-5 py-2.5 rounded-lg font-semibold transition-all shadow-lg shadow-emerald-500/25 border border-emerald-500/50"
+          >
+            <span className="text-xl">+</span>
+            Nova Carteira
+          </button>
         </div>
 
         <div className="bg-slate-800/50 backdrop-blur-xl rounded-xl shadow-lg p-4 border border-emerald-500/20">

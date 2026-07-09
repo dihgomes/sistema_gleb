@@ -4,7 +4,6 @@ export const API_ENDPOINTS = {
   TROCAR_SENHA: `${API_URL}/api/auth/trocar-senha`,
   ADMINS: `${API_URL}/api/admin/usuarios`,
   CARTEIRAS: `${API_URL}/api/admin/carteiras`,
-  CARTEIRAS_LOTE: `${API_URL}/api/admin/carteiras/lote`,
   CARTEIRA_PUBLIC: (codigo: string) => `${API_URL}/api/public/carteira/${codigo}`,
   CARTEIRA_PUBLIC_WITH_PIN: (codigo: string, pin: string) => `${API_URL}/api/public/carteira/${codigo}?pin=${pin}`,
   GERAR_QRCODE: (id: string) => `${API_URL}/api/admin/carteiras/${id}/gerar-qrcode`,
