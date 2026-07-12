@@ -5,8 +5,10 @@ services:
     image: postgres:16-alpine
     environment:
       POSTGRES_DB: gleb_db
-      POSTGRES_HOST_AUTH_METHOD: trust
-      PGDATA: /var/lib/postgresql/data/pgdata_v3
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Gleb@2026
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
     networks:
       - gleb-network
     deploy:
@@ -22,11 +24,15 @@ services:
     working_dir: /app
     command: >
       sh -c "
-      apk add --no-cache git openssl openssl-dev &&
+      apk add --no-cache git openssl openssl-dev postgresql-client &&
       git clone https://github.com/dihgomes/sistema_gleb.git . &&
       cd backend &&
       echo 'Aguardando PostgreSQL inicializar...' &&
-      sleep 15 &&
+      until pg_isready -h postgres -U postgres; do
+        echo 'PostgreSQL não está pronto ainda, aguardando...'
+        sleep 2
+      done &&
+      echo 'PostgreSQL está pronto!' &&
       npm install &&
       npx prisma generate &&
       npx prisma migrate deploy &&
@@ -37,7 +43,7 @@ services:
       NODE_ENV: production
       PORT: 3002
       API_URL: https://sistema-gleb.scrb.org.br
-      DATABASE_URL: postgresql://postgres@postgres:5432/gleb_db
+      DATABASE_URL: postgresql://postgres:Gleb@2026@postgres:5432/gleb_db
       JWT_SECRET: 5e0d462036a3f8b0c97cba4517a01dd0a57748b3badbd02827c3a7dc8d0858a8eed70c3e5fa7a69932a9fca655229d735bbf4d74daea91d7a622c0a1474ca72f
       ADMIN_NOME: admin
       ADMIN_EMAIL: admin@sistema-gleb.scrb.org.br
@@ -89,6 +95,9 @@ services:
         - "traefik.http.routers.gleb-frontend.tls=true"
         - "traefik.http.routers.gleb-frontend.tls.certresolver=letsencryptresolver"
         - "traefik.http.services.gleb-frontend.loadbalancer.server.port=3000"
+
+volumes:
+  postgres-data:
 
 networks:
   gleb-network:
