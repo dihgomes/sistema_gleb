@@ -28,7 +28,7 @@ services:
       git clone https://github.com/dihgomes/sistema_gleb.git . &&
       cd backend &&
       echo 'Aguardando PostgreSQL inicializar...' &&
-      until pg_isready -h postgres -U postgres; do
+      until pg_isready -h sistema_gleb_postgres -U postgres; do
         echo 'PostgreSQL não está pronto ainda, aguardando...'
         sleep 2
       done &&
@@ -43,7 +43,7 @@ services:
       NODE_ENV: production
       PORT: 3002
       API_URL: https://sistema-gleb.scrb.org.br
-      DATABASE_URL: postgresql://postgres:Gleb2026Scrb@postgres:5432/gleb_db
+      DATABASE_URL: postgresql://postgres:Gleb2026Scrb@sistema_gleb_postgres:5432/gleb_db
       JWT_SECRET: 5e0d462036a3f8b0c97cba4517a01dd0a57748b3badbd02827c3a7dc8d0858a8eed70c3e5fa7a69932a9fca655229d735bbf4d74daea91d7a622c0a1474ca72f
       ADMIN_NOME: admin
       ADMIN_EMAIL: admin@sistema-gleb.scrb.org.br
