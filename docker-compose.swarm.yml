@@ -25,10 +25,11 @@ services:
     command: >
       sh -c "
       apk add --no-cache git openssl openssl-dev postgresql-client &&
-      rm -rf /app/* &&
-      git clone https://github.com/dihgomes/sistema_gleb.git /app/temp &&
-      mv /app/temp/* /app/ &&
-      rm -rf /app/temp &&
+      if [ ! -d /app/backend ]; then
+        git clone https://github.com/dihgomes/sistema_gleb.git /app/temp &&
+        mv /app/temp/* /app/ &&
+        rm -rf /app/temp
+      fi &&
       cd backend &&
       echo 'Aguardando PostgreSQL inicializar...' &&
       until pg_isready -h sistema_gleb_postgres -U postgres; do
