@@ -12,7 +12,6 @@ const __dirname = path.dirname(__filename);
 
 if (!process.env.JWT_SECRET) {
   console.error('\n❌ ERRO CRÍTICO: JWT_SECRET não configurado no .env');
-  console.log('Configure JWT_SECRET com um valor secreto forte\n');
   process.exit(1);
 }
 
