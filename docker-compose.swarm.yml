@@ -25,12 +25,14 @@ services:
     command: >
       sh -c "
       apk add --no-cache git openssl openssl-dev postgresql-client &&
-      if [ ! -d /app/backend ]; then
-        git clone https://github.com/dihgomes/sistema_gleb.git /app/temp &&
+      git clone https://github.com/dihgomes/sistema_gleb.git /app/temp 2>/dev/null || true &&
+      if [ -d /app/temp ]; then
         mv /app/temp/* /app/ &&
         rm -rf /app/temp
       fi &&
       cd backend &&
+      rm -rf uploads &&
+      ln -s /app/uploads uploads &&
       echo 'Aguardando PostgreSQL inicializar...' &&
       until pg_isready -h sistema_gleb_postgres -U postgres; do
         echo 'PostgreSQL não está pronto ainda, aguardando...'
@@ -44,7 +46,7 @@ services:
       node src/server.js
       "
     volumes:
-      - uploads-data:/app/backend/uploads
+      - uploads-data:/app/uploads
     environment:
       NODE_ENV: production
       PORT: 3002
