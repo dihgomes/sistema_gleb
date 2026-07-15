@@ -19,7 +19,7 @@ export default function Sidebar({ isOpen, onClose, onLogout, onChangePassword }:
     { path: '/admin/carteiras', icon: Users, label: 'Carteiras' },
     { path: '/admin/carteiras/nova', icon: Plus, label: 'Nova Carteira' },
     { path: '/admin/pins', icon: Key, label: 'PINs de Acesso' },
-    { path: '/admin/configuracoes', icon: Cog, label: 'Configurações' },
+    ...(admin?.role === 'admin' ? [{ path: '/admin/configuracoes', icon: Cog, label: 'Configurações' }] : []),
   ];
 
   const handleNavigation = (path: string) => {
