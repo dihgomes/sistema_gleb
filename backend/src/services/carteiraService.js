@@ -409,8 +409,8 @@ class CarteiraService {
   }
 
   async criarZIP(files, outputPath) {
-    return new Promise(async (resolve, reject) => {
-      const { default: archiver } = await import('archiver');
+    return new Promise((resolve, reject) => {
+      const archiver = require('archiver');
       const output = fs.createWriteStream(outputPath);
       const archive = archiver('zip', { zlib: { level: 9 } });
 
