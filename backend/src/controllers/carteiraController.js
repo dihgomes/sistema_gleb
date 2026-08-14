@@ -1,6 +1,7 @@
 import carteiraService from '../services/carteiraService.js';
 import logger from '../utils/logger.js';
 import path from 'path';
+import fs from 'fs';
 
 class CarteiraController {
   async criar(req, res) {
@@ -168,9 +169,6 @@ class CarteiraController {
       res.download(result.zipPath, `carteiras_${Date.now()}.zip`, (err) => {
         // Limpar arquivos temporários após o download
         if (!err) {
-          const fs = await import('fs');
-          const path = await import('path');
-          
           try {
             fs.unlinkSync(result.zipPath);
             const tempDir = path.join(process.cwd(), 'temp', 'pdfs');
