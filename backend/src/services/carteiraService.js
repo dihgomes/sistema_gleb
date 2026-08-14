@@ -6,6 +6,9 @@ import QRCode from 'qrcode';
 import PDFDocument from 'pdfkit';
 import fs from 'fs';
 import path from 'path';
+import { createRequire } from 'module';
+
+const require = createRequire(import.meta.url);
 
 class CarteiraService {
   async criar(data, fotoUrl = null, adminId = null) {

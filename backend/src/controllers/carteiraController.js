@@ -157,6 +157,8 @@ class CarteiraController {
     try {
       const { comFoto } = req.body;
       
+      console.log('Iniciando exportação PDF. Filtro:', comFoto);
+      
       const result = await carteiraService.exportarPDF(comFoto);
       
       logger.carteira('export', {
@@ -183,6 +185,7 @@ class CarteiraController {
         }
       });
     } catch (error) {
+      console.error('Erro ao exportar PDF:', error);
       return res.status(400).json({ error: error.message });
     }
   }
