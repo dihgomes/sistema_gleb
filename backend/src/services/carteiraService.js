@@ -6,9 +6,7 @@ import QRCode from 'qrcode';
 import PDFDocument from 'pdfkit';
 import fs from 'fs';
 import path from 'path';
-import { createRequire } from 'module';
-
-const require = createRequire(import.meta.url);
+import AdmZip from 'adm-zip';
 
 class CarteiraService {
   async criar(data, fotoUrl = null, adminId = null) {
@@ -413,20 +411,18 @@ class CarteiraService {
 
   async criarZIP(files, outputPath) {
     return new Promise((resolve, reject) => {
-      const archiver = require('archiver');
-      const output = fs.createWriteStream(outputPath);
-      const archive = archiver('zip', { zlib: { level: 9 } });
-
-      output.on('close', () => resolve());
-      archive.on('error', reject);
-
-      archive.pipe(output);
-
-      files.forEach(file => {
-        archive.file(file.path, { name: file.name });
-      });
-
-      archive.finalize();
+      try {
+        const zip = new AdmZip();
+        
+        files.forEach(file => {
+          zip.addLocalFile(file.path, file.name);
+        });
+        
+        zip.writeZip(outputPath);
+        resolve();
+      } catch (error) {
+        reject(error);
+      }
     });
   }
 }
