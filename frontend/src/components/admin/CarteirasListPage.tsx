@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Edit, QrCode, Search, ChevronLeft, ChevronRight, User, Ban } from 'lucide-react';
+import { Edit, QrCode, Search, ChevronLeft, ChevronRight, User, Ban, Download } from 'lucide-react';
 import AdminLayout from './AdminLayout';
 import { API_ENDPOINTS } from '../../config/api';
 import { getToken, getAdmin } from '../../utils/auth';
@@ -27,6 +27,9 @@ export default function CarteirasListPage() {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+  const [showExportModal, setShowExportModal] = useState(false);
+  const [exporting, setExporting] = useState(false);
+  const [filtroFoto, setFiltroFoto] = useState<'todas' | 'com' | 'sem'>('todas');
   const itemsPerPage = 10;
 
   useEffect(() => {
@@ -82,6 +85,45 @@ export default function CarteirasListPage() {
     }
   };
 
+  const handleExportar = async () => {
+    setExporting(true);
+    try {
+      const comFoto = filtroFoto === 'com' ? true : filtroFoto === 'sem' ? false : null;
+      
+      const response = await fetch(`${API_ENDPOINTS.CARTEIRAS}/exportar/pdf`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${getToken()}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ comFoto })
+      });
+
+      if (response.ok) {
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `carteiras_${Date.now()}.zip`;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+        
+        setShowExportModal(false);
+        alert('Exportação concluída com sucesso!');
+      } else {
+        const error = await response.json();
+        alert(`Erro ao exportar: ${error.error}`);
+      }
+    } catch (error) {
+      console.error('Erro ao exportar:', error);
+      alert('Erro ao exportar carteiras');
+    } finally {
+      setExporting(false);
+    }
+  };
+
 
   const filteredCarteiras = carteiras.filter(c =>
     c.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -110,13 +152,22 @@ export default function CarteirasListPage() {
             <h2 className="text-3xl font-bold text-white">Carteiras Cadastradas</h2>
             <p className="text-slate-400 mt-1">Gerencie todas as carteiras digitais</p>
           </div>
-          <button
-            onClick={() => navigate('/admin/carteiras/nova')}
-            className="flex items-center gap-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white px-5 py-2.5 rounded-lg font-semibold transition-all shadow-lg shadow-emerald-500/25 border border-emerald-500/50"
-          >
-            <span className="text-xl">+</span>
-            Nova Carteira
-          </button>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setShowExportModal(true)}
+              className="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white px-5 py-2.5 rounded-lg font-semibold transition-all shadow-lg shadow-blue-500/25 border border-blue-500/50"
+            >
+              <Download className="w-5 h-5" />
+              Exportar PDFs
+            </button>
+            <button
+              onClick={() => navigate('/admin/carteiras/nova')}
+              className="flex items-center gap-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white px-5 py-2.5 rounded-lg font-semibold transition-all shadow-lg shadow-emerald-500/25 border border-emerald-500/50"
+            >
+              <span className="text-xl">+</span>
+              Nova Carteira
+            </button>
+          </div>
         </div>
 
         <div className="bg-slate-800/50 backdrop-blur-xl rounded-xl shadow-lg p-4 border border-emerald-500/20">
@@ -319,6 +370,82 @@ export default function CarteirasListPage() {
               </div>
             )}
           </>
+        )}
+
+        {/* Modal de Exportação */}
+        {showExportModal && (
+          <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+            <div className="bg-slate-800 rounded-xl shadow-2xl border border-emerald-500/20 w-full max-w-md">
+              <div className="p-6">
+                <h3 className="text-xl font-bold text-white mb-2">Exportar Carteiras em PDF</h3>
+                <p className="text-slate-400 text-sm mb-6">Selecione o filtro para exportação das carteiras</p>
+
+                <div className="space-y-3">
+                  <label className="flex items-center gap-3 p-3 bg-slate-700/50 rounded-lg border border-emerald-500/20 cursor-pointer hover:bg-slate-700 transition-colors">
+                    <input
+                      type="radio"
+                      name="filtroFoto"
+                      value="todas"
+                      checked={filtroFoto === 'todas'}
+                      onChange={(e) => setFiltroFoto(e.target.value as 'todas' | 'com' | 'sem')}
+                      className="w-4 h-4 text-emerald-500 bg-slate-600 border-slate-500 focus:ring-emerald-500"
+                    />
+                    <div>
+                      <span className="text-white font-medium">Todas as carteiras</span>
+                      <p className="text-xs text-slate-400">Exporta todas as carteiras ativas</p>
+                    </div>
+                  </label>
+
+                  <label className="flex items-center gap-3 p-3 bg-slate-700/50 rounded-lg border border-emerald-500/20 cursor-pointer hover:bg-slate-700 transition-colors">
+                    <input
+                      type="radio"
+                      name="filtroFoto"
+                      value="com"
+                      checked={filtroFoto === 'com'}
+                      onChange={(e) => setFiltroFoto(e.target.value as 'todas' | 'com' | 'sem')}
+                      className="w-4 h-4 text-emerald-500 bg-slate-600 border-slate-500 focus:ring-emerald-500"
+                    />
+                    <div>
+                      <span className="text-white font-medium">Apenas com foto</span>
+                      <p className="text-xs text-slate-400">Exporta apenas carteiras que possuem foto</p>
+                    </div>
+                  </label>
+
+                  <label className="flex items-center gap-3 p-3 bg-slate-700/50 rounded-lg border border-emerald-500/20 cursor-pointer hover:bg-slate-700 transition-colors">
+                    <input
+                      type="radio"
+                      name="filtroFoto"
+                      value="sem"
+                      checked={filtroFoto === 'sem'}
+                      onChange={(e) => setFiltroFoto(e.target.value as 'todas' | 'com' | 'sem')}
+                      className="w-4 h-4 text-emerald-500 bg-slate-600 border-slate-500 focus:ring-emerald-500"
+                    />
+                    <div>
+                      <span className="text-white font-medium">Apenas sem foto</span>
+                      <p className="text-xs text-slate-400">Exporta apenas carteiras sem foto</p>
+                    </div>
+                  </label>
+                </div>
+
+                <div className="flex gap-3 mt-6">
+                  <button
+                    onClick={() => setShowExportModal(false)}
+                    disabled={exporting}
+                    className="flex-1 px-4 py-2.5 bg-slate-700 hover:bg-slate-600 text-white rounded-lg font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    onClick={handleExportar}
+                    disabled={exporting}
+                    className="flex-1 px-4 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-lg font-semibold transition-all shadow-lg shadow-blue-500/25 border border-blue-500/50 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {exporting ? 'Exportando...' : 'Exportar'}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
         )}
       </div>
     </AdminLayout>

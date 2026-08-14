@@ -3,6 +3,10 @@ import { generateUniqueCode } from '../utils/generateCode.js';
 import { generateValidationHash } from '../utils/generateHash.js';
 import { formatBrazilianDate } from '../utils/formatDate.js';
 import QRCode from 'qrcode';
+import PDFDocument from 'pdfkit';
+import archiver from 'archiver';
+import fs from 'fs';
+import path from 'path';
 
 class CarteiraService {
   async criar(data, fotoUrl = null, adminId = null) {
@@ -247,6 +251,180 @@ class CarteiraService {
       qrcode: qrCodeBase64,
       codigoUnico: carteira.codigoUnico
     };
+  }
+
+  async exportarPDF(comFoto = null) {
+    // Filtrar carteiras conforme parâmetro
+    const whereClause = {
+      ativo: true
+    };
+
+    if (comFoto === true) {
+      whereClause.fotoUrl = { not: null };
+    } else if (comFoto === false) {
+      whereClause.fotoUrl = null;
+    }
+
+    const carteiras = await prisma.carteira.findMany({
+      where: whereClause,
+      orderBy: { nome: 'asc' }
+    });
+
+    if (carteiras.length === 0) {
+      throw new Error('Nenhuma carteira encontrada com o filtro especificado');
+    }
+
+    // Criar diretório temporário para PDFs
+    const tempDir = path.join(process.cwd(), 'temp', 'pdfs');
+    if (!fs.existsSync(tempDir)) {
+      fs.mkdirSync(tempDir, { recursive: true });
+    }
+
+    const pdfFiles = [];
+    const dataExportacao = formatBrazilianDate(new Date());
+
+    // Gerar PDF para cada carteira
+    for (const carteira of carteiras) {
+      const pdfPath = path.join(tempDir, `carteira_${carteira.codigoUnico}.pdf`);
+      await this.gerarPDFIndividual(carteira, pdfPath, dataExportacao);
+      pdfFiles.push({
+        path: pdfPath,
+        name: `carteira_${carteira.nome.replace(/\s+/g, '_')}_${carteira.codigoUnico}.pdf`
+      });
+    }
+
+    // Criar ZIP com todos os PDFs
+    const zipPath = path.join(tempDir, `carteiras_${Date.now()}.zip`);
+    await this.criarZIP(pdfFiles, zipPath);
+
+    return {
+      zipPath,
+      totalCarteiras: carteiras.length
+    };
+  }
+
+  async gerarPDFIndividual(carteira, outputPath, dataExportacao) {
+    return new Promise((resolve, reject) => {
+      try {
+        const doc = new PDFDocument({
+          size: 'A4',
+          margin: 50,
+          info: {
+            Title: `Carteira - ${carteira.nome}`,
+            Author: 'Santa Casa de Ruy Barbosa',
+            Subject: 'Carteira de Identificação',
+            CreationDate: new Date()
+          }
+        });
+
+        const stream = fs.createWriteStream(outputPath);
+        doc.pipe(stream);
+
+        // Cabeçalho
+        doc.fontSize(20)
+           .font('Helvetica-Bold')
+           .fillColor('#10b981')
+           .text('CARTEIRA DE IDENTIFICAÇÃO', { align: 'center' })
+           .moveDown(0.5);
+
+        doc.fontSize(12)
+           .font('Helvetica')
+           .fillColor('#64748b')
+           .text('Grande Loja Maçônica do Estado da Bahia', { align: 'center' })
+           .moveDown(0.5);
+
+        doc.fontSize(10)
+           .fillColor('#94a3b8')
+           .text(`Santa Casa de Ruy Barbosa`, { align: 'center' })
+           .moveDown(1.5);
+
+        // Linha separadora
+        doc.moveTo(50, doc.y)
+           .lineTo(545, doc.y)
+           .lineWidth(1)
+           .strokeColor('#e2e8f0')
+           .stroke()
+           .moveDown(1);
+
+        // Foto (se existir)
+        if (carteira.fotoUrl) {
+          try {
+            const fotoPath = path.join(process.cwd(), 'uploads', path.basename(carteira.fotoUrl));
+            if (fs.existsSync(fotoPath)) {
+              doc.image(fotoPath, 50, doc.y, { width: 150, height: 150 });
+              doc.moveDown(0.5);
+            }
+          } catch (error) {
+            console.log('Erro ao carregar foto:', error);
+          }
+        }
+
+        // Dados da carteira
+        const startX = carteira.fotoUrl ? 220 : 50;
+        doc.fontSize(14)
+           .font('Helvetica-Bold')
+           .fillColor('#1e293b')
+           .text('Dados Pessoais', startX, doc.y)
+           .moveDown(0.5);
+
+        const dados = [
+          { label: 'Nome:', value: carteira.nome },
+          { label: 'CPF:', value: carteira.cpf || 'Não informado' },
+          { label: 'Cargo:', value: carteira.cargo || 'Não informado' },
+          { label: 'Data de Nascimento:', value: carteira.dataNascimento || 'Não informado' },
+          { label: 'Unidades Administradas:', value: carteira.unidadesAdministradas || 'Não informado' },
+          { label: 'Situação Atual:', value: carteira.situacaoAtual || 'Não informado' },
+          { label: 'Código Único:', value: carteira.codigoUnico }
+        ];
+
+        doc.fontSize(11)
+           .font('Helvetica')
+           .fillColor('#475569');
+
+        dados.forEach(dado => {
+          doc.text(`${dado.label} ${dado.value}`, { continued: false });
+          doc.moveDown(0.3);
+        });
+
+        doc.moveDown(1);
+
+        // Data de exportação
+        doc.fontSize(10)
+           .fillColor('#94a3b8')
+           .text(`Exportado em: ${dataExportacao}`, { align: 'center' })
+           .moveDown(0.5);
+
+        // Rodapé
+        doc.fontSize(8)
+           .fillColor('#cbd5e1')
+           .text('Documento gerado automaticamente pelo Sistema de Validação de Carteiras', { align: 'center' });
+
+        doc.end();
+
+        stream.on('finish', () => resolve());
+        stream.on('error', reject);
+      } catch (error) {
+        reject(error);
+      }
+    });
+  }
+
+  async criarZIP(files, outputPath) {
+    return new Promise((resolve, reject) => {
+      const output = fs.createWriteStream(outputPath);
+      const archive = archiver('zip', { zlib: { level: 9 } });
+
+      output.on('close', () => resolve());
+      archive.on('error', reject);
+
+      archive.pipe(output);
+
+      files.forEach(file => {
+        archive.file(file.path, { name: file.name });
+      });
+
+      archive.finalize();
+    });
   }
 }
 

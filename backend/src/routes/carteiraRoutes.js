@@ -21,4 +21,6 @@ router.delete('/:id', carteiraController.deletar.bind(carteiraController));
 
 router.post('/:id/gerar-qrcode', carteiraController.gerarQRCode.bind(carteiraController));
 
+router.post('/exportar/pdf', carteiraController.exportarPDF.bind(carteiraController));
+
 export default router;

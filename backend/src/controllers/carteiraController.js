@@ -151,6 +151,43 @@ class CarteiraController {
       return res.status(400).json({ error: error.message });
     }
   }
+
+  async exportarPDF(req, res) {
+    try {
+      const { comFoto } = req.body;
+      
+      const result = await carteiraService.exportarPDF(comFoto);
+      
+      logger.carteira('export', {
+        total: result.totalCarteiras,
+        filtro: comFoto === true ? 'Com foto' : comFoto === false ? 'Sem foto' : 'Todas',
+        admin: req.user?.nome || 'Sistema'
+      });
+
+      // Enviar arquivo ZIP
+      res.download(result.zipPath, `carteiras_${Date.now()}.zip`, (err) => {
+        // Limpar arquivos temporários após o download
+        if (!err) {
+          const fs = await import('fs');
+          const path = await import('path');
+          
+          try {
+            fs.unlinkSync(result.zipPath);
+            const tempDir = path.join(process.cwd(), 'temp', 'pdfs');
+            if (fs.existsSync(tempDir)) {
+              fs.readdirSync(tempDir).forEach(file => {
+                fs.unlinkSync(path.join(tempDir, file));
+              });
+            }
+          } catch (cleanupError) {
+            console.log('Erro ao limpar arquivos temporários:', cleanupError);
+          }
+        }
+      });
+    } catch (error) {
+      return res.status(400).json({ error: error.message });
+    }
+  }
 }
 
 export default new CarteiraController();
