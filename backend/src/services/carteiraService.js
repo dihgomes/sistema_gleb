@@ -4,7 +4,6 @@ import { generateValidationHash } from '../utils/generateHash.js';
 import { formatBrazilianDate } from '../utils/formatDate.js';
 import QRCode from 'qrcode';
 import PDFDocument from 'pdfkit';
-import archiver from 'archiver';
 import fs from 'fs';
 import path from 'path';
 
@@ -410,7 +409,8 @@ class CarteiraService {
   }
 
   async criarZIP(files, outputPath) {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
+      const { default: archiver } = await import('archiver');
       const output = fs.createWriteStream(outputPath);
       const archive = archiver('zip', { zlib: { level: 9 } });
 
