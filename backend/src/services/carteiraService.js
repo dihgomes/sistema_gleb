@@ -379,7 +379,7 @@ class CarteiraService {
            .font('Helvetica-Bold')
            .fillColor('#1e293b')
            .text('CARTEIRA DE IDENTIFICAÇÃO', startX, currentY)
-           .moveDown(1.5);
+           .moveDown(3);
 
         currentY = doc.y;
 
@@ -396,7 +396,7 @@ class CarteiraService {
         }
 
         const dadosStartX = carteira.fotoUrl ? startX + 140 : startX;
-        const dadosStartY = carteira.fotoUrl ? 200 : currentY;
+        const dadosStartY = carteira.fotoUrl ? 255 : currentY;
 
         doc.fontSize(12)
            .font('Helvetica-Bold')
@@ -423,14 +423,37 @@ class CarteiraService {
           doc.moveDown(0.3);
         });
 
+        doc.moveDown(32);
+
+        const larguraPagina =
+            doc.page.width -
+            doc.page.margins.left -
+            doc.page.margins.right;
+
         doc.fontSize(9)
-           .fillColor('#64748b')
-           .text(`Exportado em: ${dataExportacao}`, { align: 'center' })
-           .moveDown(0.5);
+          .fillColor('#64748b')
+          .text(
+              `Exportado em: ${dataExportacao}`,
+              doc.page.margins.left,
+              doc.y,
+              {
+                  width: larguraPagina,
+                  align: 'center'
+              }
+          )
+          .moveDown(0.5);
 
         doc.fontSize(8)
-           .fillColor('#94a3b8')
-           .text('Documento gerado automaticamente pelo Sistema de Validação de Carteiras', { align: 'center' });
+          .fillColor('#94a3b8')
+          .text(
+              'Documento gerado automaticamente pelo Sistema de Validação de Carteiras',
+              doc.page.margins.left,
+              doc.y,
+              {
+                  width: larguraPagina,
+                  align: 'center'
+              }
+          );
 
         doc.end();
 
