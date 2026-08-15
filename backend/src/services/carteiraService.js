@@ -253,6 +253,30 @@ class CarteiraService {
     };
   }
 
+  async gerarQRCodeArquivo(carteira, outputPath, frontendUrl) {
+    return new Promise((resolve, reject) => {
+      const url = `${frontendUrl}/q/${carteira.codigoUnico}`;
+      
+      QRCode.toFile(outputPath, url, {
+        errorCorrectionLevel: 'M',
+        type: 'image/png',
+        quality: 1,
+        width: 400,
+        margin: 4,
+        color: {
+          dark: '#000000',
+          light: '#FFFFFF'
+        }
+      }, (error) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve();
+        }
+      });
+    });
+  }
+
   async exportarPDF(comFoto = null) {
     // Filtrar carteiras conforme parâmetro
     const whereClause = {
@@ -280,22 +304,52 @@ class CarteiraService {
       fs.mkdirSync(tempDir, { recursive: true });
     }
 
-    const pdfFiles = [];
+    const files = [];
     const dataExportacao = formatBrazilianDate(new Date());
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
 
-    // Gerar PDF para cada carteira
+    // Gerar arquivos para cada carteira
     for (const carteira of carteiras) {
-      const pdfPath = path.join(tempDir, `carteira_${carteira.codigoUnico}.pdf`);
+      const nomeNormalizado = carteira.nome.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_-]/g, '');
+      const codigo = carteira.codigoUnico;
+
+      // 1. Gerar PDF
+      const pdfPath = path.join(tempDir, `carteira_${codigo}.pdf`);
       await this.gerarPDFIndividual(carteira, pdfPath, dataExportacao);
-      pdfFiles.push({
+      files.push({
         path: pdfPath,
-        name: `carteira_${carteira.nome.replace(/\s+/g, '_')}_${carteira.codigoUnico}.pdf`
+        name: `${nomeNormalizado}/carteira_${codigo}.pdf`
       });
+
+      // 2. Gerar QRCode como PNG
+      const qrCodePath = path.join(tempDir, `qrcode_${codigo}.png`);
+      await this.gerarQRCodeArquivo(carteira, qrCodePath, frontendUrl);
+      files.push({
+        path: qrCodePath,
+        name: `${nomeNormalizado}/qrcode_${codigo}.png`
+      });
+
+      // 3. Copiar foto se existir
+      if (carteira.fotoUrl) {
+        try {
+          const fotoOriginal = path.join(process.cwd(), 'uploads', path.basename(carteira.fotoUrl));
+          if (fs.existsSync(fotoOriginal)) {
+            const fotoCopia = path.join(tempDir, `foto_${codigo}${path.extname(fotoOriginal)}`);
+            fs.copyFileSync(fotoOriginal, fotoCopia);
+            files.push({
+              path: fotoCopia,
+              name: `${nomeNormalizado}/foto_${codigo}${path.extname(fotoOriginal)}`
+            });
+          }
+        } catch (error) {
+          console.log('Erro ao copiar foto:', error);
+        }
+      }
     }
 
-    // Criar ZIP com todos os PDFs
+    // Criar ZIP com todos os arquivos
     const zipPath = path.join(tempDir, `carteiras_${Date.now()}.zip`);
-    await this.criarZIP(pdfFiles, zipPath);
+    await this.criarZIP(files, zipPath);
 
     return {
       zipPath,
@@ -415,7 +469,8 @@ class CarteiraService {
         const zip = new AdmZip();
         
         files.forEach(file => {
-          zip.addLocalFile(file.path, file.name);
+          // Adicionar arquivo com caminho relativo para criar estrutura de pastas
+          zip.addLocalFile(file.path, '', file.name);
         });
         
         zip.writeZip(outputPath);
