@@ -310,7 +310,7 @@ class CarteiraService {
 
     // Gerar arquivos para cada carteira
     for (const carteira of carteiras) {
-      const nomeNormalizado = carteira.nome.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_-]/g, '');
+      const nomeNormalizado = carteira.nome.trim().replace(/\s+/g, '_');
       const codigo = carteira.codigoUnico;
 
       // 1. Gerar PDF
