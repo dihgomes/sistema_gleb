@@ -362,7 +362,7 @@ class CarteiraService {
       try {
         const doc = new PDFDocument({
           size: 'A4',
-          margin: 50,
+          margin: 0,
           info: {
             Title: `Carteira - ${carteira.nome}`,
             Author: 'Santa Casa de Ruy Barbosa',
@@ -374,39 +374,32 @@ class CarteiraService {
         const stream = fs.createWriteStream(outputPath);
         doc.pipe(stream);
 
-        // Cabeçalho
-        doc.fontSize(20)
+        // Adicionar timbrado como fundo
+        const timbradoPath = path.join(process.cwd(), 'public', 'timbrado_csc.png');
+        if (fs.existsSync(timbradoPath)) {
+          doc.image(timbradoPath, 0, 0, { width: 595.28, height: 841.89 });
+        }
+
+        // Posicionar conteúdo sobre o timbrado
+        const startX = 80;
+        let currentY = 180;
+
+        // Título da carteira
+        doc.fontSize(16)
            .font('Helvetica-Bold')
-           .fillColor('#10b981')
-           .text('CARTEIRA DE IDENTIFICAÇÃO', { align: 'center' })
-           .moveDown(0.5);
-
-        doc.fontSize(12)
-           .font('Helvetica')
-           .fillColor('#64748b')
-           .text('Grande Loja Maçônica do Estado da Bahia', { align: 'center' })
-           .moveDown(0.5);
-
-        doc.fontSize(10)
-           .fillColor('#94a3b8')
-           .text(`Santa Casa de Ruy Barbosa`, { align: 'center' })
+           .fillColor('#1e293b')
+           .text('CARTEIRA DE IDENTIFICAÇÃO', startX, currentY)
            .moveDown(1.5);
 
-        // Linha separadora
-        doc.moveTo(50, doc.y)
-           .lineTo(545, doc.y)
-           .lineWidth(1)
-           .strokeColor('#e2e8f0')
-           .stroke()
-           .moveDown(1);
+        currentY = doc.y;
 
-        // Foto (se existir)
+        // Foto (se existir) - posicionada à esquerda
         if (carteira.fotoUrl) {
           try {
             const fotoPath = path.join(process.cwd(), 'uploads', path.basename(carteira.fotoUrl));
             if (fs.existsSync(fotoPath)) {
-              doc.image(fotoPath, 50, doc.y, { width: 150, height: 150 });
-              doc.moveDown(0.5);
+              doc.image(fotoPath, startX, currentY, { width: 120, height: 120 });
+              currentY += 130;
             }
           } catch (error) {
             console.log('Erro ao carregar foto:', error);
@@ -414,11 +407,13 @@ class CarteiraService {
         }
 
         // Dados da carteira
-        const startX = carteira.fotoUrl ? 220 : 50;
-        doc.fontSize(14)
+        const dadosStartX = carteira.fotoUrl ? startX + 140 : startX;
+        const dadosStartY = carteira.fotoUrl ? 200 : currentY;
+
+        doc.fontSize(12)
            .font('Helvetica-Bold')
            .fillColor('#1e293b')
-           .text('Dados Pessoais', startX, doc.y)
+           .text('Dados Pessoais', dadosStartX, dadosStartY)
            .moveDown(0.5);
 
         const dados = [
@@ -431,7 +426,7 @@ class CarteiraService {
           { label: 'Código Único:', value: carteira.codigoUnico }
         ];
 
-        doc.fontSize(11)
+        doc.fontSize(10)
            .font('Helvetica')
            .fillColor('#475569');
 
@@ -440,17 +435,15 @@ class CarteiraService {
           doc.moveDown(0.3);
         });
 
-        doc.moveDown(1);
-
         // Data de exportação
-        doc.fontSize(10)
-           .fillColor('#94a3b8')
+        doc.fontSize(9)
+           .fillColor('#64748b')
            .text(`Exportado em: ${dataExportacao}`, { align: 'center' })
            .moveDown(0.5);
 
         // Rodapé
         doc.fontSize(8)
-           .fillColor('#cbd5e1')
+           .fillColor('#94a3b8')
            .text('Documento gerado automaticamente pelo Sistema de Validação de Carteiras', { align: 'center' });
 
         doc.end();
