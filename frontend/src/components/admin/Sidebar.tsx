@@ -29,7 +29,6 @@ export default function Sidebar({ isOpen, onClose, onLogout, onChangePassword }:
 
   return (
     <>
-      {/* Overlay para mobile */}
       {isOpen && (
         <div
           className="fixed inset-0 bg-black/50 z-40 lg:hidden"
@@ -37,14 +36,12 @@ export default function Sidebar({ isOpen, onClose, onLogout, onChangePassword }:
         />
       )}
 
-      {/* Sidebar */}
       <aside
         className={`fixed top-0 left-0 h-full bg-slate-800/95 backdrop-blur-xl border-r border-emerald-500/20 z-50 transition-transform duration-300 easeInOut ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         } lg:translate-x-0 lg:fixed lg:z-30`}
       >
         <div className="flex flex-col h-full w-64">
-          {/* Header do Sidebar */}
           <div className="h-16 px-4 border-b border-emerald-500/20 flex items-center">
             <div className="flex items-center justify-between w-full">
               <div className="flex items-center gap-3">
@@ -65,7 +62,6 @@ export default function Sidebar({ isOpen, onClose, onLogout, onChangePassword }:
             </div>
           </div>
 
-          {/* Menu Items */}
           <nav className="flex-1 overflow-y-auto p-4 space-y-2">
             {menuItems.map((item) => {
               const Icon = item.icon;
@@ -88,7 +84,6 @@ export default function Sidebar({ isOpen, onClose, onLogout, onChangePassword }:
             })}
           </nav>
 
-          {/* Footer do Sidebar */}
           <div className="p-4 border-t border-emerald-500/20 space-y-2">
             <button
               onClick={() => {

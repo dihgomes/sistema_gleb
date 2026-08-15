@@ -278,7 +278,6 @@ class CarteiraService {
   }
 
   async exportarPDF(comFoto = null) {
-    // Filtrar carteiras conforme parâmetro
     const whereClause = {
       ativo: true
     };
@@ -298,7 +297,6 @@ class CarteiraService {
       throw new Error('Nenhuma carteira encontrada com o filtro especificado');
     }
 
-    // Criar diretório temporário para PDFs
     const tempDir = path.join(process.cwd(), 'temp', 'pdfs');
     if (!fs.existsSync(tempDir)) {
       fs.mkdirSync(tempDir, { recursive: true });
@@ -308,12 +306,10 @@ class CarteiraService {
     const dataExportacao = formatBrazilianDate(new Date());
     const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
 
-    // Gerar arquivos para cada carteira
     for (const carteira of carteiras) {
       const nomeNormalizado = carteira.nome.trim().replace(/\s+/g, '_');
       const codigo = carteira.codigoUnico;
 
-      // 1. Gerar PDF
       const pdfPath = path.join(tempDir, `carteira_${codigo}.pdf`);
       await this.gerarPDFIndividual(carteira, pdfPath, dataExportacao);
       files.push({
@@ -321,7 +317,6 @@ class CarteiraService {
         name: `${nomeNormalizado}/carteira_${codigo}.pdf`
       });
 
-      // 2. Gerar QRCode como PNG
       const qrCodePath = path.join(tempDir, `qrcode_${codigo}.png`);
       await this.gerarQRCodeArquivo(carteira, qrCodePath, frontendUrl);
       files.push({
@@ -329,7 +324,6 @@ class CarteiraService {
         name: `${nomeNormalizado}/qrcode_${codigo}.png`
       });
 
-      // 3. Copiar foto se existir
       if (carteira.fotoUrl) {
         try {
           const fotoOriginal = path.join(process.cwd(), 'uploads', path.basename(carteira.fotoUrl));
@@ -347,7 +341,6 @@ class CarteiraService {
       }
     }
 
-    // Criar ZIP com todos os arquivos
     const zipPath = path.join(tempDir, `carteiras_${Date.now()}.zip`);
     await this.criarZIP(files, zipPath);
 
@@ -374,17 +367,14 @@ class CarteiraService {
         const stream = fs.createWriteStream(outputPath);
         doc.pipe(stream);
 
-        // Adicionar timbrado como fundo
         const timbradoPath = path.join(process.cwd(), 'public', 'timbrado_csc.png');
         if (fs.existsSync(timbradoPath)) {
           doc.image(timbradoPath, 0, 0, { width: 595.28, height: 841.89 });
         }
 
-        // Posicionar conteúdo sobre o timbrado
         const startX = 80;
         let currentY = 180;
 
-        // Título da carteira
         doc.fontSize(16)
            .font('Helvetica-Bold')
            .fillColor('#1e293b')
@@ -393,7 +383,6 @@ class CarteiraService {
 
         currentY = doc.y;
 
-        // Foto (se existir) - posicionada à esquerda
         if (carteira.fotoUrl) {
           try {
             const fotoPath = path.join(process.cwd(), 'uploads', path.basename(carteira.fotoUrl));
@@ -406,7 +395,6 @@ class CarteiraService {
           }
         }
 
-        // Dados da carteira
         const dadosStartX = carteira.fotoUrl ? startX + 140 : startX;
         const dadosStartY = carteira.fotoUrl ? 200 : currentY;
 
@@ -435,13 +423,11 @@ class CarteiraService {
           doc.moveDown(0.3);
         });
 
-        // Data de exportação
         doc.fontSize(9)
            .fillColor('#64748b')
            .text(`Exportado em: ${dataExportacao}`, { align: 'center' })
            .moveDown(0.5);
 
-        // Rodapé
         doc.fontSize(8)
            .fillColor('#94a3b8')
            .text('Documento gerado automaticamente pelo Sistema de Validação de Carteiras', { align: 'center' });
@@ -462,7 +448,6 @@ class CarteiraService {
         const zip = new AdmZip();
         
         files.forEach(file => {
-          // Adicionar arquivo com caminho relativo para criar estrutura de pastas
           zip.addLocalFile(file.path, '', file.name);
         });
         
