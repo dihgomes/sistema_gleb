@@ -80,7 +80,12 @@ services:
     command: >
       sh -c "
       apk add --no-cache git &&
-      git clone https://github.com/dihgomes/sistema_gleb.git . &&
+      git clone https://github.com/dihgomes/sistema_gleb.git /app/temp 2>/dev/null || true &&
+      if [ -d /app/temp ]; then
+        rm -rf /app/frontend /app/backend /app/node_modules &&
+        mv /app/temp/* /app/ &&
+        rm -rf /app/temp
+      fi &&
       cd frontend &&
       npm install &&
       npm run build &&
