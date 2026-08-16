@@ -124,6 +124,37 @@ export default function CarteirasListPage() {
     }
   };
 
+  const handleExportarIndividual = async (id: string, nome: string) => {
+    try {
+      const response = await fetch(`${API_ENDPOINTS.CARTEIRAS}/${id}/exportar/pdf`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${getToken()}`
+        }
+      });
+
+      if (response.ok) {
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `carteira_${nome.replace(/\s+/g, '_')}_${Date.now()}.zip`;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+        
+        alert('Exportação individual concluída com sucesso!');
+      } else {
+        const error = await response.json();
+        alert(`Erro ao exportar: ${error.error}`);
+      }
+    } catch (error) {
+      console.error('Erro ao exportar individual:', error);
+      alert('Erro ao exportar carteira');
+    }
+  };
+
 
   const filteredCarteiras = carteiras.filter(c =>
     c.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -273,6 +304,14 @@ export default function CarteirasListPage() {
                       >
                         <QrCode className="w-4 h-4" />
                         QR Code
+                      </button>
+
+                      <button
+                        onClick={() => handleExportarIndividual(carteira.id, carteira.nome)}
+                        className="flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-lg text-xs font-semibold transition-all shadow-lg shadow-blue-500/25 border border-blue-500/50"
+                      >
+                        <Download className="w-4 h-4" />
+                        Download
                       </button>
 
                       <button

@@ -189,6 +189,43 @@ class CarteiraController {
       return res.status(400).json({ error: error.message });
     }
   }
+
+  async exportarPDFIndividual(req, res) {
+    try {
+      const { id } = req.params;
+      
+      console.log('Iniciando exportação PDF individual. ID:', id);
+      
+      const result = await carteiraService.exportarPDFIndividual(id);
+      
+      logger.carteira('export_individual', {
+        nome: result.nome,
+        codigo: result.codigo,
+        admin: req.user?.nome || 'Sistema'
+      });
+
+      // Enviar arquivo ZIP
+      res.download(result.zipPath, `carteira_${result.nome.replace(/\s+/g, '_')}_${Date.now()}.zip`, (err) => {
+        // Limpar arquivos temporários após o download
+        if (!err) {
+          try {
+            fs.unlinkSync(result.zipPath);
+            const tempDir = path.join(process.cwd(), 'temp', 'pdfs');
+            if (fs.existsSync(tempDir)) {
+              fs.readdirSync(tempDir).forEach(file => {
+                fs.unlinkSync(path.join(tempDir, file));
+              });
+            }
+          } catch (cleanupError) {
+            console.log('Erro ao limpar arquivos temporários:', cleanupError);
+          }
+        }
+      });
+    } catch (error) {
+      console.error('Erro ao exportar PDF individual:', error);
+      return res.status(400).json({ error: error.message });
+    }
+  }
 }
 
 export default new CarteiraController();

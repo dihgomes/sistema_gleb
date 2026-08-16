@@ -350,6 +350,60 @@ class CarteiraService {
     };
   }
 
+  async exportarPDFIndividual(id) {
+    const carteira = await this.buscarPorId(id);
+
+    const tempDir = path.join(process.cwd(), 'temp', 'pdfs');
+    if (!fs.existsSync(tempDir)) {
+      fs.mkdirSync(tempDir, { recursive: true });
+    }
+
+    const files = [];
+    const dataExportacao = formatBrazilianDate(new Date());
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+    const nomeNormalizado = carteira.nome.trim().replace(/\s+/g, '_');
+    const codigo = carteira.codigoUnico;
+
+    const pdfPath = path.join(tempDir, `carteira_${codigo}.pdf`);
+    await this.gerarPDFIndividual(carteira, pdfPath, dataExportacao);
+    files.push({
+      path: pdfPath,
+      name: `carteira_${codigo}.pdf`
+    });
+
+    const qrCodePath = path.join(tempDir, `qrcode_${codigo}.png`);
+    await this.gerarQRCodeArquivo(carteira, qrCodePath, frontendUrl);
+    files.push({
+      path: qrCodePath,
+      name: `qrcode_${codigo}.png`
+    });
+
+    if (carteira.fotoUrl) {
+      try {
+        const fotoOriginal = path.join(process.cwd(), 'uploads', path.basename(carteira.fotoUrl));
+        if (fs.existsSync(fotoOriginal)) {
+          const fotoCopia = path.join(tempDir, `foto_${codigo}${path.extname(fotoOriginal)}`);
+          fs.copyFileSync(fotoOriginal, fotoCopia);
+          files.push({
+            path: fotoCopia,
+            name: `foto_${codigo}${path.extname(fotoOriginal)}`
+          });
+        }
+      } catch (error) {
+        console.log('Erro ao copiar foto:', error);
+      }
+    }
+
+    const zipPath = path.join(tempDir, `carteira_${codigo}_${Date.now()}.zip`);
+    await this.criarZIP(files, zipPath);
+
+    return {
+      zipPath,
+      nome: carteira.nome,
+      codigo: carteira.codigoUnico
+    };
+  }
+
   async gerarPDFIndividual(carteira, outputPath, dataExportacao) {
     return new Promise((resolve, reject) => {
       try {

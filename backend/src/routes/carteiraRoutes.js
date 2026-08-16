@@ -23,4 +23,6 @@ router.post('/:id/gerar-qrcode', carteiraController.gerarQRCode.bind(carteiraCon
 
 router.post('/exportar/pdf', carteiraController.exportarPDF.bind(carteiraController));
 
+router.post('/:id/exportar/pdf', carteiraController.exportarPDFIndividual.bind(carteiraController));
+
 export default router;
