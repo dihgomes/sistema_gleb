@@ -13,8 +13,6 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [showChangePasswordModal, setShowChangePasswordModal] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-
-  // Calcular anos de existência da Santa Casa (fundada em 03/02/1950)
   const fundacaoDate = new Date('1950-02-03');
   const hoje = new Date();
   const anos = hoje.getFullYear() - fundacaoDate.getFullYear();

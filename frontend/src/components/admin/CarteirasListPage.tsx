@@ -189,7 +189,7 @@ export default function CarteirasListPage() {
               className="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white px-5 py-2.5 rounded-lg font-semibold transition-all shadow-lg shadow-blue-500/25 border border-blue-500/50"
             >
               <Download className="w-5 h-5" />
-              Exportar PDFs
+              Exportar Carteiras
             </button>
             <button
               onClick={() => navigate('/admin/carteiras/nova')}
