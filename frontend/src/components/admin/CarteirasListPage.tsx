@@ -411,7 +411,6 @@ export default function CarteirasListPage() {
           </>
         )}
 
-        {/* Modal de Exportação */}
         {showExportModal && (
           <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
             <div className="bg-slate-800 rounded-xl shadow-2xl border border-emerald-500/20 w-full max-w-md">
