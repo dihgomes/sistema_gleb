@@ -7,9 +7,9 @@ interface SectionHeaderProps {
 
 function SectionHeader({ title }: SectionHeaderProps) {
   return (
-    <div className="px-5 py-3 rounded-t-md shadow-sm" style={{ backgroundColor: '#6F63C7' }}>
+    <div className="px-5 py-3 rounded-t-md shadow-sm" style={{ backgroundColor: '#10b981' }}>
       <h3 className="text-white text-xs font-bold tracking-widest uppercase flex items-center gap-2">
-        <span className="w-1 h-4 bg-yellow-400 rounded-full"></span>
+        <span className="w-1 h-4 bg-emerald-300 rounded-full"></span>
         {title}
       </h3>
     </div>
@@ -65,8 +65,8 @@ interface InfoItemProps {
 
 function InfoItem({ label, value, uppercase = false }: InfoItemProps) {
   return (
-    <div className="px-5 py-4 bg-white border-b border-gray-100 last:border-b-0 hover:bg-purple-50/30 transition-colors">
-      <p className="text-[10px] font-bold uppercase tracking-widest mb-2" style={{ color: '#6F63C7' }}>{label}</p>
+    <div className="px-5 py-4 bg-white border-b border-gray-100 last:border-b-0 hover:bg-emerald-50/30 transition-colors">
+      <p className="text-[10px] font-bold uppercase tracking-widest mb-2" style={{ color: '#10b981' }}>{label}</p>
       <p className={`text-base text-gray-900 font-semibold ${uppercase ? 'uppercase' : ''}`}>
         {value || <span className="text-gray-400 font-normal italic">Não informado</span>}
       </p>
@@ -93,8 +93,8 @@ interface InfoSectionProps {
 export default function InfoSection({ data, statusVisivel = true }: InfoSectionProps) {
   return (
     <div className="flex flex-col gap-6 w-full">
-      <div className="text-center border-b-2 pb-5" style={{ borderColor: '#6F63C7' }}>
-        <h2 className="text-xl sm:text-2xl font-black leading-tight tracking-tight uppercase" style={{ color: '#6F63C7' }}>
+      <div className="text-center border-b-2 pb-5" style={{ borderColor: '#10b981' }}>
+        <h2 className="text-xl sm:text-2xl font-black leading-tight tracking-tight uppercase" style={{ color: '#10b981' }}>
           {data.nome}
         </h2>
       </div>

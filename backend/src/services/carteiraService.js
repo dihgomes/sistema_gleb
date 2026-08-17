@@ -429,9 +429,15 @@ class CarteiraService {
         const startX = 80;
         let currentY = 180;
 
+        const iconPath = path.join(process.cwd(), 'public', 'santacasa-icon.png');
+        console.log('Verificando ícone:', iconPath, 'Existe:', fs.existsSync(iconPath));
+        if (fs.existsSync(iconPath)) {
+          doc.image(iconPath, startX, currentY - 100, { width: 120, height: 120 });
+        }
+
         doc.fontSize(16)
            .font('Helvetica-Bold')
-           .fillColor('#1e293b')
+           .fillColor('#10b981')
            .text('CARTEIRA DE IDENTIFICAÇÃO', startX, currentY)
            .moveDown(3);
 
@@ -454,7 +460,7 @@ class CarteiraService {
 
         doc.fontSize(12)
            .font('Helvetica-Bold')
-           .fillColor('#1e293b')
+           .fillColor('#10b981')
            .text('Dados Pessoais', dadosStartX, dadosStartY)
            .moveDown(0.5);
 
@@ -470,7 +476,7 @@ class CarteiraService {
 
         doc.fontSize(10)
            .font('Helvetica')
-           .fillColor('#475569');
+           .fillColor('#166534');
 
         dados.forEach(dado => {
           doc.text(`${dado.label} ${dado.value}`, { continued: false });
@@ -485,7 +491,7 @@ class CarteiraService {
             doc.page.margins.right;
 
         doc.fontSize(9)
-          .fillColor('#64748b')
+          .fillColor('#15803d')
           .text(
               `Exportado em: ${dataExportacao}`,
               doc.page.margins.left,
@@ -498,16 +504,8 @@ class CarteiraService {
           .moveDown(0.5);
 
         doc.fontSize(8)
-          .fillColor('#94a3b8')
-          .text(
-              'Documento gerado automaticamente pelo Sistema de Validação de Carteiras',
-              doc.page.margins.left,
-              doc.y,
-              {
-                  width: larguraPagina,
-                  align: 'center'
-              }
-          );
+           .fillColor('#22c55e')
+           .text('Documento gerado automaticamente pelo Sistema de Validação de Carteiras', { align: 'center' });
 
         doc.end();
 

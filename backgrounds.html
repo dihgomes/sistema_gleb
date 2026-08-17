@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Opções de Background - Santa Casa de Ruy Barbosa</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #10b981;
+            margin-bottom: 10px;
+            font-size: 2rem;
+        }
+        
+        p.subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .background-card {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .background-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .preview {
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .info {
+            padding: 15px;
+            background: white;
+        }
+        
+        .info h3 {
+            color: #10b981;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+        
+        .info p {
+            color: #666;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+        
+        .section-title {
+            color: #10b981;
+            font-size: 1.5rem;
+            margin: 30px 0 20px 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #10b981;
+        }
+        
+        /* Background Options */
+        .bg-1 {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+        
+        .bg-2 {
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+        }
+        
+        .bg-3 {
+            background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+        }
+        
+        .bg-4 {
+            background: linear-gradient(135deg, #10b981 0%, #065f46 100%);
+        }
+        
+        .bg-5 {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+        }
+        
+        .bg-6 {
+            background: linear-gradient(135deg, #064e3b 0%, #065f46 100%);
+        }
+        
+        .bg-7 {
+            background: linear-gradient(135deg, #10b981 0%, #3b82f6 100%);
+        }
+        
+        .bg-8 {
+            background: linear-gradient(135deg, #22c55e 0%, #8b5cf6 100%);
+        }
+        
+        .bg-9 {
+            background: linear-gradient(135deg, #34d399 0%, #f59e0b 100%);
+        }
+        
+        .bg-10 {
+            background: linear-gradient(135deg, #10b981 0%, #ec4899 100%);
+        }
+        
+        .bg-11 {
+            background: linear-gradient(135deg, #059669 0%, #6366f1 100%);
+        }
+        
+        .bg-12 {
+            background: linear-gradient(135deg, #10b981 0%, #f97316 100%);
+        }
+        
+        .bg-13 {
+            background: linear-gradient(45deg, #10b981, #22c55e, #34d399);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+        }
+        
+        .bg-14 {
+            background: linear-gradient(45deg, #059669, #10b981, #065f46);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+        }
+        
+        .bg-15 {
+            background: radial-gradient(circle at center, #10b981 0%, #059669 100%);
+        }
+        
+        .bg-16 {
+            background: radial-gradient(circle at top right, #22c55e 0%, #10b981 100%);
+        }
+        
+        .bg-17 {
+            background: conic-gradient(from 45deg, #10b981, #22c55e, #34d399, #10b981);
+        }
+        
+        .bg-18 {
+            background: linear-gradient(135deg, #10b981 0%, #059669 50%, #065f46 100%);
+        }
+        
+        .bg-19 {
+            background: linear-gradient(180deg, #10b981 0%, #059669 100%);
+        }
+        
+        .bg-20 {
+            background: linear-gradient(90deg, #10b981 0%, #22c55e 50%, #10b981 100%);
+        }
+        
+        .bg-21 {
+            background: linear-gradient(135deg, #10b981 0%, #059669 25%, #065f46 50%, #059669 75%, #10b981 100%);
+            background-size: 400% 400%;
+            animation: gradient 20s ease infinite;
+        }
+        
+        .bg-22 {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.8) 0%, rgba(5, 150, 105, 0.9) 100%);
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+        
+        .bg-23 {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M40 40c0-22.091-17.909-40-40-40S-40 17.909-40 40s17.909 40 40 40 40-17.909 40-40zm0 2c-23.196 0-42-18.804-42-42s18.804-42 42-42 42 18.804 42 42-18.804 42-42 42z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+        
+        .bg-24 {
+            background: linear-gradient(135deg, #22c55e 0%, #10b981 100%);
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cpath fill='%23ffffff' fill-opacity='0.05' d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm67 30c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3z'/%3E%3C/svg%3E");
+        }
+        
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .selected-info {
+            background: #f0fdf4;
+            border: 2px solid #10b981;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .selected-info h2 {
+            color: #10b981;
+            margin-bottom: 10px;
+        }
+        
+        .selected-info code {
+            background: #e5e7eb;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+            color: #374151;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎨 Opções de Background</h1>
+    <p class="subtitle">Santa Casa de Ruy Barbosa - Sistema de Validação de Carteiras</p>
+    
+    <div class="container">
+        <h2 class="section-title">Gradientes Simples (Verde)</h2>
+        <div class="grid">
+            <div class="background-card">
+                <div class="preview bg-1">1</div>
+                <div class="info">
+                    <h3>Verde Clássico</h3>
+                    <p>Gradiente verde simples e elegante</p>
+                </div>
+            </div>
+            
+            <div class="background-card">
+                <div class="preview bg-2">2</div>
+                <div class="info">
+                    <h3>Verde Vibrante</h3>
+                    <p>Gradiente verde mais intenso e vibrante</p>
+                </div>
+            </div>
+            
+            <div class="background-card">
+                <div class="preview bg-3">3</div>
+                <div class="info">
+                    <h3>Verde Suave</h3>
+                    <p>Gradiente verde claro e suave</p>
+                </div>
+            </div>
+            
+            <div class="background-card">
+                <div class="preview bg-4">4</div>
+                <div class="info">
+                    <h3>Verde Profundo</h3>
+                    <p>Gradiente verde escuro e profissional</p>
+                </div>
+            </div>
+            
+            <div class="background-card">
+                <div class="preview bg-5">5</div>
+                <div class="info">
+                    <h3>Verde Floresta</h3>
+                    <p>Gradiente verde floresta natural</p>
+                </div>
+            </div>
+            
+            <div class="background-card">
+                <div class="preview bg-6">6</div>
+                <div class="info">
+                    <h3>Verde Escuro</h3>
+                    <p>Gradiente verde muito escuro e sóbrio</p>
+                </div>
+            </div>
+        </div>
+        
+        <h2 class="section-title">Gradientes Multicoloridos</h2>
+        <div class="grid">
+            <div class="background-card">
+                <div class="preview bg-7">7</div>
+                <div class="info">
+                    <h3>Verde e Azul</h3>
+                    <p>Combinação verde e azul profissional</p>
+                </div>
+            </div>
+            
+            <div class="background-card">
+                <div class="preview bg-8">8</div>
+                <div class="info">
+                    <h3>Verde e Roxo</h3>
+                    <p>Combinação verde e roxo moderna</p>
+                </div>
+            </div>
+            
+            <div class="background-card">
+                <div class="preview bg-9">9</div>
+                <div class="info">
+                    <h3>Verde e Laranja</h3>
+                    <p>Combinação verde e laranja vibrante</p>
+                </div>
+            </div>
+            
+            <div class="background-card">
+                <div class="preview bg-10">10</div>
+                <div class="info">
+                    <h3>Verde e Rosa</h3>
+                    <p>Combinação verde e rosa delicada</p>
+                </div>
+            </div>
+            
+            <div class="background-card">
+                <div class="preview bg-11">11</div>
+                <div class="info">
+                    <h3>Verde e Índigo</h3>
+                    <p>Combinação verde e índigo elegante</p>
+                </div>
+            </div>
+            
+            <div class="background-card">
+                <div class="preview bg-12">12</div>
+                <div class="info">
+                    <h3>Verde e Coral</h3>
+                    <p>Combinação verde e coral energética</p>
+                </div>
+            </div>
+        </div>
+        
+        <h2 class="section-title">Gradientes Animados</h2>
+        <div class="grid">
+            <div class="background-card">
+                <div class="preview bg-13">13</div>
+                <div class="info">
+                    <h3>Verde Animado 1</h3>
+                    <p>Gradiente verde com animação suave</p>
+                </div>
+            </div>
+            
+            <div class="background-card">
+                <div class="preview bg-14">14</div>
+                <div class="info">
+                    <h3>Verde Animado 2</h3>
+                    <p>Gradiente verde escuro animado</p>
+                </div>
+            </div>
+            
+            <div class="background-card">
+                <div class="preview bg-21">21</div>
+                <div class="info">
+                    <h3>Verde Animado 3</h3>
+                    <p>Gradiente verde complexo animado</p>
+                </div>
+            </div>
+        </div>
+        
+        <h2 class="section-title">Gradientes Radiais</h2>
+        <div class="grid">
+            <div class="background-card">
+                <div class="preview bg-15">15</div>
+                <div class="info">
+                    <h3>Radial Central</h3>
+                    <p>Gradiente radial verde do centro</p>
+                </div>
+            </div>
+            
+            <div class="background-card">
+                <div class="preview bg-16">16</div>
+                <div class="info">
+                    <h3>Radial Canto</h3>
+                    <p>Gradiente radial do canto superior direito</p>
+                </div>
+            </div>
+        </div>
+        
+        <h2 class="section-title">Outros Estilos</h2>
+        <div class="grid">
+            <div class="background-card">
+                <div class="preview bg-17">17</div>
+                <div class="info">
+                    <h3>Cônico</h3>
+                    <p>Gradiente cônico verde</p>
+                </div>
+            </div>
+            
+            <div class="background-card">
+                <div class="preview bg-18">18</div>
+                <div class="info">
+                    <h3>Três Tons</h3>
+                    <p>Gradiente com três tons de verde</p>
+                </div>
+            </div>
+            
+            <div class="background-card">
+                <div class="preview bg-19">19</div>
+                <div class="info">
+                    <h3>Vertical</h3>
+                    <p>Gradiente verde vertical</p>
+                </div>
+            </div>
+            
+            <div class="background-card">
+                <div class="preview bg-20">20</div>
+                <div class="info">
+                    <h3>Horizontal</h3>
+                    <p>Gradiente verde horizontal</p>
+                </div>
+            </div>
+        </div>
+        
+        <h2 class="section-title">Com Padrões</h2>
+        <div class="grid">
+            <div class="background-card">
+                <div class="preview bg-22">22</div>
+                <div class="info">
+                    <h3>Com Cruzes</h3>
+                    <p>Gradiente verde com padrão de cruzes</p>
+                </div>
+            </div>
+            
+            <div class="background-card">
+                <div class="preview bg-23">23</div>
+                <div class="info">
+                    <h3>Com Círculos</h3>
+                    <p>Gradiente verde com padrão de círculos</p>
+                </div>
+            </div>
+            
+            <div class="background-card">
+                <div class="preview bg-24">24</div>
+                <div class="info">
+                    <h3>Com Pontos</h3>
+                    <p>Gradiente verde com padrão de pontos</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="selected-info">
+            <h2>📋 Como usar:</h2>
+            <p>Para implementar o background escolhido, substitua o CSS atual por:</p>
+            <p><code>background: linear-gradient(135deg, #10b981 0%, #059669 100%);</code></p>
+            <p style="margin-top: 10px;">Substitua as cores hexadecimais conforme a opção escolhida acima.</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -113,7 +113,7 @@ export default function LoginPage() {
           <p className="text-slate-400 text-lg max-w-lg leading-relaxed">
             Sistema de Validação de Carteiras
             <br />
-            <span className="text-slate-500">Grande Loja Maçônica do Estado da Bahia</span>
+            <span className="text-slate-500">SANTA CASA DE RUY BARBOSA</span>
           </p>
           <div className="flex items-center gap-2 text-emerald-400">
             <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>

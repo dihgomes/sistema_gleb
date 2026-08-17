@@ -9,7 +9,7 @@ interface PhotoCardProps {
 export default function PhotoCard({ foto, nome }: PhotoCardProps) {
   return (
     <div className="flex flex-col items-center">
-      <div className="relative w-48 h-72 sm:w-64 sm:h-96 rounded-lg overflow-hidden border-2 shadow-2xl bg-white" style={{ borderColor: '#6F63C7' }}>
+      <div className="relative w-48 h-72 sm:w-64 sm:h-96 rounded-lg overflow-hidden border-2 shadow-2xl bg-white" style={{ borderColor: '#10b981' }}>
         {foto ? (
           <img
             src={foto}

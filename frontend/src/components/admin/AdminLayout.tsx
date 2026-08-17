@@ -73,7 +73,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         <footer className="bg-slate-800/30 backdrop-blur-sm border-t border-emerald-500/10 relative z-10">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
             <p className="text-center text-sm text-slate-400">
-              Grande Loja Maçônica do Estado da Bahia - Sistema de Validação de Carteiras
+              SANTA CASA DE RUY BARBOSA - Sistema de Validação de Carteiras
             </p>
             <p className="text-center text-xs text-slate-500 mt-1">
               © {new Date().getFullYear()} Santa Casa de Ruy Barbosa

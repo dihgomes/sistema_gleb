@@ -171,22 +171,22 @@ export default function ValidationPage() {
         )}
 
         {!statusVisivel && (
-          <div className="mb-6 bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-lg">
+          <div className="mb-6 bg-emerald-50 border-l-4 border-emerald-500 p-4 rounded-r-lg">
             <div className="flex items-center justify-between">
               <div className="flex items-center">
-                <Key className="h-5 w-5 text-blue-500 mr-3" />
+                <Key className="h-5 w-5 text-emerald-500 mr-3" />
                 <div>
-                  <p className="text-sm font-semibold text-blue-800">
+                  <p className="text-sm font-semibold text-emerald-800">
                     Status Protegido
                   </p>
-                  <p className="text-xs text-blue-700 mt-1">
+                  <p className="text-xs text-emerald-700 mt-1">
                     Para visualizar o status atual, insira o PIN de acesso
                   </p>
                 </div>
               </div>
               <button
                 onClick={() => setShowPinInput(!showPinInput)}
-                className="ml-4 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-lg transition-all flex items-center gap-2"
+                className="ml-4 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm rounded-lg transition-all flex items-center gap-2"
               >
                 {showPinInput ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 {showPinInput ? 'Ocultar' : 'Inserir PIN'}
@@ -201,12 +201,12 @@ export default function ValidationPage() {
                   onChange={(e) => setPin(e.target.value.replace(/\D/g, '').slice(0, 6))}
                   placeholder="Digite o PIN de 6 dígitos"
                   maxLength={6}
-                  className="flex-1 px-4 py-2 border border-blue-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-center text-lg font-mono tracking-wider"
+                  className="flex-1 px-4 py-2 border border-emerald-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-center text-lg font-mono tracking-wider"
                 />
                 <button
                   type="submit"
                   disabled={pin.length !== 6}
-                  className="px-6 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white rounded-lg transition-all"
+                  className="px-6 py-2 bg-emerald-600 hover:bg-emerald-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white rounded-lg transition-all"
                 >
                   Validar
                 </button>
@@ -224,8 +224,8 @@ export default function ValidationPage() {
           </div>
         )}
 
-        <div className="bg-white rounded-2xl shadow-2xl overflow-hidden border-2" style={{ borderColor: '#6F63C7' }}>
-          <div className="h-2" style={{ background: 'linear-gradient(to right, #6F63C7, #8B7FD9, #FCD34D)' }} />
+        <div className="bg-white rounded-2xl shadow-2xl overflow-hidden border-2" style={{ borderColor: '#10b981' }}>
+          <div className="h-2" style={{ background: 'linear-gradient(to right, #10b981, #22c55e, #34d399)' }} />
 
           <div className="p-6 sm:p-10">
             <div className="flex flex-col items-center gap-10 sm:flex-row sm:items-start sm:gap-12">
@@ -243,7 +243,7 @@ export default function ValidationPage() {
             </div>
           </div>
 
-          <div className="h-2" style={{ background: 'linear-gradient(to right, #FCD34D, #8B7FD9, #6F63C7)' }} />
+          <div className="h-2" style={{ background: 'linear-gradient(to right, #34d399, #22c55e, #10b981)' }} />
         </div>
 
         <FooterValidation
