@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modelos de Container para Logo - Santa Casa de Ruy Barbosa</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #10b981;
+            margin-bottom: 10px;
+            font-size: 2rem;
+        }
+        
+        p.subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .container-card {
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .container-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .preview {
+            height: 220px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            padding: 20px;
+        }
+        
+        .logo-placeholder {
+            width: 80px;
+            height: 80px;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: #10b981;
+            font-weight: bold;
+        }
+        
+        .info {
+            padding: 20px;
+            background: white;
+        }
+        
+        .info h3 {
+            color: #10b981;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+        
+        .info p {
+            color: #666;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+        
+        .info code {
+            background: #f0fdf4;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+            color: #059669;
+            font-size: 0.85rem;
+        }
+        
+        .section-title {
+            color: #10b981;
+            font-size: 1.5rem;
+            margin: 30px 0 20px 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #10b981;
+        }
+        
+        /* Container Styles */
+        .container-1 .logo-placeholder {
+            border-radius: 50%;
+            padding: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .container-2 .logo-placeholder {
+            border-radius: 20px;
+            padding: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .container-3 .logo-placeholder {
+            border-radius: 12px;
+            padding: 12px;
+            background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            border: 3px solid #10b981;
+        }
+        
+        .container-4 .logo-placeholder {
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            padding: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .container-5 .logo-placeholder {
+            clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+            padding: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .container-6 .logo-placeholder {
+            clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+            padding: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .container-7 .logo-placeholder {
+            border-radius: 50%;
+            padding: 12px;
+            background: linear-gradient(135deg, #ffffff 0%, #ecfdf5 100%);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+            border: 4px solid #10b981;
+        }
+        
+        .container-8 .logo-placeholder {
+            border-radius: 30px;
+            padding: 15px;
+            background: white;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            border: 2px solid #059669;
+        }
+        
+        .container-9 .logo-placeholder {
+            border-radius: 50%;
+            padding: 10px;
+            background: white;
+            box-shadow: 0 0 0 8px rgba(16, 185, 129, 0.2), 0 0 0 16px rgba(16, 185, 129, 0.1);
+        }
+        
+        .container-10 .logo-placeholder {
+            border-radius: 16px;
+            padding: 15px;
+            background: linear-gradient(145deg, #ffffff, #f0fdf4);
+            box-shadow: 8px 8px 16px rgba(0, 0, 0, 0.1), -8px -8px 16px rgba(255, 255, 255, 0.8);
+        }
+        
+        .container-11 .logo-placeholder {
+            border-radius: 50%;
+            padding: 12px;
+            background: white;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+            position: relative;
+        }
+        
+        .container-11 .logo-placeholder::before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #10b981, #059669, #047857);
+            z-index: -1;
+            animation: rotate 3s linear infinite;
+        }
+        
+        .container-12 .logo-placeholder {
+            border-radius: 20px;
+            padding: 15px;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.3), 0 0 0 8px rgba(16, 185, 129, 0.1);
+        }
+        
+        .container-13 .logo-placeholder {
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+            padding: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .container-14 .logo-placeholder {
+            border-radius: 50%;
+            padding: 12px;
+            background: white;
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.1), 0 4px 15px rgba(0, 0, 0, 0.2);
+            border: 3px solid transparent;
+            background-clip: padding-box;
+            position: relative;
+        }
+        
+        .container-14 .logo-placeholder::before {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            right: -3px;
+            bottom: -3px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #10b981, #059669, #047857, #10b981);
+            z-index: -1;
+            animation: rotate 3s linear infinite;
+        }
+        
+        .container-15 .logo-placeholder {
+            border-radius: 25px;
+            padding: 15px;
+            background: linear-gradient(135deg, #ffffff 0%, #ecfdf5 100%);
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
+            border: 2px solid #10b981;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .container-15 .logo-placeholder::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transform: rotate(45deg);
+        }
+        
+        .container-16 .logo-placeholder {
+            border-radius: 50%;
+            padding: 12px;
+            background: white;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            border: 5px solid #10b981;
+            border-style: double;
+        }
+        
+        .container-17 .logo-placeholder {
+            border-radius: 15px;
+            padding: 15px;
+            background: white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            border: 3px dashed #10b981;
+        }
+        
+        .container-18 .logo-placeholder {
+            border-radius: 50%;
+            padding: 12px;
+            background: white;
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.5);
+        }
+        
+        .container-19 .logo-placeholder {
+            border-radius: 20px;
+            padding: 15px;
+            background: linear-gradient(145deg, #ffffff, #e6fffa);
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.1), -5px -5px 15px rgba(255, 255, 255, 0.8);
+            border: 2px solid #10b981;
+        }
+        
+        .container-20 .logo-placeholder {
+            clip-path: polygon(20% 0%, 80% 0%, 100% 20%, 100% 80%, 80% 100%, 20% 100%, 0% 80%, 0% 20%);
+            padding: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .selected-info {
+            background: #f0fdf4;
+            border: 2px solid #10b981;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .selected-info h2 {
+            color: #10b981;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎨 Modelos de Container para Logo</h1>
+    <p class="subtitle">Santa Casa de Ruy Barbosa - Opções Modernas e Únicas</p>
+    
+    <div class="container">
+        <h2 class="section-title">Círculos e Elipses</h2>
+        <div class="grid">
+            <div class="container-card container-1">
+                <div class="preview">
+                    <div class="logo-placeholder">LOGO</div>
+                </div>
+                <div class="info">
+                    <h3>Círculo Clássico</h3>
+                    <p>Círculo simples com sombra suave</p>
+                    <p><code>border-radius: 50%</code></p>
+                </div>
+            </div>
+            
+            <div class="container-card container-7">
+                <div class="preview">
+                    <div class="logo-placeholder">LOGO</div>
+                </div>
+                <div class="info">
+                    <h3>Círculo com Borda</h3>
+                    <p>Círculo com borda verde e sombra colorida</p>
+                    <p><code>border: 4px solid #10b981</code></p>
+                </div>
+            </div>
+            
+            <div class="container-card container-9">
+                <div class="preview">
+                    <div class="logo-placeholder">LOGO</div>
+                </div>
+                <div class="info">
+                    <h3>Círculo com Anéis</h3>
+                    <p>Círculo com múltiplos anéis concêntricos</p>
+                    <p><code>box-shadow com múltiplos valores</code></p>
+                </div>
+            </div>
+            
+            <div class="container-card container-14">
+                <div class="preview">
+                    <div class="logo-placeholder">LOGO</div>
+                </div>
+                <div class="info">
+                    <h3>Círculo com Gradiente Animado</h3>
+                    <p>Borda com gradiente rotativo animado</p>
+                    <p><code>animation: rotate 3s linear infinite</code></p>
+                </div>
+            </div>
+            
+            <div class="container-card container-16">
+                <div class="preview">
+                    <div class="logo-placeholder">LOGO</div>
+                </div>
+                <div class="info">
+                    <h3>Círculo com Borda Dupla</h3>
+                    <p>Borda dupla estilo elegante</p>
+                    <p><code>border-style: double</code></p>
+                </div>
+            </div>
+            
+            <div class="container-card container-18">
+                <div class="preview">
+                    <div class="logo-placeholder">LOGO</div>
+                </div>
+                <div class="info">
+                    <h3>Círculo com Brilho</h3>
+                    <p>Efeito de brilho/glow ao redor</p>
+                    <p><code>box-shadow com cor verde</code></p>
+                </div>
+            </div>
+        </div>
+        
+        <h2 class="section-title">Quadrados e Retângulos</h2>
+        <div class="grid">
+            <div class="container-card container-2">
+                <div class="preview">
+                    <div class="logo-placeholder">LOGO</div>
+                </div>
+                <div class="info">
+                    <h3>Quadrado Arredondado</h3>
+                    <p>Quadrado com bordas arredondadas</p>
+                    <p><code>border-radius: 20px</code></p>
+                </div>
+            </div>
+            
+            <div class="container-card container-3">
+                <div class="preview">
+                    <div class="logo-placeholder">LOGO</div>
+                </div>
+                <div class="info">
+                    <h3>Quadrado com Borda Verde</h3>
+                    <p>Quadrado com borda verde e gradiente</p>
+                    <p><code>border: 3px solid #10b981</code></p>
+                </div>
+            </div>
+            
+            <div class="container-card container-8">
+                <div class="preview">
+                    <div class="logo-placeholder">LOGO</div>
+                </div>
+                <div class="info">
+                    <h3>Retângulo Moderno</h3>
+                    <p>Retângulo com borda verde e sombra</p>
+                    <p><code>border-radius: 30px</code></p>
+                </div>
+            </div>
+            
+            <div class="container-card container-10">
+                <div class="preview">
+                    <div class="logo-placeholder">LOGO</div>
+                </div>
+                <div class="info">
+                    <h3>Neumorfismo</h3>
+                    <p>Efeito neumórfico moderno</p>
+                    <p><code>box-shadow com luz e sombra</code></p>
+                </div>
+            </div>
+            
+            <div class="container-card container-12">
+                <div class="preview">
+                    <div class="logo-placeholder">LOGO</div>
+                </div>
+                <div class="info">
+                    <h3>Quadrado com Anéis</h3>
+                    <p>Quadrado com bordas múltiplas</p>
+                    <p><code>box-shadow com múltiplos valores</code></p>
+                </div>
+            </div>
+            
+            <div class="container-card container-17">
+                <div class="preview">
+                    <div class="logo-placeholder">LOGO</div>
+                </div>
+                <div class="info">
+                    <h3>Quadrado Tracejado</h3>
+                    <p>Borda tracejada estilo moderno</p>
+                    <p><code>border-style: dashed</code></p>
+                </div>
+            </div>
+            
+            <div class="container-card container-19">
+                <div class="preview">
+                    <div class="logo-placeholder">LOGO</div>
+                </div>
+                <div class="info">
+                    <h3>Soft Neumorfismo</h3>
+                    <p>Versão suave do neumorfismo</p>
+                    <p><code>box-shadow suave</code></p>
+                </div>
+            </div>
+        </div>
+        
+        <h2 class="section-title">Formas Geométricas</h2>
+        <div class="grid">
+            <div class="container-card container-4">
+                <div class="preview">
+                    <div class="logo-placeholder">LOGO</div>
+                </div>
+                <div class="info">
+                    <h3>Hexágono</h3>
+                    <p>Forma hexagonal moderna</p>
+                    <p><code>clip-path: polygon(...)</code></p>
+                </div>
+            </div>
+            
+            <div class="container-card container-5">
+                <div class="preview">
+                    <div class="logo-placeholder">LOGO</div>
+                </div>
+                <div class="info">
+                    <h3>Losango</h3>
+                    <p>Forma de losango elegante</p>
+                    <p><code>clip-path: polygon(...)</code></p>
+                </div>
+            </div>
+            
+            <div class="container-card container-6">
+                <div class="preview">
+                    <div class="logo-placeholder">LOGO</div>
+                </div>
+                <div class="info">
+                    <h3>Octógono</h3>
+                    <p>Forma octogonal única</p>
+                    <p><code>clip-path: polygon(...)</code></p>
+                </div>
+            </div>
+            
+            <div class="container-card container-13">
+                <div class="preview">
+                    <div class="logo-placeholder">LOGO</div>
+                </div>
+                <div class="info">
+                    <h3>Estrela</h3>
+                    <p>Forma de estrela decorativa</p>
+                    <p><code>clip-path: polygon(...)</code></p>
+                </div>
+            </div>
+            
+            <div class="container-card container-20">
+                <div class="preview">
+                    <div class="logo-placeholder">LOGO</div>
+                </div>
+                <div class="info">
+                    <h3>Corte nos Cantos</h3>
+                    <p>Quadrado com cantos cortados</p>
+                    <p><code>clip-path: polygon(...)</code></p>
+                </div>
+            </div>
+        </div>
+        
+        <h2 class="section-title">Efeitos Especiais</h2>
+        <div class="grid">
+            <div class="container-card container-11">
+                <div class="preview">
+                    <div class="logo-placeholder">LOGO</div>
+                </div>
+                <div class="info">
+                    <h3>Gradiente Rotativo</h3>
+                    <p>Borda com gradiente animado</p>
+                    <p><code>animation com gradiente</code></p>
+                </div>
+            </div>
+            
+            <div class="container-card container-15">
+                <div class="preview">
+                    <div class="logo-placeholder">LOGO</div>
+                </div>
+                <div class="info">
+                    <h3>Efeito Vidro</h3>
+                    <p>Efeito de reflexo de vidro</p>
+                    <p><code>gradient com transparência</code></p>
+                </div>
+            </div>
+        </div>
+        
+        <h2 class="section-title">Badges e Etiquetas</h2>
+        <div class="grid">
+            <div class="container-card container-21">
+                <div class="preview">
+                    <div class="logo-placeholder" style="border-radius: 50%; padding: 15px; background: white; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); position: relative;">
+                        <span style="position: absolute; top: -5px; right: -5px; background: #ef4444; color: white; font-size: 10px; padding: 2px 6px; border-radius: 50%;">NEW</span>
+                        LOGO
+                    </div>
+                </div>
+                <div class="info">
+                    <h3>Badge com Notificação</h3>
+                    <p>Círculo com badge de notificação</p>
+                    <p><code>position: absolute</code></p>
+                </div>
+            </div>
+            
+            <div class="container-card container-22">
+                <div class="preview">
+                    <div class="logo-placeholder" style="border-radius: 20px; padding: 15px; background: linear-gradient(135deg, #10b981, #059669); color: white; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);">
+                        LOGO
+                    </div>
+                </div>
+                <div class="info">
+                    <h3>Badge Gradiente</h3>
+                    <p>Container com fundo gradiente</p>
+                    <p><code>background: linear-gradient</code></p>
+                </div>
+            </div>
+            
+            <div class="container-card container-23">
+                <div class="preview">
+                    <div class="logo-placeholder" style="border-radius: 50%; padding: 15px; background: white; border: 4px solid #10b981; border-left-color: #059669; border-right-color: #047857; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);">
+                        LOGO
+                    </div>
+                </div>
+                <div class="info">
+                    <h3>Borda Multicolorida</h3>
+                    <p>Borda com diferentes tons de verde</p>
+                    <p><code>border-left-color, border-right-color</code></p>
+                </div>
+            </div>
+            
+            <div class="container-card container-24">
+                <div class="preview">
+                    <div class="logo-placeholder" style="border-radius: 25px; padding: 15px; background: white; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15); border-top: 4px solid #10b981;">
+                        LOGO
+                    </div>
+                </div>
+                <div class="info">
+                    <h3>Top Border</h3>
+                    <p>Borda apenas no topo</p>
+                    <p><code>border-top: 4px solid</code></p>
+                </div>
+            </div>
+        </div>
+        
+        <h2 class="section-title">Glassmorphism</h2>
+        <div class="grid">
+            <div class="container-card container-25">
+                <div class="preview">
+                    <div class="logo-placeholder" style="border-radius: 20px; padding: 15px; background: rgba(255, 255, 255, 0.25); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.3); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);">
+                        LOGO
+                    </div>
+                </div>
+                <div class="info">
+                    <h3>Glass Clássico</h3>
+                    <p>Efeito glassmorphism clássico</p>
+                    <p><code>backdrop-filter: blur</code></p>
+                </div>
+            </div>
+            
+            <div class="container-card container-26">
+                <div class="preview">
+                    <div class="logo-placeholder" style="border-radius: 50%; padding: 15px; background: rgba(255, 255, 255, 0.3); backdrop-filter: blur(15px); border: 2px solid rgba(255, 255, 255, 0.4); box-shadow: 0 8px 32px rgba(16, 185, 129, 0.2);">
+                        LOGO
+                    </div>
+                </div>
+                <div class="info">
+                    <h3>Glass Circular</h3>
+                    <p>Glassmorphism em formato circular</p>
+                    <p><code>backdrop-filter com borda</code></p>
+                </div>
+            </div>
+            
+            <div class="container-card container-27">
+                <div class="preview">
+                    <div class="logo-placeholder" style="border-radius: 25px; padding: 15px; background: linear-gradient(135deg, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.1)); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.5); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);">
+                        LOGO
+                    </div>
+                </div>
+                <div class="info">
+                    <h3>Glass com Gradiente</h3>
+                    <p>Glassmorphism com gradiente sutil</p>
+                    <p><code>background com gradiente</code></p>
+                </div>
+            </div>
+        </div>
+        
+        <h2 class="section-title">Cards e Molduras</h2>
+        <div class="grid">
+            <div class="container-card container-28">
+                <div class="preview">
+                    <div class="logo-placeholder" style="border-radius: 20px; padding: 15px; background: white; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); border: 1px solid rgba(16, 185, 129, 0.2);">
+                        LOGO
+                    </div>
+                </div>
+                <div class="info">
+                    <h3>Card Minimalista</h3>
+                    <p>Card simples e elegante</p>
+                    <p><code>border com transparência</code></p>
+                </div>
+            </div>
+            
+            <div class="container-card container-29">
+                <div class="preview">
+                    <div class="logo-placeholder" style="border-radius: 25px; padding: 15px; background: white; box-shadow: 0 10px 40px rgba(16, 185, 129, 0.15); border: 2px solid #10b981; position: relative; overflow: hidden;">
+                        <div style="position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, #10b981, #059669, #047857);"></div>
+                        LOGO
+                    </div>
+                </div>
+                <div class="info">
+                    <h3>Card com Barra Superior</h3>
+                    <p>Card com barra de gradiente no topo</p>
+                    <p><code>position: absolute bar</code></p>
+                </div>
+            </div>
+            
+            <div class="container-card container-30">
+                <div class="preview">
+                    <div class="logo-placeholder" style="border-radius: 30px; padding: 15px; background: white; box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12); border: 3px solid #10b981; border-style: groove;">
+                        LOGO
+                    </div>
+                </div>
+                <div class="info">
+                    <h3>Moldura Groove</h3>
+                    <p>Borda estilo groove</p>
+                    <p><code>border-style: groove</code></p>
+                </div>
+            </div>
+            
+            <div class="container-card container-31">
+                <div class="preview">
+                    <div class="logo-placeholder" style="border-radius: 25px; padding: 15px; background: white; box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12); border: 3px solid #10b981; border-style: ridge;">
+                        LOGO
+                    </div>
+                </div>
+                <div class="info">
+                    <h3>Moldura Ridge</h3>
+                    <p>Borda estilo ridge</p>
+                    <p><code>border-style: ridge</code></p>
+                </div>
+            </div>
+            
+            <div class="container-card container-32">
+                <div class="preview">
+                    <div class="logo-placeholder" style="border-radius: 25px; padding: 15px; background: white; box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12); border: 3px solid #10b981; border-style: inset;">
+                        LOGO
+                    </div>
+                </div>
+                <div class="info">
+                    <h3>Moldura Inset</h3>
+                    <p>Borda estilo inset</p>
+                    <p><code>border-style: inset</code></p>
+                </div>
+            </div>
+            
+            <div class="container-card container-33">
+                <div class="preview">
+                    <div class="logo-placeholder" style="border-radius: 25px; padding: 15px; background: white; box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12); border: 3px solid #10b981; border-style: outset;">
+                        LOGO
+                    </div>
+                </div>
+                <div class="info">
+                    <h3>Moldura Outset</h3>
+                    <p>Borda estilo outset</p>
+                    <p><code>border-style: outset</code></p>
+                </div>
+            </div>
+        </div>
+        
+        <h2 class="section-title">Efeitos 3D</h2>
+        <div class="grid">
+            <div class="container-card container-34">
+                <div class="preview">
+                    <div class="logo-placeholder" style="border-radius: 20px; padding: 15px; background: white; box-shadow: 0 10px 0 #059669, 0 10px 20px rgba(0, 0, 0, 0.2); transform: translateY(0); transition: all 0.2s;">
+                        LOGO
+                    </div>
+                </div>
+                <div class="info">
+                    <h3>Botão 3D</h3>
+                    <p>Efeito de botão 3D pressionável</p>
+                    <p><code>box-shadow com offset</code></p>
+                </div>
+            </div>
+            
+            <div class="container-card container-35">
+                <div class="preview">
+                    <div class="logo-placeholder" style="border-radius: 50%; padding: 15px; background: linear-gradient(145deg, #ffffff, #e6e6e6); box-shadow: 8px 8px 16px rgba(0, 0, 0, 0.1), -8px -8px 16px rgba(255, 255, 255, 0.8);">
+                        LOGO
+                    </div>
+                </div>
+                <div class="info">
+                    <h3>Esfera 3D</h3>
+                    <p>Efeito de esfera 3D</p>
+                    <p><code>gradient com sombras</code></p>
+                </div>
+            </div>
+            
+            <div class="container-card container-36">
+                <div class="preview">
+                    <div class="logo-placeholder" style="border-radius: 25px; padding: 15px; background: linear-gradient(135deg, #10b981, #059669); color: white; box-shadow: 0 15px 35px rgba(16, 185, 129, 0.4), inset 0 2px 10px rgba(255, 255, 255, 0.3);">
+                        LOGO
+                    </div>
+                </div>
+                <div class="info">
+                    <h3>Placa 3D</h3>
+                    <p>Efeito de placa 3D</p>
+                    <p><code>box-shadow com inset</code></p>
+                </div>
+            </div>
+        </div>
+        
+        <h2 class="section-title">Com Padrões e Texturas</h2>
+        <div class="grid">
+            <div class="container-card container-37">
+                <div class="preview">
+                    <div class="logo-placeholder" style="border-radius: 25px; padding: 15px; background: white; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); border: 2px solid #10b981; background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(16, 185, 129, 0.05) 10px, rgba(16, 185, 129, 0.05) 20px);">
+                        LOGO
+                    </div>
+                </div>
+                <div class="info">
+                    <h3>Listras Diagonais</h3>
+                    <p>Padrão de listras diagonais</p>
+                    <p><code>repeating-linear-gradient</code></p>
+                </div>
+            </div>
+            
+            <div class="container-card container-38">
+                <div class="preview">
+                    <div class="logo-placeholder" style="border-radius: 25px; padding: 15px; background: white; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); border: 2px solid #10b981; background-image: radial-gradient(circle, rgba(16, 185, 129, 0.1) 1px, transparent 1px); background-size: 20px 20px;">
+                        LOGO
+                    </div>
+                </div>
+                <div class="info">
+                    <h3>Pontos</h3>
+                    <p>Padrão de pontos</p>
+                    <p><code>radial-gradient pattern</code></p>
+                </div>
+            </div>
+            
+            <div class="container-card container-39">
+                <div class="preview">
+                    <div class="logo-placeholder" style="border-radius: 25px; padding: 15px; background: white; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); border: 2px solid #10b981; background-image: linear-gradient(90deg, rgba(16, 185, 129, 0.05) 1px, transparent 1px), linear-gradient(rgba(16, 185, 129, 0.05) 1px, transparent 1px); background-size: 20px 20px;">
+                        LOGO
+                    </div>
+                </div>
+                <div class="info">
+                    <h3>Grade</h3>
+                    <p>Padrão de grade</p>
+                    <p><code>linear-gradient grid</code></p>
+                </div>
+            </div>
+            
+            <div class="container-card container-40">
+                <div class="preview">
+                    <div class="logo-placeholder" style="border-radius: 25px; padding: 15px; background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); border: 2px solid #10b981;">
+                        LOGO
+                    </div>
+                </div>
+                <div class="info">
+                    <h3>Gradiente Suave</h3>
+                    <p>Fundo com gradiente suave</p>
+                    <p><code>background gradient</code></p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="selected-info">
+            <h2>📋 Como usar:</h2>
+            <p>Para implementar o container escolhido, substitua o CSS atual do container da logo pelo código indicado em cada opção.</p>
+            <p style="margin-top: 10px;">Exemplo para o círculo clássico:</p>
+            <p><code>className="w-40 h-40 sm:w-48 sm:h-48 bg-white rounded-full p-4 shadow-xl"</code></p>
+            <p style="margin-top: 10px;">Para formas geométricas, use <code>clip-path</code> no estilo inline.</p>
+            <p style="margin-top: 10px;">Para efeitos especiais, use <code>style</code> com as propriedades CSS indicadas.</p>
+        </div>
+    </div>
+</body>
+</html>
